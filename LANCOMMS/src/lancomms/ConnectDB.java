@@ -24,7 +24,7 @@ public class ConnectDB {
         
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/mysql","username","1234");           
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lancomms","root","1234");           
         }
         catch ( ClassNotFoundException | SQLException e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );

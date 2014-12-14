@@ -122,22 +122,8 @@ public class LoginUI extends javax.swing.JFrame {
 
     private void LogInButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LogInButtonMouseClicked
         // TODO add your handling code here:
-        NTSystem NTSystem = new NTSystem();//test
-        System.out.println(NTSystem.getName());//test
-        Webcam webcam = Webcam.getDefault();
-        WebcamPanel panel = new WebcamPanel(webcam);
-
-        panel.setFPSDisplayed(true);
-        panel.setDisplayDebugInfo(true);
-        panel.setImageSizeDisplayed(true);
-//        panel.setMirrored(true);
-
-        JFrame window = new JFrame("Test webcam panel");
-        window.add(panel);
-        window.setResizable(true);
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.pack();
-        window.setVisible(true);
+        WebCamFeed feed = new WebCamFeed();
+        feed.getFeed();
     }//GEN-LAST:event_LogInButtonMouseClicked
 
     private void usernameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameFieldActionPerformed
