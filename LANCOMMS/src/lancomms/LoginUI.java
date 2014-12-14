@@ -9,6 +9,7 @@ import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
 import com.sun.security.auth.module.NTSystem;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -122,15 +123,13 @@ public class LoginUI extends javax.swing.JFrame {
 
     private void LogInButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LogInButtonMouseClicked
         // TODO add your handling code here:
-        WebCamFeed feed = new WebCamFeed();
-        feed.getFeed();
+        HandleLogInButton();
+
     }//GEN-LAST:event_LogInButtonMouseClicked
 
     private void usernameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_usernameFieldActionPerformed
-
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton LogInButton;
@@ -140,4 +139,26 @@ public class LoginUI extends javax.swing.JFrame {
     private javax.swing.JTextField passwordField;
     private javax.swing.JTextField usernameField;
     // End of variables declaration//GEN-END:variables
+
+    void HandleLogInButton(){
+        Login log = new Login();
+        
+        int userId =  log.login(usernameField.getText(), passwordField.getText());
+        JOptionPane.showMessageDialog(null, userId);
+        try{
+            if(userId==0){
+            throw new Exception("Invalid username and/or password.");
+            }
+    
+            else{
+            WebCamFeed feed = new WebCamFeed();
+            feed.getFeed();
+            this.setVisible(false);
+            }
+        
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage());        
+        }
+    }
 }
