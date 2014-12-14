@@ -33,12 +33,6 @@ public class ConnectDB {
         System.out.println("Opened database successfully");
         return con;
     }
-    
-    public static void main(String[] args) {
-        // TODO code application logic here
-        ConnectDB con = new ConnectDB();
-        con.connectToDB();
-    }
         
 }
 
