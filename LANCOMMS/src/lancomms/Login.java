@@ -35,7 +35,7 @@ public class Login {
             Statement stmt;
             stmt = con.createStatement();
             
-            String sql = "SELECT * FROM Account_Details WHERE USERNAME == '" + username + "';";
+            String sql = "SELECT * FROM user WHERE username == '" + username + "';";
             rs = stmt.executeQuery(sql);
             userId = rs.getInt("ID");
 
