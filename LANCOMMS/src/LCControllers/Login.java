@@ -4,12 +4,13 @@
  * and open the template in the editor.
  */
 
-package lancomms;
+package LCControllers;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import LCModels.ConnectDB;
 
 /**
  *
@@ -18,6 +19,7 @@ import java.sql.Statement;
 public class Login {
     
     int userId=0;
+    String userPw = null;
     /**
      * 
      * @param username the user name what is the user is trying to log in
@@ -28,22 +30,34 @@ public class Login {
         
         Connection con;
         ConnectDB callConnector = new ConnectDB();
-        con = callConnector.connectToDB();
-        
+        con = callConnector.connectToDB();    
+        ResultSet rs=null;
+        Statement stmt=null; 
         try{
-            ResultSet rs;
-            Statement stmt;
+         
             stmt = con.createStatement();
-            
+                
             String sql = "SELECT * FROM `user` WHERE user_username = '" + username + "';";
             rs = stmt.executeQuery(sql);
             rs.next();
-            userId = rs.getInt("user_id");
-
+            userPw = rs.getString("user_password");
+            if(password.equals(userPw))
+                {
+                userId = rs.getInt("user_id");
+                //String timeIn = "INSERT INTO `user_log` (ul_in_timestamp, ul_room) " +
+                //  "VALUES ('" + username + "', '" + password + "', '" + fullname + "');";
+                }                
+            
         }
         catch(SQLException e){
             System.out.println(e.getMessage());
         }
-        return userId;
+        finally{
+            try { if (rs != null) rs.close(); } catch (Exception e) {};
+            try { if (stmt != null) stmt.close(); } catch (Exception e) {};
+            try { if (con != null) con.close(); } catch (Exception e) {};  
+            return userId;                
+        }
+        
     }
 }

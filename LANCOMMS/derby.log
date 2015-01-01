@@ -16,3 +16,4 @@ Database Class Loader started - derby.database.classpath=''
 Sun Dec 14 23:24:32 CST 2014:
 Shutting down instance a816c00e-014a-4964-f850-000077406d0e on database directory C:\Users\user\Documents\School Stuff\4th Year\Capstone\lancomms.it184\LANCOMMS\lancomms with class loader sun.misc.Launcher$AppClassLoader@1d44bcfa 
 Sun Dec 14 23:24:32 CST 2014 Thread[DRDAConnThread_3,5,main] (DATABASE = lancomms), (DRDAID = {2}), Database 'lancomms' shutdown.
+----------------------------------------------------------------

@@ -5,15 +5,13 @@
 // */
 package lancomms;
 
+import LCViews.LoginUI;
+
 public class LANCOMMS {
 
     public static void main(String[] args) throws InterruptedException {
         LoginUI test = new LoginUI();
         test.setVisible(true);
         
-    }
-
-    public static void authTest(String filename) {
-
     }
 }

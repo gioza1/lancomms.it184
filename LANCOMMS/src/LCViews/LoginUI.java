@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lancomms;
+package LCViews;
 
+import LCControllers.Login;
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
 import com.sun.security.auth.module.NTSystem;
@@ -116,8 +117,27 @@ public class LoginUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void LogInButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LogInButtonMouseClicked
-        // TODO add your handling code here:
-        HandleLogInButton();
+        Login log = new Login();
+        
+        int userId =  log.login(usernameField.getText(), passwordField.getText());
+        try{
+            if(userId==0){
+            throw new Exception("Invalid username and/or password.");
+            }
+    
+            else{
+            //WebCamFeed feed = new WebCamFeed();
+            //feed.getFeed();
+            MainUI startApp = new MainUI();
+            this.setVisible(false);
+            this.dispose();
+            startApp.setVisible(true);
+            }
+        
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage());        
+        }
 
     }//GEN-LAST:event_LogInButtonMouseClicked
 
@@ -138,24 +158,4 @@ public class LoginUI extends javax.swing.JFrame {
     private javax.swing.JTextField usernameField;
     // End of variables declaration//GEN-END:variables
 
-    void HandleLogInButton(){
-        Login log = new Login();
-        
-        int userId =  log.login(usernameField.getText(), passwordField.getText());
-        try{
-            if(userId==0){
-            throw new Exception("Invalid username and/or password.");
-            }
-    
-            else{
-            WebCamFeed feed = new WebCamFeed();
-            feed.getFeed();
-            this.setVisible(false);
-            }
-        
-        }
-        catch(Exception e){
-            JOptionPane.showMessageDialog(null, e.getMessage());        
-        }
-    }
 }

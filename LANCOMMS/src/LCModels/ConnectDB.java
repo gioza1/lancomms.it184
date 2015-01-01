@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package lancomms;
+package LCModels;
 
 import java.sql.*;
 
