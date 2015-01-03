@@ -181,7 +181,8 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
 
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         // TODO add your handling code here:
-        MessageTransmitter transmitter = new MessageTransmitter(message.getText(), ipTextField.getText(), Integer.parseInt(targetPort.getText()));
+        int tp = Integer.parseInt(receivingPort.getText());
+        MessageTransmitter transmitter = new MessageTransmitter("From Port#"+ tp+": " + message.getText(), ipTextField.getText(), Integer.parseInt(targetPort.getText()));
         transmitter.start();
 
     }//GEN-LAST:event_sendButtonActionPerformed
