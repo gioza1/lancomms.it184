@@ -64,7 +64,8 @@ public class MainUI extends javax.swing.JFrame {
                     int index = theList.locationToIndex(mouseEvent.getPoint());
                     if (index >= 0) {
                         Object o = theList.getModel().getElementAt(index);
-                        new SimpleSoundCapture().runSound();
+                        ChatWindowUI cw = new ChatWindowUI();
+                        cw.show();
                     }
                 }
             }
@@ -108,7 +109,7 @@ public class MainUI extends javax.swing.JFrame {
         MainTabs.addTab("Conversations", ConvoList);
 
         NTSystem NTSystem = new NTSystem();//test
-        UserNameDisplay.setText(NTSystem.getName());
+        UserNameDisplay.setText(System.getProperty("user.name"));
 
         LancommsMenu.setText("LANCOMMS");
 

@@ -72,7 +72,7 @@ public class SimpleSoundCapture extends JPanel implements ActionListener {
     p2.add(buttonsPanel);
 
     p1.add(p2);
-    add(p1);
+    add(p1); 
   }
 
   public void open() {

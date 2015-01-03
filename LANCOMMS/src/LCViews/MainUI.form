@@ -128,7 +128,7 @@
                     </Property>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="MouseListener mouseListener = new MouseAdapter() {&#xa;      public void mouseClicked(MouseEvent mouseEvent) {&#xa;        JList theList = (JList) mouseEvent.getSource();&#xa;        if (mouseEvent.getClickCount() == 2) {&#xa;          int index = theList.locationToIndex(mouseEvent.getPoint());&#xa;          if (index &gt;= 0) {&#xa;            Object o = theList.getModel().getElementAt(index);&#xa;           new SimpleSoundCapture().runSound();&#xa;          }&#xa;        }&#xa;      }&#xa;    };&#xa;    jList1.addMouseListener(mouseListener);"/>
+                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="MouseListener mouseListener = new MouseAdapter() {&#xa;      public void mouseClicked(MouseEvent mouseEvent) {&#xa;        JList theList = (JList) mouseEvent.getSource();&#xa;        if (mouseEvent.getClickCount() == 2) {&#xa;          int index = theList.locationToIndex(mouseEvent.getPoint());&#xa;          if (index &gt;= 0) {&#xa;            Object o = theList.getModel().getElementAt(index);&#xa;           ChatWindowUI cw = new ChatWindowUI();&#xa;           cw.show();&#xa;          }&#xa;        }&#xa;      }&#xa;    };&#xa;    jList1.addMouseListener(mouseListener);"/>
                   </AuxValues>
                 </Component>
               </SubComponents>
@@ -188,7 +188,7 @@
     <Component class="javax.swing.JLabel" name="UserNameDisplay">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="NTSystem.getName()" type="code"/>
+          <Connection code="System.getProperty(&quot;user.name&quot;)" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
