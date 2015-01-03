@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -49,5 +50,6 @@ public class MessageTransmitter extends Thread {
         }
     }
     
+  
    
 }
