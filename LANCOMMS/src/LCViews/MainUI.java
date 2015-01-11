@@ -7,6 +7,8 @@
 package LCViews;
 
 import LCControllers.Contacts;
+import LCControllers.Login;
+import LCControllers.Session;
 import com.sun.security.auth.module.NTSystem;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -28,12 +30,14 @@ import lancomms.SimpleSoundCapture;
  */
 public class MainUI extends JFrame {
 
-    int userId = 0;
+    Session sess;
+    int userId;
     /**
      * Creates new form MainUI
      */
     public MainUI(int uid) {
-        userId = uid;
+        sess = new Session(uid);
+        userId = sess.getId();
         initComponents();
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
@@ -211,6 +215,8 @@ public class MainUI extends JFrame {
 
     private void logoutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                             
         this.dispose();
+        Login logoutTime = new Login();
+        logoutTime.logoutTime(userId);
         LoginUI loggedout = new LoginUI();
         loggedout.setVisible(rootPaneCheckingEnabled);
     }                                            

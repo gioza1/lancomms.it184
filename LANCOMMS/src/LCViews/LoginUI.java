@@ -120,6 +120,7 @@ public class LoginUI extends javax.swing.JFrame {
         Login log = new Login();
         
         int userId =  log.login(usernameField.getText(), passwordField.getText());
+        log.loginTime(userId);
         try{
             if(userId==0){
             throw new Exception("Invalid username and/or password.");
