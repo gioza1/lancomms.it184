@@ -11,10 +11,12 @@ import LCModels.WritableGUI;
 import lancomms.SimpleSoundCapture;
 import lancomms.WebCamFeed;
 
+
 /**
  *
  * @author Gio
  */
+
 public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
 
     /**
@@ -22,6 +24,7 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
      */
     public ChatWindowUI() {
         initComponents();
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -267,4 +270,6 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
     public void write(String s) {
         chat.append(s + System.lineSeparator());
     }
+    
+    
 }

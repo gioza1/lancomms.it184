@@ -6,24 +6,42 @@
 
 package LCViews;
 
+import LCControllers.Contacts;
 import com.sun.security.auth.module.NTSystem;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JTable;
+import javax.swing.WindowConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumn;
 import lancomms.SimpleSoundCapture;
 
 /**
  *
  * @author user
  */
-public class MainUI extends javax.swing.JFrame {
+public class MainUI extends JFrame {
 
+    int userId = 0;
     /**
      * Creates new form MainUI
      */
-    public MainUI() {
+    public MainUI(int uid) {
+        userId = uid;
         initComponents();
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                setExtendedState(JFrame.ICONIFIED);
+                }
+            });       
     }
 
     /**
@@ -38,8 +56,10 @@ public class MainUI extends javax.swing.JFrame {
 
         MainTabs = new javax.swing.JTabbedPane();
         ContactsList = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        Contacts contact = new Contacts();
+        TableColumn idColumn = null;
+        jTable1 = new javax.swing.JTable(contact.displayContacts(userId));
         ConvoList = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList2 = new javax.swing.JList();
@@ -52,36 +72,52 @@ public class MainUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Contact 1", "Contact 2", "Contact 3", "Contact 4", "Contact 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+        jTable1.setRowHeight(18);
+        jTable1.setRowMargin(5);
+        jTable1.setShowVerticalLines(false);
+        jTable1.setAutoCreateRowSorter(true);
+        jTable1.setRowSelectionAllowed(true);
+        jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+            public void valueChanged(ListSelectionEvent e){
+                int row = jTable1.getSelectedRow();
+                Object data = (Object)jTable1.getModel().getValueAt(row, 0);
+                int idrow = Integer.parseInt(data.toString());
+                Object data2 = (Object)jTable1.getModel().getValueAt(row, 1);
+                String namerow = data2.toString();
+                System.out.println(idrow);
+                System.out.println(namerow);
+            }
         });
         MouseListener mouseListener = new MouseAdapter() {
             public void mouseClicked(MouseEvent mouseEvent) {
-                JList theList = (JList) mouseEvent.getSource();
+                JTable theTable = (JTable) mouseEvent.getSource();
                 if (mouseEvent.getClickCount() == 2) {
-                    int index = theList.locationToIndex(mouseEvent.getPoint());
+                    int index = theTable.rowAtPoint(mouseEvent.getPoint());
                     if (index >= 0) {
-                        Object o = theList.getModel().getElementAt(index);
                         ChatWindowUI cw = new ChatWindowUI();
                         cw.show();
                     }
                 }
             }
         };
-        jList1.addMouseListener(mouseListener);
-        jScrollPane1.setViewportView(jList1);
+        jTable1.addMouseListener(mouseListener);
+        idColumn = jTable1.getColumnModel().getColumn(0);
+        jTable1.removeColumn(idColumn);
+        jScrollPane3.setViewportView(jTable1);
 
         javax.swing.GroupLayout ContactsListLayout = new javax.swing.GroupLayout(ContactsList);
         ContactsList.setLayout(ContactsListLayout);
         ContactsListLayout.setHorizontalGroup(
             ContactsListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ContactsListLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         ContactsListLayout.setVerticalGroup(
             ContactsListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
+            .addGroup(ContactsListLayout.createSequentialGroup()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 14, Short.MAX_VALUE))
         );
 
         MainTabs.addTab("Contacts", ContactsList);
@@ -193,11 +229,11 @@ public class MainUI extends javax.swing.JFrame {
     private javax.swing.JTabbedPane MainTabs;
     private javax.swing.JLabel UserNameDisplay;
     private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JList jList1;
     private javax.swing.JList jList2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable jTable1;
     private javax.swing.JMenuItem logoutMenuItem;
     private javax.swing.JMenuItem settingsMenuItem;
     // End of variables declaration//GEN-END:variables

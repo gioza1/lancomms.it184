@@ -128,7 +128,7 @@ public class LoginUI extends javax.swing.JFrame {
             else{
             //WebCamFeed feed = new WebCamFeed();
             //feed.getFeed();
-            MainUI startApp = new MainUI();
+            MainUI startApp = new MainUI(userId);
             this.setVisible(false);
             this.dispose();
             startApp.setVisible(true);

@@ -9,34 +9,53 @@ package LCControllers;
 import javax.swing.*;
 import java.sql.*;
 import LCModels.ConnectDB;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author user
  */
 public class Contacts
 {
+    String ID;
+    String fname;
+    String lname;
+    DefaultTableModel model = new DefaultTableModel(){
+        @Override
+        public boolean isCellEditable(int row, int column)
+        {
+        return false;
+        }
+    };    
     
-    public void displayContacts(int userID){
-    DefaultListModel clist = new DefaultListModel();
-    Connection con = null;
-    ConnectDB callConnector = new ConnectDB();
-    con = callConnector.connectToDB(); 
-    ResultSet rs = null;
-    Statement stmt = null;              
-        try{
-            stmt = con.createStatement();                
-            String sql = "SELECT * FROM `user` WHERE user_id != '" + userID + "';";
-            rs = stmt.executeQuery(sql);
-            
-            while(rs.next()){
-            String ID = rs.getString("user_id");
-            String fname = rs.getString("user_fname");
-            String lname = rs.getString("user_lname");
- 
+    //@SuppressWarnings("unchecked")    
+    public DefaultTableModel displayContacts(int userID){
+        model.setRowCount(0);
+        model.addColumn("ID");
+        model.addColumn("Name");       
+        Connection con = null;
+        ResultSet rs = null;
+        Statement stmt = null;              
+            try{
+                ConnectDB callConnector = new ConnectDB();
+                con = callConnector.connectToDB();               
+                stmt = con.createStatement();                
+                String sql = "SELECT * FROM `user` WHERE user_id != '" + userID + "';";
+                rs = stmt.executeQuery(sql);
                 
+                System.out.println(userID);
                 
-            clist.addElement(new Object[]{ID, fname, lname});
+            while(rs.next()){               
+                String rID = rs.getString("user_id");
+                String rfname = rs.getString("user_fname");
+                String rlname = rs.getString("user_lname");
+                StringBuilder sbuilder = new StringBuilder();
+                    sbuilder.append(rfname);
+                    sbuilder.append(rlname);
+                    String name =  sbuilder.toString();
+                model.addRow(new Object[]{rID, name});
+                
             } 
+            model.fireTableDataChanged();
         }
         catch(SQLException e){
             System.out.println(e.getMessage());
@@ -44,8 +63,9 @@ public class Contacts
         finally{
             try { if (rs != null) rs.close(); } catch (Exception e) {};
             try { if (stmt != null) stmt.close(); } catch (Exception e) {};
-            try { if (con != null) con.close(); } catch (Exception e) {};                           
-        }
-    }
+            try { if (con != null) con.close(); } catch (Exception e) {}; 
+            return model;
+            }         
+    }   
     
 }

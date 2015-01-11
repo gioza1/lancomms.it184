@@ -29,7 +29,7 @@ public class SettingsUI extends JFrame{
             
         this.setSize(350,150);
         this.setResizable(false);
-        this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setTitle("Settings");JPanel panel = new JPanel(); 
        

@@ -104,31 +104,39 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="298" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="jScrollPane3" min="-2" pref="298" max="-2" attributes="0"/>
+                  </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="416" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jScrollPane3" min="-2" pref="402" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="14" max="32767" attributes="0"/>
+                  </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+            <Container class="javax.swing.JScrollPane" name="jScrollPane3">
               <AuxValues>
                 <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
               </AuxValues>
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JList" name="jList1">
+                <Component class="javax.swing.JTable" name="jTable1">
                   <Properties>
-                    <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                      <Connection code="new javax.swing.AbstractListModel() {&#xa;    String[] strings = { &quot;Contact 1&quot;, &quot;Contact 2&quot;, &quot;Contact 3&quot;, &quot;Contact 4&quot;, &quot;Contact 5&quot; };&#xa;    public int getSize() { return strings.length; }&#xa;    public Object getElementAt(int i) { return strings[i]; }&#xa;}" type="code"/>
-                    </Property>
+                    <Property name="rowHeight" type="int" value="18"/>
+                    <Property name="rowMargin" type="int" value="5"/>
+                    <Property name="showVerticalLines" type="boolean" value="false"/>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="MouseListener mouseListener = new MouseAdapter() {&#xa;      public void mouseClicked(MouseEvent mouseEvent) {&#xa;        JList theList = (JList) mouseEvent.getSource();&#xa;        if (mouseEvent.getClickCount() == 2) {&#xa;          int index = theList.locationToIndex(mouseEvent.getPoint());&#xa;          if (index &gt;= 0) {&#xa;            Object o = theList.getModel().getElementAt(index);&#xa;           ChatWindowUI cw = new ChatWindowUI();&#xa;           cw.show();&#xa;          }&#xa;        }&#xa;      }&#xa;    };&#xa;    jList1.addMouseListener(mouseListener);"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(contact.displayContacts(userId))"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="Contacts contact = new Contacts();&#xa;TableColumn idColumn = null;"/>
+                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="jTable1.setAutoCreateRowSorter(true);&#xa;jTable1.setRowSelectionAllowed(true);&#xa;jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener(){&#xa;    public void valueChanged(ListSelectionEvent e){&#xa;        int row = jTable1.getSelectedRow();&#xa;        Object data = (Object)jTable1.getModel().getValueAt(row, 0);&#xa;        int idrow = Integer.parseInt(data.toString());&#xa;        Object data2 = (Object)jTable1.getModel().getValueAt(row, 1);&#xa;        String namerow = data2.toString();&#xa;        System.out.println(idrow);&#xa;        System.out.println(namerow);&#xa;        }&#xa;    });&#xa;MouseListener mouseListener = new MouseAdapter() {&#xa;      public void mouseClicked(MouseEvent mouseEvent) {&#xa;        JTable theTable = (JTable) mouseEvent.getSource();&#xa;        if (mouseEvent.getClickCount() == 2) {&#xa;          int index = theTable.rowAtPoint(mouseEvent.getPoint());&#xa;          if (index &gt;= 0) {&#xa;           ChatWindowUI cw = new ChatWindowUI();&#xa;           cw.show();&#xa;          }&#xa;        }   &#xa;      }&#xa;    };&#xa;jTable1.addMouseListener(mouseListener);&#xa;idColumn = jTable1.getColumnModel().getColumn(0);&#xa;jTable1.removeColumn(idColumn);"/>
                   </AuxValues>
                 </Component>
               </SubComponents>
