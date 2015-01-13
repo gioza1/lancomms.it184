@@ -6,10 +6,6 @@
 package LCViews;
 
 import LCControllers.Login;
-import com.github.sarxos.webcam.Webcam;
-import com.github.sarxos.webcam.WebcamPanel;
-import com.sun.security.auth.module.NTSystem;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**

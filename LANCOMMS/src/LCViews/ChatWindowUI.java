@@ -10,7 +10,6 @@ import LCModels.MessageListener;
 import LCModels.MessageTransmitter;
 import LCModels.WritableGUI;
 import lancomms.SimpleSoundCapture;
-import lancomms.WebCamFeed;
 
 
 /**
@@ -50,7 +49,6 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         videoCall = new javax.swing.JButton();
-        audioCall = new javax.swing.JButton();
         connectionStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -102,13 +100,6 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
             }
         });
 
-        audioCall.setText("Audio Call");
-        audioCall.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                audioCallActionPerformed(evt);
-            }
-        });
-
         connectionStatus.setText(" ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -126,10 +117,7 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(videoCall)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(audioCall))))
+                                .addComponent(videoCall)))
                         .addGroup(layout.createSequentialGroup()
                             .addGap(92, 92, 92)
                             .addComponent(jLabel4)
@@ -155,9 +143,7 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(videoCall)
-                    .addComponent(audioCall))
+                .addComponent(videoCall)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -204,12 +190,6 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
         call.startCall(ipTextField.getText(),targetPort.getText());
     }//GEN-LAST:event_videoCallActionPerformed
 
-    private void audioCallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_audioCallActionPerformed
-        // TODO add your handling code here:
-        SimpleSoundCapture ssc = new SimpleSoundCapture();
-        ssc.runSound();
-    }//GEN-LAST:event_audioCallActionPerformed
-
     private void targetPortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetPortActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_targetPortActionPerformed
@@ -250,7 +230,6 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton audioCall;
     private javax.swing.JTextArea chat;
     private javax.swing.JLabel connectionStatus;
     private javax.swing.JTextField ipTextField;
