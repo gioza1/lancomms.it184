@@ -50,6 +50,7 @@ public class Contacts
                 String rlname = rs.getString("user_lname");
                 StringBuilder sbuilder = new StringBuilder();
                     sbuilder.append(rfname);
+                    sbuilder.append(" ");
                     sbuilder.append(rlname);
                     String name =  sbuilder.toString();
                 model.addRow(new Object[]{rID, name});

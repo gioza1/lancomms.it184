@@ -305,3 +305,6 @@ java.sql.SQLException: Database 'PhoneBook' not found.
 ============= end nested exception, level (1) ===========
 Cleanup action completed
 Sun Jan 11 21:46:29 CST 2015 Thread[DRDAConnThread_2,5,main] (DATABASE = PhoneBook), (DRDAID = {6}), Database 'PhoneBook' not found.
+----------------------------------------------------------------
+Mon Jan 12 00:59:11 CST 2015: Shutting down Derby engine
+----------------------------------------------------------------

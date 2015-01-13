@@ -5,6 +5,7 @@
  */
 package LCViews;
 
+import LCControllers.Call;
 import LCModels.MessageListener;
 import LCModels.MessageTransmitter;
 import LCModels.WritableGUI;
@@ -199,8 +200,8 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
 
     private void videoCallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_videoCallActionPerformed
         // TODO add your handling code here:
-        WebCamFeed wcf = new WebCamFeed();
-        wcf.getFeed();
+        Call call = new Call();
+        call.startCall(ipTextField.getText(),targetPort.getText());
     }//GEN-LAST:event_videoCallActionPerformed
 
     private void audioCallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_audioCallActionPerformed

@@ -16,13 +16,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JTable;
-import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
-import lancomms.SimpleSoundCapture;
 
 /**
  *
@@ -76,10 +73,16 @@ public class MainUI extends JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setRowHeight(18);
-        jTable1.setRowMargin(5);
+        ContactsList.setForeground(new java.awt.Color(255, 255, 255));
+
+        jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jTable1.setGridColor(new java.awt.Color(255, 255, 255));
+        jTable1.setInheritsPopupMenu(true);
+        jTable1.setIntercellSpacing(new java.awt.Dimension(2, 8));
+        jTable1.setRowHeight(25);
+        jTable1.setRowMargin(8);
+        jTable1.setShowHorizontalLines(false);
         jTable1.setShowVerticalLines(false);
-        jTable1.setAutoCreateRowSorter(true);
         jTable1.setRowSelectionAllowed(true);
         jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent e){
