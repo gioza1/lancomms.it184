@@ -38,6 +38,7 @@ public class LoginUI extends javax.swing.JFrame {
         passwordField = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         usernameField.setToolTipText("Username");
         usernameField.setName("username");
