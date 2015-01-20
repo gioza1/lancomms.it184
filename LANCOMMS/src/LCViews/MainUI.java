@@ -9,7 +9,9 @@ package LCViews;
 import LCControllers.Contacts;
 import LCControllers.Login;
 import LCControllers.Session;
+import com.sun.glass.ui.Window;
 import com.sun.security.auth.module.NTSystem;
+import java.awt.Frame;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -82,6 +84,7 @@ public class MainUI extends JFrame {
 
         ContactsList.setForeground(new java.awt.Color(255, 255, 255));
 
+        jTable1.setTableHeader(null);
         jTable1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jTable1.setFont(jTable1.getFont());
         jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -110,7 +113,7 @@ public class MainUI extends JFrame {
                     int index = theTable.rowAtPoint(mouseEvent.getPoint());
                     if (index >= 0) {
                         ChatWindowUI cw = new ChatWindowUI();
-                        cw.show();
+                        cw.setVisible(true);
                     }
                 }
             }
@@ -232,6 +235,10 @@ public class MainUI extends JFrame {
 
     private void logoutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                             
         this.dispose();
+        System.gc();
+        for(Frame frames : Frame.getFrames()){
+            frames.dispose();
+            }
         Login logoutTime = new Login();
         logoutTime.logoutTime(userId);
         LoginUI loggedout = new LoginUI();

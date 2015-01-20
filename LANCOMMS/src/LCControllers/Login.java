@@ -74,6 +74,7 @@ public class Login {
             Timestamp tstamp = new Timestamp(date.getTime());
             String room = System.getProperty("user.name");
             String sql = "INSERT INTO `user_log` (ul_in_timestamp,ul_room,user_id) VALUES ('"+tstamp+"','"+room+"','"+userId+"');";
+            System.out.println("IN: "+tstamp);
             stmt.executeUpdate(sql);
         }
         catch(SQLException e){
@@ -97,7 +98,7 @@ public class Login {
             Timestamp tstamp = new Timestamp(date.getTime());
             String room = System.getProperty("user.name");
             String sql = "UPDATE `user_log` SET ul_out_timestamp='"+tstamp+"' WHERE user_id = "+userId+" ORDER BY ul_in_timestamp DESC LIMIT 1;";
-            System.out.println(sql);
+            System.out.println("OUT: "+tstamp);
             stmt.executeUpdate(sql);
         }
         catch(SQLException e){
