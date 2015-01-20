@@ -55,6 +55,7 @@ public class MainUI extends JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         MainTabs = new javax.swing.JTabbedPane();
         ContactsList = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -72,15 +73,22 @@ public class MainUI extends JFrame {
         logoutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(112, 196, 59));
+        setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        MainTabs.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
 
         ContactsList.setForeground(new java.awt.Color(255, 255, 255));
 
+        jTable1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jTable1.setFont(jTable1.getFont());
         jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jTable1.setGridColor(new java.awt.Color(255, 255, 255));
         jTable1.setInheritsPopupMenu(true);
         jTable1.setIntercellSpacing(new java.awt.Dimension(2, 8));
         jTable1.setRowHeight(25);
-        jTable1.setRowMargin(8);
         jTable1.setShowHorizontalLines(false);
         jTable1.setShowVerticalLines(false);
         jTable1.setRowSelectionAllowed(true);
@@ -116,15 +124,11 @@ public class MainUI extends JFrame {
         ContactsList.setLayout(ContactsListLayout);
         ContactsListLayout.setHorizontalGroup(
             ContactsListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ContactsListLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
         );
         ContactsListLayout.setVerticalGroup(
             ContactsListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ContactsListLayout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 14, Short.MAX_VALUE))
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
         );
 
         MainTabs.addTab("Contacts", ContactsList);
@@ -142,11 +146,11 @@ public class MainUI extends JFrame {
         ConvoList.setLayout(ConvoListLayout);
         ConvoListLayout.setHorizontalGroup(
             ConvoListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
         );
         ConvoListLayout.setVerticalGroup(
             ConvoListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
         );
 
         MainTabs.addTab("Conversations", ConvoList);
@@ -154,9 +158,30 @@ public class MainUI extends JFrame {
         NTSystem NTSystem = new NTSystem();//test
         UserNameDisplay.setText(System.getProperty("user.name"));
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(UserNameDisplay)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(MainTabs, javax.swing.GroupLayout.Alignment.TRAILING)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(92, Short.MAX_VALUE)
+                .addComponent(UserNameDisplay)
+                .addGap(18, 18, 18)
+                .addComponent(MainTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
         LancommsMenu.setText("LANCOMMS");
 
         settingsMenuItem.setText("Settings");
+        settingsMenuItem.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        settingsMenuItem.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         settingsMenuItem.setIconTextGap(1);
         settingsMenuItem.setInheritsPopupMenu(true);
         settingsMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -175,6 +200,7 @@ public class MainUI extends JFrame {
         LancommsMenu.add(aboutMenuItem);
 
         logoutMenuItem.setText("Log Out");
+        logoutMenuItem.setIconTextGap(0);
         logoutMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 logoutMenuItemActionPerformed(evt);
@@ -190,23 +216,11 @@ public class MainUI extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(MainTabs)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addComponent(UserNameDisplay)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(UserNameDisplay)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                .addComponent(MainTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -240,6 +254,7 @@ public class MainUI extends JFrame {
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JList jList2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;

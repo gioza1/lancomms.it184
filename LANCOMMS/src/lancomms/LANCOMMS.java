@@ -6,10 +6,21 @@
 package lancomms;
 
 import LCViews.LoginUI;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class LANCOMMS {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, UnsupportedLookAndFeelException {
+        try {
+            // Set cross-platform Java L&F (also called "Metal")
+        UIManager.setLookAndFeel(
+            UIManager.getSystemLookAndFeelClassName());
+        } 
+        catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            System.out.println("Something's wrong with the GUI theme selected: "+e.getMessage());
+        }
+        
         LoginUI test = new LoginUI();
         test.setVisible(true);
         
