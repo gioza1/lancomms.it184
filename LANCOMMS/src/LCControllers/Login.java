@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -51,8 +52,9 @@ public class Login {
                 //log the time of login                
                 }                                              
         }
-        catch(SQLException e){
-            System.out.println(e.getMessage());
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Cannot connect at this time.");
+            System.out.println("An error has occurred: "+e.getMessage());                       
         }
         finally{
             try { if (rs != null) rs.close(); } catch (Exception e) {};

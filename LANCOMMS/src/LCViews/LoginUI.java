@@ -41,7 +41,7 @@ public class LoginUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(251, 255, 246));
 
         LogInButton.setBackground(new java.awt.Color(255, 255, 255));
         LogInButton.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
@@ -140,15 +140,16 @@ public class LoginUI extends javax.swing.JFrame {
         Login log = new Login();
         
         int userId =  log.login(usernameField.getText(), passwordField.getText());
-        log.loginTime(userId);
+        
         try{
             if(userId==0){
-            throw new Exception("Invalid username and/or password.");
+                throw new Exception("Wrong username and/or password. Please try again.");
             }
     
             else{
             //WebCamFeed feed = new WebCamFeed();
             //feed.getFeed();
+            log.loginTime(userId);
             MainUI startApp = new MainUI(userId);
             this.setVisible(false);
             this.dispose();

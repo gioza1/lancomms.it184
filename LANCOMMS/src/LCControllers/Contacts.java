@@ -42,7 +42,7 @@ public class Contacts
                 String sql = "SELECT * FROM `user` WHERE user_id != '" + userID + "';";
                 rs = stmt.executeQuery(sql);
                 
-                System.out.println(userID);
+                //System.out.println(userID);
                 
             while(rs.next()){               
                 String rID = rs.getString("user_id");
@@ -60,6 +60,7 @@ public class Contacts
         }
         catch(SQLException e){
             System.out.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, "An error has occurred: Cannot connect to database.");
         }
         finally{
             try { if (rs != null) rs.close(); } catch (Exception e) {};

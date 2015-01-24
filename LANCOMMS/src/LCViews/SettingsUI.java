@@ -6,6 +6,7 @@
 
 package LCViews;
 
+import LCControllers.Settings;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -24,10 +25,12 @@ public class SettingsUI extends JFrame{
     private javax.swing.JPasswordField newpasswordField;
     public static String oldpassword;
     public static String newpassword;
+    private int uid;
     
-    public SettingsUI(){
-            
-        this.setSize(350,150);
+    public SettingsUI(int userid){
+        
+        uid = userid;
+        this.setSize(300,150);
         this.setResizable(false);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -74,7 +77,16 @@ public class SettingsUI extends JFrame{
           */
 	
         public void HandlingSaveButton() {
-        //    Settings set = new Settings(IDtoModify, usernameTextField.getText(), passwordTextField.getText());
+            Settings set = new Settings();
+            boolean check = set.updatePassword(uid, oldpasswordField.getText(), newpasswordField.getText());
+            if (check!=false){
+                JOptionPane.showMessageDialog(null, "Password has been changed.");
+            }
+            else
+                {  JOptionPane.showMessageDialog(null, "Woops! Something went wrong. Please try again.");}
+            oldpasswordField.setText(""); 
+            newpasswordField.setText("");
+            
 	}
         /**
          * closes window

@@ -6,6 +6,7 @@
 package lancomms;
 
 import LCViews.LoginUI;
+import LCViews.MainUI;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -21,7 +22,8 @@ public class LANCOMMS {
             System.out.println("Something's wrong with the GUI theme selected: "+e.getMessage());
         }
         
-        LoginUI test = new LoginUI();
+        //LoginUI test = new LoginUI();
+        MainUI test = new MainUI(1);
         test.setVisible(true);
         
     }
