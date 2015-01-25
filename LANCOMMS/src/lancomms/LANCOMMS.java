@@ -22,8 +22,8 @@ public class LANCOMMS {
             System.out.println("Something's wrong with the GUI theme selected: "+e.getMessage());
         }
         
-        //LoginUI test = new LoginUI();
-        MainUI test = new MainUI(1);
+        LoginUI test = new LoginUI();
+        //MainUI test = new MainUI(1);
         test.setVisible(true);
         
     }
