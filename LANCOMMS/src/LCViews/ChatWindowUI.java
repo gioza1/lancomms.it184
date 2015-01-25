@@ -6,22 +6,53 @@
 package LCViews;
 
 import LCControllers.Call;
+import LCControllers.Session;
 import LCModels.MessageListener;
 import LCModels.MessageTransmitter;
 import LCModels.WritableGUI;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import lancomms.SimpleSoundCapture;
-
 
 /**
  *
  * @author Gio
  */
-
 public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
 
     /**
      * Creates new form ChatWindowUI
      */
+    private Session sesh;
+    private MessageListener ml;
+    private String username;
+    
+    public ChatWindowUI(Session s, String user) {
+        username = user;
+        sesh = s;
+        ml = sesh.getMsgListener();
+//        ml.setPort(sesh.getPort());
+        ml.setGui(this);
+//        ml.start();
+//        int x = sesh.getPort();
+//        ml.setPort(sesh.getPort());
+
+        initComponents();
+        receivingPort.setText(Integer.toString(sesh.getPort()));
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                ml.setGui(null);
+                ml.suspend();
+            }
+        });        
+        
+    }
+    
     public ChatWindowUI() {
         initComponents();
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -78,7 +109,7 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
         receivingPort.setText("8877");
         receivingPort.setName(""); // NOI18N
 
-        ipTextField.setText("jTextField1");
+        ipTextField.setText("localhost");
 
         targetPort.setText("jTextField1");
         targetPort.addActionListener(new java.awt.event.ActionListener() {
@@ -172,62 +203,71 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         // TODO add your handling code here:
         int tp = Integer.parseInt(receivingPort.getText());
-        MessageTransmitter transmitter = new MessageTransmitter("From Port#"+ tp+": " + message.getText(), ipTextField.getText(), Integer.parseInt(targetPort.getText()));
+        MessageTransmitter transmitter = new MessageTransmitter(this.username, message.getText(), ipTextField.getText(), Integer.parseInt(targetPort.getText()));
         transmitter.start();
 
     }//GEN-LAST:event_sendButtonActionPerformed
 
     private void listenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listenButtonActionPerformed
         // TODO add your handling code here:
-        MessageListener listener;
-        listener = new MessageListener(this, Integer.parseInt(receivingPort.getText()));
-        listener.start();
+//        MessageListener listener;
+//        listener = new MessageListener(this, Integer.parseInt(receivingPort.getText()));
+//            ml.start();
+
     }//GEN-LAST:event_listenButtonActionPerformed
 
     private void videoCallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_videoCallActionPerformed
         // TODO add your handling code here:
         Call call = new Call();
-        call.startCall(ipTextField.getText(),targetPort.getText());
+        call.startCall(ipTextField.getText(), targetPort.getText());
     }//GEN-LAST:event_videoCallActionPerformed
 
     private void targetPortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetPortActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_targetPortActionPerformed
+    
+    public JTextArea getMessageArea() {
+        return chat;
+    }
+    
+    public void setMessageArea(JTextArea message) {
+        this.chat = message;
+    }
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ChatWindowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ChatWindowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ChatWindowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ChatWindowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ChatWindowUI().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(ChatWindowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(ChatWindowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(ChatWindowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(ChatWindowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new ChatWindowUI().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea chat;
@@ -250,6 +290,5 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
     public void write(String s) {
         chat.append(s + System.lineSeparator());
     }
-    
     
 }

@@ -35,6 +35,8 @@ public class MainUI extends JFrame {
     public MainUI(int uid) {
         sess = new Session(uid);
         userId = sess.getId();
+        sess.ml.start();
+        System.out.println(sess.getPort());
         initComponents();
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
@@ -109,7 +111,11 @@ public class MainUI extends JFrame {
                 if (mouseEvent.getClickCount() == 2) {
                     int index = theTable.rowAtPoint(mouseEvent.getPoint());
                     if (index >= 0) {
-                        ChatWindowUI cw = new ChatWindowUI();
+                        int row = jTable1.getSelectedRow();
+                        Object test = (Object)(jTable1.getModel().getValueAt(row, 1));
+                        String testx = (String) test;
+                        //System.out.println(data2);
+                        ChatWindowUI cw = new ChatWindowUI(sess,testx);
                         cw.show();
                     }
                 }

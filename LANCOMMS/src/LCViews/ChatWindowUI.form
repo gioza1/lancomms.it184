@@ -155,7 +155,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="ipTextField">
       <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1"/>
+        <Property name="text" type="java.lang.String" value="localhost"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="targetPort">
