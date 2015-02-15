@@ -297,6 +297,7 @@ public class Server {
                         /* Create an Object of ChatWindow */
                         cw = new ChatWindowUI(co, me);
                         sg.cwSetMainUI(cw);
+                        sg.addChatWindow(cw);
                         /**
                          * We are setting title of window to identify user for
                          * next message we gonna receive You can set hidden
@@ -358,7 +359,7 @@ public class Server {
                         break;
                     case ChatMessage.CALL:                      
                         try {
-                            String cresponse;
+                            String cresponse=null;
                             if(!sg.checkCallDisabled()){
                                 cresponse = call.acceptOrReject(co.getUsername());
                                 cm = new ChatMessage(ChatMessage.RESPONSE, cresponse);
@@ -370,14 +371,14 @@ public class Server {
                                     }             
                                     cw.append("\nYou are now in a call with "+co.getUsername()+"\n");
                                     call.startCall();
+                                    sg.setCallDisabled();
                                 }
-                                else{
-                                    cw.append("\nYou rejected the call from "+co.getUsername()+"\n");
-                                    
+                                else if(cresponse.equals("Reject")){
+                                    cw.append("\nYou rejected the call from "+co.getUsername()+"\n");                                    
                                 }
                             }
-                            else{
-                                cresponse = "Reject";
+                            else if(sg.checkCallDisabled()){
+                                cresponse = "Busy";
                                 cm = new ChatMessage(ChatMessage.RESPONSE, cresponse);
                                 cw.sendResponse(cm);
                             }
@@ -397,8 +398,12 @@ public class Server {
                             break;
                         case "Reject":
                             cw.append("\n"+co.getUsername()+" has rejected the call!\n");
+                            sg.setCallEnabled();
+                        case "Busy":
+                            cw.append("\n"+co.getUsername()+" is in a call right now. Please try again later!\n");
+                            sg.setCallEnabled();
                             break;
-                        }
+                        }                            
                         break;
                     case ChatMessage.STOPCALL:
                         call.stopCall();   
@@ -419,11 +424,11 @@ public class Server {
             co = null;
             alCo.remove(co);
 
-            close();
+            disconnect();
         }
 
         // try to close everything
-        private void close() {
+        public void disconnect() {
             // try to close the connection
             try {
                 if (sOutput != null) {
@@ -439,9 +444,10 @@ public class Server {
             };
             try {
                 if (socket != null) {
-                    this.socket.close();
+                    socket.close();
                 }
             } catch (Exception e) {
+                System.out.println("Oh noes.");
             }
         }
 
@@ -451,7 +457,7 @@ public class Server {
         private boolean writeMsg(String msg) {
             // if Client is still connected send the message to it
             if (!socket.isConnected()) {
-                close();
+                disconnect();
                 return false;
             }
             // write the message to the stream

@@ -22,11 +22,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -172,7 +169,7 @@ public class Call extends BaseFile{
     
     public void startCall() {
         setScreen();
-        localMediaPlayer.playMedia("screen://", ":live-caching=100",":sout=#transcode{vcodec=MJPG,vb=56,fps=15,scale=0.5,width=96,height=72,acodec=mp3,ab=24,channels=1,samplerate=8000}:duplicate{dst=rtp{dst="+caller_ad+",port="+caller_sendPort+",mux=ts},dst=display}"," :sout-keep");                
+        localMediaPlayer.playMedia("dshow://", ":live-caching=100",":sout=#transcode{vcodec=MJPG,vb=56,fps=15,scale=0.5,width=96,height=72,acodec=mp3,ab=24,channels=1,samplerate=8000}:duplicate{dst=rtp{dst="+caller_ad+",port="+caller_sendPort+",mux=ts},dst=display}"," :sout-keep");                
         mediaPlayer.playMedia("rtp://@:"+caller_rcvPort+"", " :network-caching=200");     
     }
     
@@ -216,6 +213,7 @@ public class Call extends BaseFile{
         String[] buttons = {"Accept", "Reject"};
         JOptionPane option = new JOptionPane("You have incoming call from "+username+".", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, buttons, buttons[1]);
         JDialog dialog = option.createDialog("Incoming call.");
+
         
         String reply; //onclick
         String accept = "Reject";

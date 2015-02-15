@@ -297,18 +297,20 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
     private void videoCallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_videoCallActionPerformed
         try {
             // TODO add your handling code here:
-
-            int callPort = toCo.getPort();
-            if(isCallInstanced==false){
-                call = new Call(toCo.getServer(), Integer.toString(callPort), Integer.toString(fromCo.getPort()), this, toCo.getUsername());    
+            if(!isCallDisabled){
+                int callPort = toCo.getPort();
+                if(isCallInstanced==false){
+                    call = new Call(toCo.getServer(), Integer.toString(callPort), Integer.toString(fromCo.getPort()), this, toCo.getUsername());    
+                    }
+                this.isCallInstanced=true; //associate instance to chatwindow
+                ChatMessage cmsg = new ChatMessage(ChatMessage.CALL, "call");
+                append("\nAttempting to call "+toCo.getUsername()+"\n");       
+                if (sentSelf == false) {
+                    senderDetails(fromCo);
                 }
-            this.isCallInstanced=true; //associate instance to chatwindow
-            ChatMessage cmsg = new ChatMessage(ChatMessage.CALL, "call");
-            append("\nAttempting to call "+toCo.getUsername()+"\n");       
-            if (sentSelf == false) {
-                senderDetails(fromCo);
+                sendMessage(cmsg);
+                disableCall();
             }
-            sendMessage(cmsg); 
         } catch (Exception ex) {
             Logger.getLogger(ChatWindowUI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -327,12 +329,12 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
     }
     
     public void setCallDisabled(){
-        isCallDisabled = false;
+        isCallDisabled = true;
         videoCall.setEnabled(false);        
     }
 
     public void setCallEnabled(){
-        isCallDisabled = true;
+        isCallDisabled = false;
         videoCall.setEnabled(true);
     }
     
