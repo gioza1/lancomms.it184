@@ -1,11 +1,7 @@
 package LCControllers;
 
 import LCViews.MainUI;
-import java.io.IOException;
 import java.io.Serializable;
-import java.net.ServerSocket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,39 +15,20 @@ import java.util.logging.Logger;
 public class ClientObject implements Serializable {
 
 //    protected static final long serialVersionUID = 1112122200L;
-    private ClientGUI cg;
     private MainUI mg;
     // the server, the port and the username
     private String server, username;
     private int port;
     private int myPort;
+    private int userId;
 
-    public ClientObject(String server, int port, String username, ClientGUI cg) {
+    public ClientObject(String server, int port, String username, int uid) {
         this.server = server;
         this.port = port;
         this.username = username;
-        // save if we are in GUI mode or not
-        this.cg = cg;
-
-        //comment this out after running one instance for testing (the try catch portion)
-//        try {
-//            ServerSocket x;
-//            x = new ServerSocket(0);
-//            myPort = x.getLocalPort();
-//            x.close();
-//        } catch (IOException ex) {
-//            Logger.getLogger(ClientObject.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        this.userId = uid;
     }
 
-//        public ClientObject(String server, int port, String username, ClientGUI cg) {
-//        this.server = server;
-//        this.port = port;
-//        this.username = username;
-//        // save if we are in GUI mode or not
-//        this.cg = cg;
-//
-//    }
     public String getServer() {
         return server;
     }
@@ -68,8 +45,9 @@ public class ClientObject implements Serializable {
         return myPort;
     }
 
-    public ClientGUI getGui() {
-        return cg;
-    }
+    public int getMyId() {
+        return userId;
+    }    
+   
 
 }

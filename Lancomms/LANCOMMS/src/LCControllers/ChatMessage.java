@@ -44,11 +44,5 @@ public class ChatMessage implements Serializable {
 		return message;
 	}
         
-        public void logMessage(){
-            if(type==1){
-                Message mlog = new Message();
-                mlog.callEndTime(WHOISIN);
-                }
-        }
 }
 

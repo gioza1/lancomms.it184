@@ -20,7 +20,7 @@ public class Message {
     
     
     
-        public void messageTime(int userId){
+        public void messageTime(int fromuserid, String message, int touserid){
         Connection con;
         ConnectDB callConnector = new ConnectDB();
         con = callConnector.connectToDB();    
@@ -30,7 +30,7 @@ public class Message {
             stmt = con.createStatement();
             java.util.Date date = new java.util.Date();
             Timestamp tstamp = new Timestamp(date.getTime());
-            String sql = "UPDATE `message` SET message_timestamp='"+tstamp+"' WHERE user_id = "+userId+" ORDER BY ul_in_timestamp DESC LIMIT 1;";
+            String sql = "INSERT INTO `message` (message_timestamp, ='"+tstamp+"', message_text='"+message+"', user_id_to='"+touserid+"', user_id = "+fromuserid+" ORDER BY message_timestamp DESC LIMIT 1;";
             System.out.println("OUT: "+tstamp);
             stmt.executeUpdate(sql);
         }
@@ -42,53 +42,6 @@ public class Message {
             try { if (con != null) con.close(); } catch (Exception e) {};              
         } 
     }
-        
-        public void callStartTime(int userId){
-        Connection con;
-        ConnectDB callConnector = new ConnectDB();
-        con = callConnector.connectToDB();    
-        ResultSet rs=null;
-        Statement stmt=null; 
-        try{        
-            stmt = con.createStatement();
-            java.util.Date date = new java.util.Date();
-            Timestamp tstamp = new Timestamp(date.getTime());
-            String room = System.getProperty("user.name");
-            String sql = "UPDATE `call` SET ul_out_timestamp='"+tstamp+"' WHERE user_id = "+userId+" ORDER BY ul_in_timestamp DESC LIMIT 1;";
-            System.out.println("OUT: "+tstamp);
-            stmt.executeUpdate(sql);
-        }
-        catch(SQLException e){
-            System.out.println(e.getMessage());
-        }
-        finally{
-            try { if (stmt != null) stmt.close(); } catch (Exception e) {};
-            try { if (con != null) con.close(); } catch (Exception e) {};              
-        } 
-    }
-        
-        public void callEndTime(int userId){
-        Connection con;
-        ConnectDB callConnector = new ConnectDB();
-        con = callConnector.connectToDB();    
-        ResultSet rs=null;
-        Statement stmt=null; 
-        try{        
-            stmt = con.createStatement();
-            java.util.Date date = new java.util.Date();
-            Timestamp tstamp = new Timestamp(date.getTime());
-            String room = System.getProperty("user.name");
-            String sql = "UPDATE `call` SET ul_out_timestamp='"+tstamp+"' WHERE user_id = "+userId+" ORDER BY ul_in_timestamp DESC LIMIT 1;";
-            System.out.println("OUT: "+tstamp);
-            stmt.executeUpdate(sql);
-        }
-        catch(SQLException e){
-            System.out.println(e.getMessage());
-        }
-        finally{
-            try { if (stmt != null) stmt.close(); } catch (Exception e) {};
-            try { if (con != null) con.close(); } catch (Exception e) {};              
-        }         
-    }        
+     
 }
 

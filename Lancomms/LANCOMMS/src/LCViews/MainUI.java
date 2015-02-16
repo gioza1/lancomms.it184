@@ -6,7 +6,6 @@
 package LCViews;
 
 import LCControllers.Client;
-import LCControllers.ClientGUI;
 import LCControllers.ClientObject;
 import LCControllers.Contacts;
 import LCControllers.Login;
@@ -56,11 +55,12 @@ public class MainUI extends JFrame implements Serializable {
     private Server myServer;
     private ArrayList<ChatWindowUI> algui;
     private boolean callDisabled;
-
+    private List<String> chatting;
     DefaultListModel<ClientObject> model = new DefaultListModel<>();
 
     /**
      * Creates new form MainUI
+     *
      * @param uid
      * @param co
      */
@@ -69,10 +69,11 @@ public class MainUI extends JFrame implements Serializable {
         umodel = new UserModel();
         callDisabled = false;
         algui = new ArrayList<ChatWindowUI>();
+        chatting = new ArrayList<String>();
         int port = 0;
         ParseRoute pr = new ParseRoute();
         String server = pr.getLocalIPAddress();
-     
+
         //create own port
         try {
             ServerSocket getp;
@@ -82,14 +83,14 @@ public class MainUI extends JFrame implements Serializable {
         } catch (IOException ex) {
             Logger.getLogger(MainUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        myCObj = new ClientObject(server, port, co, null);
+        myCObj = new ClientObject(server, port, co, uid);
         //-------//
         //creating own client instance. handles connecting to main server
         myClient = new Client(myCObj, server, port);
         System.out.println("Name: " + co + " |Server: " + server + " |Port: " + port);
         System.out.println(myCObj.toString());
         System.out.println(myClient.getCo().toString());
-        
+
         myClient.setMainUI(this);
         myServer = new Server(myCObj, this);
         new ServerRunning().start();
@@ -194,6 +195,7 @@ public class MainUI extends JFrame implements Serializable {
                 if (mouseEvent.getClickCount() == 2) {
                     int index = theList.locationToIndex(mouseEvent.getPoint());
                     if (index >= 0) {
+
 //                        ClientObject o = (ClientObject) theList.getModel().getElementAt(index);
 //
 //                        System.out.println(o.toString());
@@ -209,6 +211,26 @@ public class MainUI extends JFrame implements Serializable {
 //                        cwSetMainUI(cw);
 //                        addChatWindow(cw);
                         
+
+
+                        ClientObject o = (ClientObject) theList.getModel().getElementAt(index);
+                        if (!chatting.contains(o.getUsername())) {
+
+                            ChatWindowUI cw = new ChatWindowUI(o, myCObj);
+                            System.out.println(o.toString());
+                            System.out.println(myCObj.toString());
+                            cw.setTitle(o.getUsername());
+                            cw.setVisible(true);
+                            cwSetMainUI(cw);
+                            addChatWindow(cw);
+                            chatting.add(o.getUsername());
+                        } else {
+                            for (ChatWindowUI cwindow : algui) {
+                                if (cwindow.getUsername().contentEquals(o.getUsername()) && !cwindow.isVisible()) {
+                                    cwindow.setVisible(true);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -500,35 +522,35 @@ public class MainUI extends JFrame implements Serializable {
 
             }
         });
-        
+
     }
-    
-    public void setCallDisabled(){
+
+    public void setCallDisabled() {
         callDisabled = true;
-        for(ChatWindowUI cwindow:algui){
+        for (ChatWindowUI cwindow : algui) {
             cwindow.setCallDisabled();
         }
         System.out.println("Call buttons disabled!");
     }
-    
-    public void setCallEnabled(){
+
+    public void setCallEnabled() {
         callDisabled = false;
-        for(ChatWindowUI cwindow:algui){
+        for (ChatWindowUI cwindow : algui) {
             cwindow.setCallEnabled();
         }
     }
-    
-    public boolean checkCallDisabled(){
+
+    public boolean checkCallDisabled() {
         return callDisabled;
     }
 
-    public void addChatWindow(ChatWindowUI cwindow){
+    public void addChatWindow(ChatWindowUI cwindow) {
         algui.add(cwindow);
-        if(callDisabled){
+        if (callDisabled) {
             setCallDisabled();
         }
     }
-    
+
     public ArrayList<ClientObject> hideSelf(ArrayList<ClientObject> str) {
         for (ClientObject test : str) {
             if (test.getUsername().contentEquals(myCObj.getUsername())) {
@@ -548,13 +570,11 @@ public class MainUI extends JFrame implements Serializable {
                     }
                 }
                 jTable1.updateUI();
-
             }
         });
-
     }
-    
-    public void cwSetMainUI(ChatWindowUI cw){
+
+    public void cwSetMainUI(ChatWindowUI cw) {
         ChatWindowUI cwwindow = cw;
         cwwindow.setMainUI(this);
     }
@@ -562,11 +582,7 @@ public class MainUI extends JFrame implements Serializable {
     class ServerRunning extends Thread {
 
         public void run() {
-            myServer.start();         // should execute until if fails
-            // the server failed
-//            stopStart.setText("Start");
-//            tPortNumber.setEditable(true);
-//            appendEvent("Server crashed\n");
+            myServer.start();
             myServer = null;
         }
     }

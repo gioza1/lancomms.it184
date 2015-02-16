@@ -9,7 +9,6 @@
  * @author Gio
  */
 
-import LCControllers.ClientGUI;
 import LCControllers.ClientObject;
 import java.net.*;
 import java.io.*;
@@ -28,9 +27,6 @@ public class Client {
     private ObjectInputStream mainSInput;		// to read from the socket
     private ObjectOutputStream mainSOutput;		// to write on the socket
     private transient Socket mSocket;
-
-    // if I use a GUI or not
-    private ClientGUI cg;
 
     // the server, the port and the username
     private String runningServer, username;
@@ -173,11 +169,7 @@ public class Client {
      * To send a message to the console or the GUI
      */
     private void display(String msg) {
-        if (cg == null) {
             System.out.println(msg);      // println in console mode
-        } else {
-            cg.append(msg + "\n");		// append to the ClientGUI JTextArea (or whatever)
-        }
     }
 
     /*
@@ -228,101 +220,8 @@ public class Client {
         } catch (Exception e) {
         } // not much else I can do
 
-        // inform the GUI
-        if (cg != null) {
-            cg.connectionFailed();
-        }
 
     }
-    /*
-     * To start the Client in console mode use one of the following command
-     * > java Client
-     * > java Client username
-     * > java Client username portNumber
-     * > java Client username portNumber serverAddress
-     * at the console prompt
-     * If the portNumber is not specified 1500 is used
-     * If the serverAddress is not specified "localHost" is used
-     * If the username is not specified "Anonymous" is used
-     * > java Client 
-     * is equivalent to
-     * > java Client Anonymous 1500 localhost 
-     * are eqquivalent
-     * 
-     * In console mode, if an error occurs the program simply stops
-     * when a GUI id used, the GUI is informed of the disconnection
-     */
-//	public static void main(String[] args) {
-//		// default values
-//		int portNumber = 1500;
-//		String serverAddress = "localhost";
-//		String userName = "Anonymous";
-//
-//		// depending of the number of arguments provided we fall through
-//		switch(args.length) {
-//			// > javac Client username portNumber serverAddr
-//			case 3:
-//				serverAddress = args[2];
-//			// > javac Client username portNumber
-//			case 2:
-//				try {
-//					portNumber = Integer.parseInt(args[1]);
-//				}
-//				catch(Exception e) {
-//					System.out.println("Invalid port number.");
-//					System.out.println("Usage is: > java Client [username] [portNumber] [serverAddress]");
-//					return;
-//				}
-//			// > javac Client username
-//			case 1: 
-//				userName = args[0];
-//			// > java Client
-//			case 0:
-//				break;
-//			// invalid number of arguments
-//			default:
-//				System.out.println("Usage is: > java Client [username] [portNumber] {serverAddress]");
-//			return;
-//		}
-//		// create the Client object
-//		Client client = new Client(serverAddress, portNumber, userName);
-//		// test if we can start the connection to the Server
-//		// if it failed nothing we can do
-//		if(!client.start())
-//			return;
-//		
-//		// wait for messages from user
-//		Scanner scan = new Scanner(System.in);
-//		// loop forever for message from the user
-//		while(true) {
-//			System.out.print("> ");
-//			// read message from user
-//			String msg = scan.nextLine();
-//			// logout if message is LOGOUT
-//			if(msg.equalsIgnoreCase("LOGOUT")) {
-//				client.sendMessage(new ChatMessage(ChatMessage.LOGOUT, ""));
-//				// break to do the disconnect
-//				break;
-//			}
-//			// message WhoIsIn
-//			else if(msg.equalsIgnoreCase("WHOISIN")) {
-//				client.sendMessage(new ChatMessage(ChatMessage.WHOISIN, ""));				
-//			}
-//			else {				// default to ordinary message
-//				client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, msg));
-//			}
-//		}
-//		// done disconnect
-//		client.disconnect();	
-//	}
-
-//    void sendInstance(Client client) {
-//        try {
-//            mainSOutput.writeObject(client);
-//        } catch (IOException e) {
-//            display("Exception writing to server: " + e);
-//        }
-//    }
 
     /*
      * a class that waits for the message from the server and append them to the JTextArea
@@ -335,17 +234,9 @@ public class Client {
                 try {
                     String msg = (String) sInput.readObject();
                     // if console mode print the message and add back the prompt
-                    if (cg == null) {
-                        System.out.println(msg);
-                        System.out.print("> ");
-                    } else {
-                        cg.append(msg);
-                    }
+
                 } catch (IOException e) {
                     display("Server has close the connection: " + e);
-                    if (cg != null) {
-                        cg.connectionFailed();
-                    }
                     break;
                 } // can't happen with a String object but need the catch anyhow
                 catch (ClassNotFoundException e2) {
@@ -361,17 +252,9 @@ public class Client {
                 try {
                     String msg = (String) mainSInput.readObject();
                     // if console mode print the message and add back the prompt
-                    if (cg == null) {
-                        System.out.println(msg);
-                        System.out.print("> ");
-                    } else {
-                       // cg.append(msg);
-                    }
+        
                 } catch (IOException e) {
                     display("Server has close the connection: " + e);
-                    if (cg != null) {
-                        cg.connectionFailed();
-                    }
                     break;
                 } // can't happen with a String object but need the catch anyhow
                 catch (ClassNotFoundException e2) {

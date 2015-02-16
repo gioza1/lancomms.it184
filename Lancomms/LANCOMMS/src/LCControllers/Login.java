@@ -52,7 +52,10 @@ public class Login {
             if(password.equals(userPw))
                 {
                 userId = rs.getInt("user_id");              
-                }                            
+                }  
+            else{
+                userId = 0;
+            }
         }
         catch(SQLException e){
             userId = -1;
@@ -115,28 +118,26 @@ public class Login {
         } 
     }
     
-    public ClientObject createClientObj(String uname)
-    {
-          int port = 0;
-        String server = "";
-//        umodel = new UserModel();
-        try {
-            server = InetAddress.getLocalHost().getHostAddress().toString();
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MainUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-//        ServerSocket getp;
-        try {
-            ServerSocket getp;
-            getp = new ServerSocket(0);
-            port = getp.getLocalPort();
-            getp.close();
-        } catch (IOException ex) {
-            Logger.getLogger(MainUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        ClientObject myCObj = new ClientObject(server, port,uname, null);
-        return myCObj;
-    }
-    
-    
+//    public ClientObject createClientObj(String uname)
+//    {
+//          int port = 0;
+//        String server = "";
+////        umodel = new UserModel();
+//        try {
+//            server = InetAddress.getLocalHost().getHostAddress().toString();
+//        } catch (UnknownHostException ex) {
+//            Logger.getLogger(MainUI.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+////        ServerSocket getp;
+//        try {
+//            ServerSocket getp;
+//            getp = new ServerSocket(0);
+//            port = getp.getLocalPort();
+//            getp.close();
+//        } catch (IOException ex) {
+//            Logger.getLogger(MainUI.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        ClientObject myCObj = new ClientObject(server, port,uname, );
+//        return myCObj;
+//    }    
 }

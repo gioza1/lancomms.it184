@@ -5,7 +5,6 @@
  */
 package LCViews;
 
-import LCControllers.ClientGUI;
 import LCControllers.ClientObject;
 import LCControllers.Login;
 import javax.swing.JOptionPane;
