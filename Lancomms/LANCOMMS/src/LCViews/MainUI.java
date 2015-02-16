@@ -473,6 +473,7 @@ public class MainUI extends JFrame implements Serializable {
         for (Frame frames : Frame.getFrames()) {
             frames.dispose();
         }
+        myClient.disconnectMain();
         myClient.disconnect();
         //disconnect all sockets to other clients
         Login logoutTime = new Login();
