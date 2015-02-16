@@ -247,7 +247,7 @@ public class MainUI extends JFrame implements Serializable {
                 if (renderer instanceof JLabel && value instanceof ClientObject) {
                     // Here value will be of the Type 'CD'
 //                    if(!((ClientObject) value).getUsername().contentEquals(myCObj.getUsername()))
-                    ((JLabel) renderer).setText(((ClientObject) value).getUsername());
+                    ((JLabel) renderer).setText(((ClientObject) value).getUsername()+" "+((ClientObject) value).getStatus());
                 }
                 return renderer;
             }
@@ -455,6 +455,7 @@ public class MainUI extends JFrame implements Serializable {
     }// </editor-fold>//GEN-END:initComponents
 
     private void settingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        myClient.updateStatus();
         new SettingsUI(userId);
     }
 

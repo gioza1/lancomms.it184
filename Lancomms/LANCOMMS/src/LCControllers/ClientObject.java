@@ -21,16 +21,26 @@ public class ClientObject implements Serializable {
     private int port;
     private int myPort;
     private int userId;
+    private String status;
 
     public ClientObject(String server, int port, String username, int uid) {
         this.server = server;
         this.port = port;
         this.username = username;
         this.userId = uid;
+        status = "Online";
     }
 
     public String getServer() {
         return server;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getUsername() {
