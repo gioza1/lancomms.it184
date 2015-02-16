@@ -66,7 +66,7 @@ public class Client {
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-        cg.logout();
+//        cg.logout();
     }
 
     public Socket getMainServerSocket() {
@@ -158,7 +158,7 @@ public class Client {
             mainSOutput.writeObject(me);
         } catch (IOException eIO) {
             System.out.println("Exception doing login : " + eIO);
-            disconnect();
+            disconnectMain();
             return false;
         }
         // success we inform the caller that it worked
@@ -194,11 +194,6 @@ public class Client {
      * Close the Input/Output streams and disconnect not much to do in the catch clause
      */
     public void disconnect() {
-        try {
-            mSocket.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
         try {
             if (sInput != null) {

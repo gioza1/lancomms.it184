@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 /**
  *
  * @author Gio
@@ -217,35 +218,43 @@ public class MainServer {
         String date;
 
         ClientObject test;
+        boolean tKeepGoing = true;
 
         // Constructore
+
         ClientThread(Socket socket) {
             // a unique id
-            id = ++uniqueId;
+
             this.socket = socket;
             /* Creating both Data Stream */
             System.out.println("Thread trying to create Object Input/Output Streams");
-            try {
-                // create output first
-                sOutput = new ObjectOutputStream(socket.getOutputStream());
-                sInput = new ObjectInputStream(socket.getInputStream());
+            if (!socket.isClosed()) {
+                id = ++uniqueId;
+                try {
+                    // create output first
+                    sOutput = new ObjectOutputStream(socket.getOutputStream());
+                    sInput = new ObjectInputStream(socket.getInputStream());
 
-            } catch (IOException e) {
-                display("Exception creating new Input/output Streams: " + e);
-                return;
+                } catch (IOException e) {
+//                 remove(id);
+                    e.printStackTrace();
+                    tKeepGoing = false;
+                    display("Exception creating new Input/output Streams: " + e);
+                    return;
 //            } catch (ClassNotFoundException ex) {
 //                Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
-            } // have to catch ClassNotFoundException
-
+                } // have to catch ClassNotFoundException
+            } else {
+                return;
+            }
             date = new Date().toString() + "\n";
         }
 
         // what will run forever
         public void run() {
             // to loop until LOGOUT
-            boolean keepGoing = true;
 
-            while (keepGoing) {
+            while (tKeepGoing) {
 
                 try {
                     test = (ClientObject) sInput.readObject();
@@ -257,7 +266,7 @@ public class MainServer {
                     Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
                     break;
                 }
-                sg.appendRoom("\n"+ test.getUsername() + " just connected.");
+                sg.appendRoom("\n" + test.getUsername() + " just connected.");
 
                 addToContactList(test);
                 alCo.add(test);
@@ -288,7 +297,7 @@ public class MainServer {
                         break;
                     case ChatMessage.LOGOUT:
                         display(username + " disconnected with a LOGOUT message.");
-                        keepGoing = false;
+                        tKeepGoing = false;
                         break;
                     case ChatMessage.WHOISIN:
 //                        writeMsg("List of the users connected at " + sdf.format(new Date()) + "\n");
