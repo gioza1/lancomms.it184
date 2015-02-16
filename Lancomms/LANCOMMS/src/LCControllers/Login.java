@@ -7,18 +7,11 @@
 package LCControllers;
 
 import LCModels.ConnectDB;
-import LCViews.MainUI;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -74,7 +67,6 @@ public class Login {
         Connection con;
         ConnectDB callConnector = new ConnectDB();
         con = callConnector.connectToDB();    
-        ResultSet rs=null;
         Statement stmt=null; 
         try{        
             stmt = con.createStatement();

@@ -18,20 +18,17 @@ import java.sql.Timestamp;
  */
 public class Message {
     
-    
-    
         public void messageTime(int fromuserid, String message, int touserid){
         Connection con;
         ConnectDB callConnector = new ConnectDB();
         con = callConnector.connectToDB();    
-        ResultSet rs=null;
         Statement stmt=null; 
         try{        
             stmt = con.createStatement();
             java.util.Date date = new java.util.Date();
             Timestamp tstamp = new Timestamp(date.getTime());
-            String sql = "INSERT INTO `message` (message_timestamp, message_ ='"+tstamp+"', message_text='"+message+"', user_id_to='"+touserid+"', user_id = "+fromuserid+" ORDER BY message_timestamp DESC LIMIT 1;";
-            System.out.println("OUT: "+tstamp);
+            String sql = "INSERT INTO `message` (message_timestamp, message_text, user_id_to, user_id_from) VALUES ('"+tstamp+"','"+message+"','"+touserid+"',"+fromuserid+");";
+            System.out.println("message log : time: "+tstamp+"| message: "+message+"| from: "+fromuserid+"| to: "+touserid);
             stmt.executeUpdate(sql);
         }
         catch(SQLException e){

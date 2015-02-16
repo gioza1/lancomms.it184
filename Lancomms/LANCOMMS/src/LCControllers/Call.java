@@ -8,6 +8,7 @@
  */
 package LCControllers;
 
+import LCModels.Call_Log;
 import LCViews.ChatWindowUI;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -170,7 +171,9 @@ public class Call extends BaseFile{
     public void startCall() {
         setScreen();
         localMediaPlayer.playMedia("dshow://", ":live-caching=100",":sout=#transcode{vcodec=MJPG,vb=56,fps=15,scale=0.5,width=96,height=72,acodec=mp3,ab=24,channels=1,samplerate=8000}:duplicate{dst=rtp{dst="+caller_ad+",port="+caller_sendPort+",mux=ts},dst=display}"," :sout-keep");                
-        mediaPlayer.playMedia("rtp://@:"+caller_rcvPort+"", " :network-caching=200");     
+        mediaPlayer.playMedia("rtp://@:"+caller_rcvPort+"", " :network-caching=200");    
+        Call_Log call_log = new Call_Log();
+        //call_log.callStartTime(cw., cw);
     }
     
     public void stopCall() {

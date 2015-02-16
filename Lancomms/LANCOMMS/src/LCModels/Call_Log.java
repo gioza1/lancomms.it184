@@ -16,21 +16,19 @@ import java.sql.Timestamp;
  *
  * @author eufrik
  */
-public class Call {
+public class Call_Log {
         
-        public void callStartTime(int userId){
+        public void callStartTime(int userIdfrom, int userIdto ){
         Connection con;
         ConnectDB callConnector = new ConnectDB();
         con = callConnector.connectToDB();    
-        ResultSet rs=null;
         Statement stmt=null; 
         try{        
             stmt = con.createStatement();
             java.util.Date date = new java.util.Date();
             Timestamp tstamp = new Timestamp(date.getTime());
-            String room = System.getProperty("user.name");
-            String sql = "UPDATE `call` SET ul_out_timestamp='"+tstamp+"' WHERE user_id = "+userId+" ORDER BY ul_in_timestamp DESC LIMIT 1;";
-            System.out.println("OUT: "+tstamp);
+            String sql = "INSERT INTO `call` (user_idc,call_start_time,call_to) VALUES ('"+userIdfrom+"','"+tstamp+"','"+userIdto+"');";
+            System.out.println("CALL START: "+tstamp);
             stmt.executeUpdate(sql);
         }
         catch(SQLException e){
@@ -46,15 +44,13 @@ public class Call {
         Connection con;
         ConnectDB callConnector = new ConnectDB();
         con = callConnector.connectToDB();    
-        ResultSet rs=null;
         Statement stmt=null; 
         try{        
             stmt = con.createStatement();
             java.util.Date date = new java.util.Date();
             Timestamp tstamp = new Timestamp(date.getTime());
-            String room = System.getProperty("user.name");
-            String sql = "UPDATE `call` SET ul_out_timestamp='"+tstamp+"' WHERE user_id = "+userId+" ORDER BY ul_in_timestamp DESC LIMIT 1;";
-            System.out.println("OUT: "+tstamp);
+            String sql = "UPDATE `call` SET call_end_time='"+tstamp+"' WHERE user_idc = "+userId+" ORDER BY call_start_time DESC LIMIT 1;";
+            System.out.println("CALL STOP: "+tstamp);
             stmt.executeUpdate(sql);
         }
         catch(SQLException e){

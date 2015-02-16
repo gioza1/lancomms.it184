@@ -9,6 +9,7 @@ import LCControllers.Call;
 import LCControllers.ChatMessage;
 import LCControllers.Client;
 import LCControllers.ClientObject;
+import LCModels.Message;
 import LCModels.WritableGUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -270,6 +271,8 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
     public void sendMessage(ChatMessage msg) {
         try {
             sOutput.writeObject(msg);
+            Message mlog = new Message();
+            mlog.messageTime(fromCo.getMyId(),msg.getMessage(),toCo.getMyId());
         } catch (IOException e) {
             System.out.println("Exception writing to server: " + e);
         }
@@ -349,6 +352,10 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
 
     public String getUsername() {
         return userNameTo;
+    }
+    
+    public int getId(){
+        return toCo.getMyId();
     }
     
 
