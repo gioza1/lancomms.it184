@@ -378,7 +378,18 @@ public class MainUI extends JFrame implements Serializable {
         jMenuBar1.add(LancommsMenu);
 
         setJMenuBar(jMenuBar1);
+        
+        
+        jComboBox1 = new javax.swing.JComboBox();
 
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Online", "Busy"}));
+        
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+        
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -406,6 +417,10 @@ public class MainUI extends JFrame implements Serializable {
                         .addContainerGap()
                         .addComponent(MainTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(117, 117, 117)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(160, Short.MAX_VALUE))                
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -429,6 +444,10 @@ public class MainUI extends JFrame implements Serializable {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                         .addComponent(MainTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(89, 89, 89)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(501, Short.MAX_VALUE))                
         );
 
         pack();
@@ -454,6 +473,10 @@ public class MainUI extends JFrame implements Serializable {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        // TODO add your handling code here:
+    } 
+    
     private void settingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         new SettingsUI(userId);
     }
@@ -484,6 +507,7 @@ public class MainUI extends JFrame implements Serializable {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
+    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JPanel ConvoList;
     private javax.swing.JMenu LancommsMenu;
     private javax.swing.JTabbedPane MainTabs;
@@ -596,4 +620,5 @@ public class MainUI extends JFrame implements Serializable {
             myServer = null;
         }
     }
+    
 }
