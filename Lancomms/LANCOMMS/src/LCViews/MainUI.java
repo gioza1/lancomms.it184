@@ -209,8 +209,8 @@ public class MainUI extends JFrame implements Serializable {
                             addChatWindow(cw);
                             chatting.add(o.getUsername());
                         } else {
-                            for (ChatWindowUI cwindow : algui) {
-                                if (cwindow.getUsername().contentEquals(o.getUsername()) && !cwindow.isShowing()) {
+                            for (Frame cwindow : Frame.getFrames()) {
+                                if (!cwindow.isShowing() && cwindow.getTitle().equals(o.getUsername())) {
                                     cwindow.setVisible(true);
                                 }
                             }
@@ -530,6 +530,10 @@ public class MainUI extends JFrame implements Serializable {
 
     public void addChatWindow(ChatWindowUI cwindow) {
         algui.add(cwindow);
+        chatting.add(cwindow.getUsername());
+        for (String x : chatting) {
+            System.out.println("Chatting to: " + x);
+        }
         if (callDisabled) {
             setCallDisabled();
         }
