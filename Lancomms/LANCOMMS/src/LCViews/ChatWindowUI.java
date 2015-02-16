@@ -345,7 +345,12 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
     public void enableCall(){
         mainui.setCallEnabled();
     }
+
+    public String getUsername() {
+        return user_name;
+    }
     
+
     
     public JTextArea getMessageArea() {
         return chat;

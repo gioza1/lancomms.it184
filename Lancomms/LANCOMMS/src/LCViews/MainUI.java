@@ -56,11 +56,12 @@ public class MainUI extends JFrame implements Serializable {
     private Server myServer;
     private ArrayList<ChatWindowUI> algui;
     private boolean callDisabled;
-
+    private List<String> chatting;
     DefaultListModel<ClientObject> model = new DefaultListModel<>();
 
     /**
      * Creates new form MainUI
+     *
      * @param uid
      * @param co
      */
@@ -69,10 +70,11 @@ public class MainUI extends JFrame implements Serializable {
         umodel = new UserModel();
         callDisabled = false;
         algui = new ArrayList<ChatWindowUI>();
+        chatting = new ArrayList<String>();
         int port = 0;
         ParseRoute pr = new ParseRoute();
         String server = pr.getLocalIPAddress();
-     
+
         //create own port
         try {
             ServerSocket getp;
@@ -89,7 +91,7 @@ public class MainUI extends JFrame implements Serializable {
         System.out.println("Name: " + co + " |Server: " + server + " |Port: " + port);
         System.out.println(myCObj.toString());
         System.out.println(myClient.getCo().toString());
-        
+
         myClient.setMainUI(this);
         myServer = new Server(myCObj, this);
         new ServerRunning().start();
@@ -194,20 +196,25 @@ public class MainUI extends JFrame implements Serializable {
                 if (mouseEvent.getClickCount() == 2) {
                     int index = theList.locationToIndex(mouseEvent.getPoint());
                     if (index >= 0) {
+
                         ClientObject o = (ClientObject) theList.getModel().getElementAt(index);
+                        if (!chatting.contains(o.getUsername())) {
 
-                        System.out.println(o.toString());
-                        System.out.println(myCObj.toString());
-
-//                      System.out.println("Double-clicked on: " + o.getUsername() + " IP: " + o.getServer() + " PORT: " + o.getPort());
-
-                        ChatWindowUI cw = new ChatWindowUI(o, myCObj);
-
-                        cw.setTitle(o.getUsername());
-                        cw.setVisible(true);
-                        
-                        cwSetMainUI(cw);
-                        addChatWindow(cw);
+                            ChatWindowUI cw = new ChatWindowUI(o, myCObj);
+                            System.out.println(o.toString());
+                            System.out.println(myCObj.toString());
+                            cw.setTitle(o.getUsername());
+                            cw.setVisible(true);
+                            cwSetMainUI(cw);
+                            addChatWindow(cw);
+                            chatting.add(o.getUsername());
+                        } else {
+                            for (ChatWindowUI cwindow : algui) {
+                                if (cwindow.getUsername().contentEquals(o.getUsername()) && !cwindow.isShowing()) {
+                                    cwindow.setVisible(true);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -499,35 +506,35 @@ public class MainUI extends JFrame implements Serializable {
 
             }
         });
-        
+
     }
-    
-    public void setCallDisabled(){
+
+    public void setCallDisabled() {
         callDisabled = true;
-        for(ChatWindowUI cwindow:algui){
+        for (ChatWindowUI cwindow : algui) {
             cwindow.setCallDisabled();
         }
         System.out.println("Call buttons disabled!");
     }
-    
-    public void setCallEnabled(){
+
+    public void setCallEnabled() {
         callDisabled = false;
-        for(ChatWindowUI cwindow:algui){
+        for (ChatWindowUI cwindow : algui) {
             cwindow.setCallEnabled();
         }
     }
-    
-    public boolean checkCallDisabled(){
+
+    public boolean checkCallDisabled() {
         return callDisabled;
     }
 
-    public void addChatWindow(ChatWindowUI cwindow){
+    public void addChatWindow(ChatWindowUI cwindow) {
         algui.add(cwindow);
-        if(callDisabled){
+        if (callDisabled) {
             setCallDisabled();
         }
     }
-    
+
     public ArrayList<ClientObject> hideSelf(ArrayList<ClientObject> str) {
         for (ClientObject test : str) {
             if (test.getUsername().contentEquals(myCObj.getUsername())) {
@@ -552,8 +559,8 @@ public class MainUI extends JFrame implements Serializable {
         });
 
     }
-    
-    public void cwSetMainUI(ChatWindowUI cw){
+
+    public void cwSetMainUI(ChatWindowUI cw) {
         ChatWindowUI cwwindow = cw;
         cwwindow.setMainUI(this);
     }
