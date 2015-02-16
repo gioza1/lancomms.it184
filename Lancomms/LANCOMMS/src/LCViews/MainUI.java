@@ -442,6 +442,15 @@ public class MainUI extends JFrame implements Serializable {
     }
 
     private void logoutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        logout();
+    }
+
+    private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        AboutUI about = new AboutUI();
+        about.setVisible(true);
+    }
+
+    public void logout() {
         this.dispose();
         System.gc();
         for (Frame frames : Frame.getFrames()) {
@@ -453,11 +462,6 @@ public class MainUI extends JFrame implements Serializable {
         logoutTime.logoutTime(userId);
         LoginUI loggedout = new LoginUI();
         loggedout.setVisible(rootPaneCheckingEnabled);
-    }
-
-    private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        AboutUI about = new AboutUI();
-        about.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
