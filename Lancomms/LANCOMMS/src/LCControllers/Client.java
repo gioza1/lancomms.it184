@@ -193,7 +193,13 @@ public class Client {
      * When something goes wrong
      * Close the Input/Output streams and disconnect not much to do in the catch clause
      */
-    private void disconnect() {
+    public void disconnect() {
+        try {
+            mSocket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         try {
             if (sInput != null) {
                 sInput.close();
@@ -213,7 +219,7 @@ public class Client {
         } catch (Exception e) {
         } // not much else I can do
 
-        disconnectMain();
+//        disconnectMain();
         // inform the GUI
         if (cg != null) {
 //            cg.connectionFailed();
@@ -268,7 +274,7 @@ public class Client {
                     break;
                 }
             }
-            disconnect();
+            cg.logout();
         }
 
     }
