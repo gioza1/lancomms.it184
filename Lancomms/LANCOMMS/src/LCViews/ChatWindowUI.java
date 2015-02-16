@@ -271,8 +271,10 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
     public void sendMessage(ChatMessage msg) {
         try {
             sOutput.writeObject(msg);
-            Message mlog = new Message();
-            mlog.messageTime(fromCo.getMyId(),msg.getMessage(),toCo.getMyId());
+            if(msg.getType()==1){
+                Message mlog = new Message();
+                mlog.messageTime(fromCo.getMyId(),msg.getMessage(),toCo.getMyId());
+                }
         } catch (IOException e) {
             System.out.println("Exception writing to server: " + e);
         }
@@ -355,9 +357,12 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
     }
     
     public int getId(){
-        return toCo.getMyId();
+        return fromCo.getMyId();
     }
     
+    public int getToId(){
+        return toCo.getMyId();
+    }
 
     
     public JTextArea getMessageArea() {
