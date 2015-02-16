@@ -36,7 +36,7 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
     /**
      * Creates new form ChatWindowUI
      */
-    private String user_name;
+    private String userNameTo;
     private Call call;
     private ClientObject fromCo;
     private ClientObject toCo;
@@ -56,7 +56,7 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
     public ChatWindowUI(String username, String s, int p) {
         toServer = s;
         toPort = p;
-        this.user_name = username;    
+        this.userNameTo = username;    
         initComponents();
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -70,6 +70,7 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
     public ChatWindowUI(ClientObject to, ClientObject from) {
         toCo = to;
         fromCo = from;
+        userNameTo = to.getUsername();
 
 
         //connect to a client
@@ -347,7 +348,7 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
     }
 
     public String getUsername() {
-        return user_name;
+        return userNameTo;
     }
     
 

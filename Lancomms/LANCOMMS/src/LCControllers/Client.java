@@ -66,6 +66,7 @@ public class Client {
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
+        cg.logout();
     }
 
     public Socket getMainServerSocket() {
@@ -80,7 +81,6 @@ public class Client {
      * Constructor call when used from a GUI
      * in console mode the ClienGUI parameter is null
      */
-
     public Client(ClientObject test, String serv, int port) {
         runningServer = serv;
         runningPort = port;
@@ -213,6 +213,7 @@ public class Client {
         } catch (Exception e) {
         } // not much else I can do
 
+        disconnectMain();
         // inform the GUI
         if (cg != null) {
 //            cg.connectionFailed();
@@ -263,10 +264,13 @@ public class Client {
                 if (eh != null) {
                     cg.updateList(eh);
                 } else {
+
                     break;
                 }
             }
+            disconnect();
         }
+
     }
 
     public static Object receiveObject(ObjectInputStream stream) {
@@ -280,9 +284,8 @@ public class Client {
         }
         return obj;
     }
-    
-    public ClientObject getCo()
-    {
+
+    public ClientObject getCo() {
         return me;
     }
 }

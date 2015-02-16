@@ -225,8 +225,9 @@ public class MainUI extends JFrame implements Serializable {
                             addChatWindow(cw);
                             chatting.add(o.getUsername());
                         } else {
-                            for (ChatWindowUI cwindow : algui) {
-                                if (cwindow.getUsername().contentEquals(o.getUsername()) && !cwindow.isVisible()) {
+
+                            for (Frame cwindow : Frame.getFrames()) {
+                                if (!cwindow.isShowing() && cwindow.getTitle().equals(o.getUsername())) {
                                     cwindow.setVisible(true);
                                 }
                             }
@@ -458,6 +459,15 @@ public class MainUI extends JFrame implements Serializable {
     }
 
     private void logoutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        logout();
+    }
+
+    private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        AboutUI about = new AboutUI();
+        about.setVisible(true);
+    }
+
+    public void logout() {
         this.dispose();
         System.gc();
         for (Frame frames : Frame.getFrames()) {
@@ -469,11 +479,6 @@ public class MainUI extends JFrame implements Serializable {
         logoutTime.logoutTime(userId);
         LoginUI loggedout = new LoginUI();
         loggedout.setVisible(rootPaneCheckingEnabled);
-    }
-
-    private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        AboutUI about = new AboutUI();
-        about.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -546,6 +551,10 @@ public class MainUI extends JFrame implements Serializable {
 
     public void addChatWindow(ChatWindowUI cwindow) {
         algui.add(cwindow);
+        chatting.add(cwindow.getUsername());
+        for (String x : chatting) {
+            System.out.println("Chatting to: " + x);
+        }
         if (callDisabled) {
             setCallDisabled();
         }
