@@ -30,7 +30,7 @@ public class Message {
             stmt = con.createStatement();
             java.util.Date date = new java.util.Date();
             Timestamp tstamp = new Timestamp(date.getTime());
-            String sql = "INSERT INTO `message` (message_timestamp, ='"+tstamp+"', message_text='"+message+"', user_id_to='"+touserid+"', user_id = "+fromuserid+" ORDER BY message_timestamp DESC LIMIT 1;";
+            String sql = "INSERT INTO `message` (message_timestamp, message_ ='"+tstamp+"', message_text='"+message+"', user_id_to='"+touserid+"', user_id = "+fromuserid+" ORDER BY message_timestamp DESC LIMIT 1;";
             System.out.println("OUT: "+tstamp);
             stmt.executeUpdate(sql);
         }
