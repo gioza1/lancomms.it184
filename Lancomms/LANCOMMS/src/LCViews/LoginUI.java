@@ -34,7 +34,7 @@ public class LoginUI extends javax.swing.JFrame {
     private boolean checkServerConnection() {
         try {
             Socket client = new Socket();
-            client.connect(new InetSocketAddress("192.168.1.102", 1500), 2000);
+            client.connect(new InetSocketAddress("192.168.1.104", 1500), 2000);
             client.setSoTimeout(1000);
             client.close();
             return true;

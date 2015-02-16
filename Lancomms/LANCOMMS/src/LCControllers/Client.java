@@ -130,7 +130,7 @@ public class Client {
     public boolean connectToMainServer() {
         // try to connect to the server
         try {
-            mSocket = new Socket("192.168.1.102", 1500);
+            mSocket = new Socket("192.168.1.104", 1500);
         } // if it failed not much I can so
         catch (Exception ec) {
             System.out.println("Error connectiong to server:" + ec);
@@ -184,6 +184,15 @@ public class Client {
     void sendMessageToServer(ChatMessage msg) {
         try {
             mainSOutput.writeObject(msg);
+        } catch (IOException e) {
+            System.out.println("Exception writing to server: " + e);
+        }
+    }
+
+   public void updateStatus() {
+        ChatMessage cmsg = new ChatMessage(ChatMessage.STATUS, "BUSY");
+        try {
+            mainSOutput.writeObject(cmsg);
         } catch (IOException e) {
             System.out.println("Exception writing to server: " + e);
         }
