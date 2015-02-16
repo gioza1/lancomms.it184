@@ -194,20 +194,21 @@ public class MainUI extends JFrame implements Serializable {
                 if (mouseEvent.getClickCount() == 2) {
                     int index = theList.locationToIndex(mouseEvent.getPoint());
                     if (index >= 0) {
-                        ClientObject o = (ClientObject) theList.getModel().getElementAt(index);
-
-                        System.out.println(o.toString());
-                        System.out.println(myCObj.toString());
-
-//                      System.out.println("Double-clicked on: " + o.getUsername() + " IP: " + o.getServer() + " PORT: " + o.getPort());
-
-                        ChatWindowUI cw = new ChatWindowUI(o, myCObj);
-
-                        cw.setTitle(o.getUsername());
-                        cw.setVisible(true);
+//                        ClientObject o = (ClientObject) theList.getModel().getElementAt(index);
+//
+//                        System.out.println(o.toString());
+//                        System.out.println(myCObj.toString());
+//
+////                      System.out.println("Double-clicked on: " + o.getUsername() + " IP: " + o.getServer() + " PORT: " + o.getPort());
+//
+//                        ChatWindowUI cw = new ChatWindowUI(o, myCObj);
+//
+//                        cw.setTitle(o.getUsername());
+//                        cw.setVisible(true);
+//                        
+//                        cwSetMainUI(cw);
+//                        addChatWindow(cw);
                         
-                        cwSetMainUI(cw);
-                        addChatWindow(cw);
                     }
                 }
             }

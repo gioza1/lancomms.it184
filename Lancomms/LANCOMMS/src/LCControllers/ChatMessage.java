@@ -10,6 +10,7 @@ package LCControllers;
  * @author Gio
  */
 
+import LCModels.Message;
 import java.io.*;
 /*
  * This class defines the different type of messages that will be exchanged between the
@@ -28,7 +29,7 @@ public class ChatMessage implements Serializable {
 	public static final int WHOISIN = 0, MESSAGE = 1, LOGOUT = 2, CALL = 3, RESPONSE = 4, STOPCALL = 5;
 	private int type;
 	private String message;
-	
+        
 	// constructor
 	public ChatMessage(int type, String message) {
 		this.type = type;
@@ -36,11 +37,18 @@ public class ChatMessage implements Serializable {
 	}
 	
 	// getters
-	int getType() {
+	public int getType() {
 		return type;
 	}
-	String getMessage() {
+	public String getMessage() {
 		return message;
 	}
+        
+        public void logMessage(){
+            if(type==1){
+                Message mlog = new Message();
+                mlog.callEndTime(WHOISIN);
+                }
+        }
 }
 

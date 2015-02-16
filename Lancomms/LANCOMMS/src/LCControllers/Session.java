@@ -6,12 +6,6 @@
 
 package LCControllers;
 
-import LCModels.MessageListener;
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author eufrik
@@ -19,18 +13,10 @@ import java.util.logging.Logger;
 public class Session {
     int currentId;
     int currentPort;
-    public MessageListener ml;
     
     public Session(int uid)
     {
         currentId = uid;
-//        try {
-//            currentPort = new ServerSocket(0).getLocalPort(); 
-//        } catch (IOException ex) {
-//            Logger.getLogger(Session.class.getName()).log(Level.SEVERE, null, ex);
-//      
-//        }
-        ml = new MessageListener(this);
     }
     
     public int getId(){
@@ -46,9 +32,5 @@ public class Session {
     {
         return currentPort;
     }
-    
-    public MessageListener getMsgListener()
-    {
-        return ml;
-    }
+   
 }

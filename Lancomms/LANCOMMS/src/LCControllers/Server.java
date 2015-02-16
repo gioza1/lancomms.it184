@@ -399,6 +399,7 @@ public class Server {
                         case "Reject":
                             cw.append("\n"+co.getUsername()+" has rejected the call!\n");
                             sg.setCallEnabled();
+                            break;
                         case "Busy":
                             cw.append("\n"+co.getUsername()+" is in a call right now. Please try again later!\n");
                             sg.setCallEnabled();
