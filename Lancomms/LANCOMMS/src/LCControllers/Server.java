@@ -9,6 +9,7 @@ package LCControllers;
  *
  * @author Gio
  */
+import LCControllers.ClientObject;
 import LCControllers.ParseRoute.ParseRoute;
 import LCViews.ChatWindowUI;
 import LCViews.MainUI;

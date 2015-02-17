@@ -17,10 +17,12 @@ import javax.swing.JOptionPane;
  */
 public class LoginUI extends javax.swing.JFrame {
 
+    private String host;
     /**
      * Creates new form Login
      */
-    public LoginUI() {
+    public LoginUI(String serverAdd) {
+        host = serverAdd;
         initComponents();
         this.getRootPane().setDefaultButton(LogInButton);
         this.setLocationByPlatform(true);
@@ -34,7 +36,7 @@ public class LoginUI extends javax.swing.JFrame {
     private boolean checkServerConnection() {
         try {
             Socket client = new Socket();
-            client.connect(new InetSocketAddress("192.168.1.104", 1500), 2000);
+            client.connect(new InetSocketAddress(host, 1500), 2000);
             client.setSoTimeout(1000);
             client.close();
             return true;
@@ -184,7 +186,7 @@ public class LoginUI extends javax.swing.JFrame {
                 //WebCamFeed feed = new WebCamFeed();
                     //feed.getFeed();
                     log.loginTime(userId);
-                    MainUI startApp = new MainUI(userId, usernameField.getText());
+                    MainUI startApp = new MainUI(userId, usernameField.getText(), host);
                     this.setVisible(false);
                     this.dispose();
                     startApp.setVisible(true);

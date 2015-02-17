@@ -1,5 +1,6 @@
 package LCControllers;
 
+import LCModels.UserModel;
 import LCViews.MainUI;
 import java.io.Serializable;
 
@@ -21,6 +22,7 @@ public class ClientObject implements Serializable {
     private int port;
     private int myPort;
     private int userId;
+    private String fullname;
     private String status;
 
     public ClientObject(String server, int port, String username, int uid) {
@@ -29,6 +31,7 @@ public class ClientObject implements Serializable {
         this.username = username;
         this.userId = uid;
         status = "Online";
+        setName();
     }
 
     public String getServer() {
@@ -47,10 +50,20 @@ public class ClientObject implements Serializable {
         return username;
     }
 
+    public String getName(){
+        return fullname;
+    }
+    
     public int getPort() {
         return port;
     }
 
+    private void setName(){
+        UserModel um = new UserModel();
+        fullname = um.getName(userId);   
+        System.out.println(fullname);
+    }
+    
     public int getMyPort() {
         return myPort;
     }

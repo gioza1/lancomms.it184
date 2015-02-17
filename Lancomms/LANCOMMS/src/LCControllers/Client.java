@@ -9,6 +9,7 @@ package LCControllers;
  *
  * @author Gio
  */
+import LCControllers.ClientObject;
 import LCControllers.Server.ClientThread;
 import LCViews.MainUI;
 import java.net.*;
@@ -127,10 +128,10 @@ public class Client {
         return true;
     }
 
-    public boolean connectToMainServer() {
+    public boolean connectToMainServer(String host) {
         // try to connect to the server
         try {
-            mSocket = new Socket("192.168.1.104", 1500);
+            mSocket = new Socket(host, 1500);
         } // if it failed not much I can so
         catch (Exception ec) {
             System.out.println("Error connectiong to server:" + ec);

@@ -10,7 +10,6 @@ import LCControllers.ChatMessage;
 import LCControllers.Client;
 import LCControllers.ClientObject;
 import LCModels.Message;
-import LCModels.WritableGUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -32,7 +31,7 @@ import javax.swing.KeyStroke;
  *
  * @author Gio
  */
-public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
+public class ChatWindowUI extends javax.swing.JFrame {
 
     /**
      * Creates new form ChatWindowUI
@@ -149,7 +148,6 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
         jLabel4 = new javax.swing.JLabel();
         videoCall = new javax.swing.JButton();
         connectionStatus = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -195,8 +193,9 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
             }
         });
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lancomms/pp1.png"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lancomms/pp2.png"))); // NOI18N
 
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText(fromCo.getUsername());
 
         videoCall.setText("Video Call");
@@ -207,8 +206,6 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
         });
 
         connectionStatus.setText(" ");
-
-        jButton1.setText("Add to Chat");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -224,27 +221,29 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
                             .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(10, 10, 10)
                         .addComponent(videoCall)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(105, 105, 105)
                         .addComponent(connectionStatus))
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel4)))
                 .addContainerGap(40, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(32, Short.MAX_VALUE)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap(52, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(38, 38, 38)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(connectionStatus)
-                    .addComponent(videoCall)
-                    .addComponent(jButton1))
+                    .addComponent(videoCall))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -389,7 +388,6 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea chat;
     private javax.swing.JLabel connectionStatus;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
@@ -398,10 +396,5 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
     private javax.swing.JButton sendButton;
     private javax.swing.JButton videoCall;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void write(String s) {
-        chat.append(s + System.lineSeparator());
-    }
     
 }

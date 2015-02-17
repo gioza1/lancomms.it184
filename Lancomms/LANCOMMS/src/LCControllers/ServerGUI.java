@@ -10,6 +10,7 @@ package LCControllers;
  *
  * @author Gio
  */
+import LCControllers.ClientObject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;

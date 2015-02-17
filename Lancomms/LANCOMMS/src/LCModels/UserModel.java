@@ -94,4 +94,33 @@ public class UserModel {
             return userName;
         }         
     }
+        
+    public String getName(int userId){
+        Connection con;
+        ConnectDB callConnector = new ConnectDB();
+        con = callConnector.connectToDB();    
+        ResultSet rs=null;
+        Statement stmt=null; 
+        String lName="";
+        String fName="";
+        String name=null;
+        try{        
+            stmt = con.createStatement();
+            String sql = "SELECT * FROM `user` WHERE user_id='"+userId+"';";
+            rs = stmt.executeQuery(sql);
+            rs.next();
+            lName = rs.getString("user_lname");
+            fName = rs.getString("user_fname");
+            System.out.println(fName+" "+lName);
+            name=fName+" "+lName;
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        finally{
+            try { if (stmt != null) stmt.close(); } catch (Exception e) {};
+            try { if (con != null) con.close(); } catch (Exception e) {};   
+            return name;
+        }         
+    }    
 }

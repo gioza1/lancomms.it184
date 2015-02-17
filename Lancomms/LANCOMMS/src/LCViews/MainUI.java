@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -57,6 +58,9 @@ public class MainUI extends JFrame implements Serializable {
     private boolean callDisabled;
     private List<String> chatting;
     private SettingsUI sui;
+    private ImageIcon img;
+    private boolean settings;
+    private String host;
     DefaultListModel<ClientObject> model = new DefaultListModel<>();
 
     /**
@@ -65,13 +69,15 @@ public class MainUI extends JFrame implements Serializable {
      * @param uid
      * @param co
      */
-    public MainUI(int uid, String co) {                  //that username is so legit.
+    public MainUI(int uid, String co, String hostadd) {                  //that username is so legit.
         myServer = null;
         sui = null;
         umodel = new UserModel();
         callDisabled = false;
+        settings = false;
         algui = new ArrayList<ChatWindowUI>();
         chatting = new ArrayList<String>();
+        host = hostadd;
         int port = 0;
         ParseRoute pr = new ParseRoute();
         String server = pr.getLocalIPAddress();
@@ -96,7 +102,7 @@ public class MainUI extends JFrame implements Serializable {
         myClient.setMainUI(this);
         myServer = new Server(myCObj, this);
         new ServerRunning().start();
-        if (!myClient.connectToMainServer()) {
+        if (!myClient.connectToMainServer(host)) {
             return;
         }
         if (!myClient.start()) {
@@ -151,6 +157,7 @@ public class MainUI extends JFrame implements Serializable {
         logoutMenuItem = new javax.swing.JMenuItem();
         ContactsList = new javax.swing.JPanel();
         ContactsList.setForeground(new java.awt.Color(255, 255, 255));
+        
         WindowListener l = new WindowAdapter() {
             List<Window> windows = new ArrayList<Window>();
 
@@ -196,25 +203,7 @@ public class MainUI extends JFrame implements Serializable {
                 JList theList = (JList) mouseEvent.getSource();
                 if (mouseEvent.getClickCount() == 2) {
                     int index = theList.locationToIndex(mouseEvent.getPoint());
-                    if (index >= 0) {
-
-//                        ClientObject o = (ClientObject) theList.getModel().getElementAt(index);
-//
-//                        System.out.println(o.toString());
-//                        System.out.println(myCObj.toString());
-//
-////                      System.out.println("Double-clicked on: " + o.getUsername() + " IP: " + o.getServer() + " PORT: " + o.getPort());
-//
-//                        ChatWindowUI cw = new ChatWindowUI(o, myCObj);
-//
-//                        cw.setTitle(o.getUsername());
-//                        cw.setVisible(true);
-//                        
-//                        cwSetMainUI(cw);
-//                        addChatWindow(cw);
-                        
-
-
+                    if (index >= 0) {                     
                         ClientObject o = (ClientObject) theList.getModel().getElementAt(index);
                         if (!chatting.contains(o.getUsername())) {
 
@@ -249,7 +238,11 @@ public class MainUI extends JFrame implements Serializable {
                 if (renderer instanceof JLabel && value instanceof ClientObject) {
                     // Here value will be of the Type 'CD'
 //                    if(!((ClientObject) value).getUsername().contentEquals(myCObj.getUsername()))
-                    ((JLabel) renderer).setText(((ClientObject) value).getUsername()+" "+((ClientObject) value).getStatus());
+                    //((JLabel) renderer).setText(((ClientObject) value).getUsername()+" "+((ClientObject) value).getStatus());
+                    //ImageIcon imageIcon = new ImageIcon(getClass().getResource("/images/pp2.png"));
+         
+                    //setIcon(imageIcon);
+                    ((JLabel) renderer).setText(((ClientObject) value).getName()+"  ("+((ClientObject) value).getStatus()+") ");
                 }
                 return renderer;
             }
@@ -281,10 +274,10 @@ public class MainUI extends JFrame implements Serializable {
                         .addGap(0, 16, Short.MAX_VALUE))
         );
 
-        MainTabs.addTab("<html><body leftmargin=20 topmargin=8 marginwidth=45 marginheight=5>Contacts</body></html>", ContactsList);
+        MainTabs.addTab("<html><body leftmargin=15 topmargin=8 marginwidth=38 marginheight=5>Online Users</body></html>", ContactsList);
 
         jList2.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
+            String[] strings = {};
 
             public int getSize() {
                 return strings.length;
@@ -309,7 +302,7 @@ public class MainUI extends JFrame implements Serializable {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
         );
 
-        MainTabs.addTab("<html><body leftmargin=15 topmargin=8 marginwidth=45 marginheight=5>Conversations</body></html>", ConvoList);
+        MainTabs.addTab("<html><body leftmargin=15 topmargin=8 marginwidth=40 marginheight=5>Conversations</body></html>", ConvoList);
 
         NTSystem NTSystem = new NTSystem();//test
 //        UserNameDisplay.setText(System.getProperty("user.name"));
@@ -319,7 +312,7 @@ public class MainUI extends JFrame implements Serializable {
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lancomms/mainui1-2.png"))); // NOI18N
 
-        profpic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lancomms/pp1.png"))); // NOI18N
+        profpic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lancomms/pp2.png"))); // NOI18N
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lancomms/mainui1-1-1.png"))); // NOI18N
 
@@ -327,6 +320,9 @@ public class MainUI extends JFrame implements Serializable {
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lancomms/mainui1-1-4.png"))); // NOI18N
 
+        img = new ImageIcon(getClass().getResource("/lancomms/pp2.png"));
+        this.setIconImage(img.getImage());
+        
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -480,17 +476,15 @@ public class MainUI extends JFrame implements Serializable {
     } 
     
     private void settingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        myClient.updateStatus();
-        if(sui==null){
-            SettingsUI sui = new SettingsUI(userId);
+        if(settings==false){
+            SettingsUI sui = new SettingsUI(userId, this);
             sui.setVisible(true);
         }       
-        else if(sui!=null){
+        else if(settings==true){
             if(!sui.isVisible()){
                 sui.setVisible(true);
             }            
         }
-
     }
 
     private void logoutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
@@ -513,7 +507,7 @@ public class MainUI extends JFrame implements Serializable {
         //disconnect all sockets to other clients
         Login logoutTime = new Login();
         logoutTime.logoutTime(userId);
-        LoginUI loggedout = new LoginUI();
+        LoginUI loggedout = new LoginUI(host);
         loggedout.setVisible(rootPaneCheckingEnabled);
     }
 

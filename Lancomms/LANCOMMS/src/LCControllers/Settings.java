@@ -17,14 +17,19 @@ import javax.swing.JOptionPane;
  */
 public class Settings {
    
-    public boolean updatePassword(int userId, String oldpw, String newpw){
+    public boolean updatePassword(int userId, String oldpw, String newpw, String confirmnewpw){
         // call check old password
         //  UserModel set = new SettingsModel();
         UserModel setpw = new UserModel();
         boolean check = setpw.checkPassword(userId, oldpw);
         if(check!=false){
-            setpw.updatePassword(userId, newpw);
-            return true;
+            if(newpw.equals(confirmnewpw)){
+                setpw.updatePassword(userId, newpw);
+                return true;
+                }
+            else{
+                return false;
+                }
             }
         else
             return false;
