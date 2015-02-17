@@ -155,11 +155,15 @@ public class ChatWindowUI extends javax.swing.JFrame implements WritableGUI {
 
         chat.setEditable(false);
         chat.setColumns(20);
+        chat.setLineWrap(true);
         chat.setRows(5);
+        chat.setWrapStyleWord(true);
         jScrollPane1.setViewportView(chat);
 
         message.setColumns(20);
+        message.setLineWrap(true);
         message.setRows(5);
+        message.setWrapStyleWord(true);
         // start our set up of key bindings
 
         // to get the correct InputMap

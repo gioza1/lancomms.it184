@@ -56,6 +56,7 @@ public class MainUI extends JFrame implements Serializable {
     private ArrayList<ChatWindowUI> algui;
     private boolean callDisabled;
     private List<String> chatting;
+    private SettingsUI sui;
     DefaultListModel<ClientObject> model = new DefaultListModel<>();
 
     /**
@@ -66,6 +67,7 @@ public class MainUI extends JFrame implements Serializable {
      */
     public MainUI(int uid, String co) {                  //that username is so legit.
         myServer = null;
+        sui = null;
         umodel = new UserModel();
         callDisabled = false;
         algui = new ArrayList<ChatWindowUI>();
@@ -479,7 +481,16 @@ public class MainUI extends JFrame implements Serializable {
     
     private void settingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         myClient.updateStatus();
-        new SettingsUI(userId);
+        if(sui==null){
+            SettingsUI sui = new SettingsUI(userId);
+            sui.setVisible(true);
+        }       
+        else if(sui!=null){
+            if(!sui.isVisible()){
+                sui.setVisible(true);
+            }            
+        }
+
     }
 
     private void logoutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {

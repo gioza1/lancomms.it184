@@ -85,7 +85,9 @@
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="columns" type="int" value="20"/>
+            <Property name="lineWrap" type="boolean" value="true"/>
             <Property name="rows" type="int" value="5"/>
+            <Property name="wrapStyleWord" type="boolean" value="true"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -100,7 +102,9 @@
         <Component class="javax.swing.JTextArea" name="message">
           <Properties>
             <Property name="columns" type="int" value="20"/>
+            <Property name="lineWrap" type="boolean" value="true"/>
             <Property name="rows" type="int" value="5"/>
+            <Property name="wrapStyleWord" type="boolean" value="true"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="// start our set up of key bindings&#xa;&#xa;      // to get the correct InputMap&#xa;      int condition = WHEN_FOCUSED;  &#xa;      // get our maps for binding from the chatEnterArea JTextArea&#xa;      InputMap inputMap = message.getInputMap(condition);&#xa;      ActionMap actionMap = message.getActionMap();&#xa;&#xa;      // the key stroke we want to capture&#xa;      KeyStroke enterStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);&#xa;&#xa;      // tell input map that we are handling the enter key&#xa;      inputMap.put(enterStroke, enterStroke.toString());&#xa;&#xa;      // tell action map just how we want to handle the enter key&#xa;      actionMap.put(enterStroke.toString(), new AbstractAction() {&#xa;&#xa;         @Override&#xa;         public void actionPerformed(ActionEvent evt) {&#xa;            sendButtonActionPerformed(evt);&#xa;         }&#xa;      });"/>

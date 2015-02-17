@@ -71,6 +71,7 @@ public class SettingsUI extends JFrame{
             
         this.add(panel);
         this.setVisible(true);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 	 /**
           * sending the updated data to the Setting Controller
