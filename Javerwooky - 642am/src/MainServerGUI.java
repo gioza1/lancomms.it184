@@ -158,7 +158,7 @@ public class MainServerGUI extends JFrame implements ActionListener {
                 setExtendedState(JFrame.ICONIFIED);
             }
         });
-
+         
     }
 
     // append message to the two JTextArea

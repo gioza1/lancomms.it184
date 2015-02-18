@@ -24,6 +24,8 @@ public class AddUser extends javax.swing.JFrame {
         initComponents();
         this.setTitle("Add User");
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setLocationByPlatform(true);
+
     }
 
     /**

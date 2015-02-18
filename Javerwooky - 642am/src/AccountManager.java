@@ -34,6 +34,7 @@ public class AccountManager extends javax.swing.JFrame {
         this.setTitle("Manage Accounts");
         System.out.println(usersTable.getColumnName(0));
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setLocationByPlatform(true);
 
     }
 

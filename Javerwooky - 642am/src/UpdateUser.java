@@ -32,6 +32,8 @@ public class UpdateUser extends javax.swing.JFrame {
         setInputValues();
         this.setTitle("Update User");
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setLocationByPlatform(true);
+
     }
 
     /**
