@@ -6,8 +6,12 @@
 
 package LCModels;
 
+import java.io.IOException;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import lancomms.LANCOMMS;
 
 
 /**
@@ -20,12 +24,21 @@ public class ConnectDB {
      * The method where the connection made
      * @return 
      */
+    private String host;
+    
+    public ConnectDB(){
+        LANCOMMS lc = new LANCOMMS();
+        host = lc.getHost();
+
+    }
+    
+    
     public Connection connectToDB(){
         //connects to DB
         
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://192.168.1.102:3306/lancomms","lancomms","lancomms");           
+            con = DriverManager.getConnection("jdbc:mysql://"+host+":3306/lancomms","lancomms","lancomms");           
         }
         catch ( ClassNotFoundException | SQLException e ) {
             JOptionPane.showMessageDialog(null, "Cannot connect to server at this time.");

@@ -7,6 +7,7 @@ package lancomms;
 
 import LCViews.LoginUI;
 import LCViews.MainUI;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,35 +21,61 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class LANCOMMS {
 
     private String host;
-    
-    public LANCOMMS(){
+
+    public LANCOMMS() {
         try {
-            getPropValues();
+            getPropHost();
         } catch (IOException ex) {
-            System.out.println("meeehh: "+ex);
+            System.out.println("meeehh: " + ex);
         }
     }
-    
+
     public void getPropValues() throws IOException {
-        
-        
+
         Properties prop = new Properties();
         String propFileName = "host.properties";
 
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("lancomms/"+propFileName);
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("../config/" + propFileName);
 
         if (inputStream != null) {
             prop.load(inputStream);
         } else {
             throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
         }
-        
+
         // get the property value and print it out
         host = prop.getProperty("host");
         System.out.println(host);
     }
-    
-    public String getHost(){
+
+    public String getHost() {
+        return host;
+    }
+
+    public String getPropHost() throws IOException {
+
+        String versionString = null;
+
+        //to load application's properties, we use this class
+        Properties mainProperties = new Properties();
+
+        FileInputStream file;
+
+        //the base folder is ./, the root of the main.properties file  
+        String path = "./host.properties";
+
+        //load the file handle for main.properties
+        file = new FileInputStream(path);
+
+        //load all the properties from this file
+        mainProperties.load(file);
+
+        //we have loaded the properties, so close the file handle
+        file.close();
+
+        //retrieve the property we are intrested, the app.version
+        host = mainProperties.getProperty("host");
+        System.out.println(host);
         return host;
     }
 
@@ -60,6 +87,7 @@ public class LANCOMMS {
         } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             System.out.println("Something's wrong with the GUI theme selected: " + e.getMessage());
         }
+
         LANCOMMS lc = new LANCOMMS();
         LoginUI test = new LoginUI(lc.getHost());
         //MainUI test = new MainUI(1);
