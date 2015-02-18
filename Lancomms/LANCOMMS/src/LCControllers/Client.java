@@ -182,7 +182,7 @@ public class Client {
 //        }
     }
 
-    void sendMessageToServer(ChatMessage msg) {
+   public void sendMessageToServer(ChatMessage msg) {
         try {
             mainSOutput.writeObject(msg);
         } catch (IOException e) {

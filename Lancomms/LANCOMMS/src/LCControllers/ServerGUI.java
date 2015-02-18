@@ -233,7 +233,7 @@ public class ServerGUI extends JFrame implements WindowListener {
     class ServerRunning extends Thread {
 
         public void run() {
-            server.start();         // should execute until if fails
+//            server.start();         // should execute until if fails
             // the server failed
             stopStart.setText("Start");
             tPortNumber.setEditable(true);

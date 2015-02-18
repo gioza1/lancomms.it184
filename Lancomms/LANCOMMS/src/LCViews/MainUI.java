@@ -5,6 +5,7 @@
  */
 package LCViews;
 
+import LCControllers.ChatMessage;
 import LCControllers.Client;
 import LCControllers.ClientObject;
 import LCControllers.Contacts;
@@ -61,6 +62,7 @@ public class MainUI extends JFrame implements Serializable {
     private ImageIcon img;
     private boolean settings;
     private String host;
+    private ServerRunning sr;
     DefaultListModel<ClientObject> model = new DefaultListModel<>();
 
     /**
@@ -101,7 +103,10 @@ public class MainUI extends JFrame implements Serializable {
 
         myClient.setMainUI(this);
         myServer = new Server(myCObj, this);
-        new ServerRunning().start();
+        sr = new ServerRunning();
+
+        sr.start();
+
         if (!myClient.connectToMainServer(host)) {
             return;
         }
@@ -157,7 +162,7 @@ public class MainUI extends JFrame implements Serializable {
         logoutMenuItem = new javax.swing.JMenuItem();
         ContactsList = new javax.swing.JPanel();
         ContactsList.setForeground(new java.awt.Color(255, 255, 255));
-        
+
         WindowListener l = new WindowAdapter() {
             List<Window> windows = new ArrayList<Window>();
 
@@ -203,7 +208,7 @@ public class MainUI extends JFrame implements Serializable {
                 JList theList = (JList) mouseEvent.getSource();
                 if (mouseEvent.getClickCount() == 2) {
                     int index = theList.locationToIndex(mouseEvent.getPoint());
-                    if (index >= 0) {                     
+                    if (index >= 0) {
                         ClientObject o = (ClientObject) theList.getModel().getElementAt(index);
                         if (!chatting.contains(o.getUsername())) {
 
@@ -219,6 +224,7 @@ public class MainUI extends JFrame implements Serializable {
 
                             for (Frame cwindow : Frame.getFrames()) {
                                 if (!cwindow.isShowing() && cwindow.getTitle().equals(o.getUsername())) {
+                                    System.out.println("Setting visible the chat window of: " + cwindow.getTitle());
                                     cwindow.setVisible(true);
                                 }
                             }
@@ -240,9 +246,9 @@ public class MainUI extends JFrame implements Serializable {
 //                    if(!((ClientObject) value).getUsername().contentEquals(myCObj.getUsername()))
                     //((JLabel) renderer).setText(((ClientObject) value).getUsername()+" "+((ClientObject) value).getStatus());
                     //ImageIcon imageIcon = new ImageIcon(getClass().getResource("/images/pp2.png"));
-         
+
                     //setIcon(imageIcon);
-                    ((JLabel) renderer).setText(((ClientObject) value).getName()+"  ("+((ClientObject) value).getStatus()+") ");
+                    ((JLabel) renderer).setText(((ClientObject) value).getName() + "  (" + ((ClientObject) value).getStatus() + ") ");
                 }
                 return renderer;
             }
@@ -322,7 +328,7 @@ public class MainUI extends JFrame implements Serializable {
 
         img = new ImageIcon(getClass().getResource("/lancomms/pp2.png"));
         this.setIconImage(img.getImage());
-        
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -376,18 +382,17 @@ public class MainUI extends JFrame implements Serializable {
         jMenuBar1.add(LancommsMenu);
 
         setJMenuBar(jMenuBar1);
-        
-        
+
         jComboBox1 = new javax.swing.JComboBox();
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Online", "Busy"}));
-        
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Online", "Busy"}));
+
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
             }
         });
-        
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -415,10 +420,10 @@ public class MainUI extends JFrame implements Serializable {
                         .addContainerGap()
                         .addComponent(MainTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(117, 117, 117)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(160, Short.MAX_VALUE))                
+                .addGroup(layout.createSequentialGroup()
+                        .addGap(117, 117, 117)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(160, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -442,10 +447,10 @@ public class MainUI extends JFrame implements Serializable {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                         .addComponent(MainTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(89, 89, 89)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(501, Short.MAX_VALUE))                
+                .addGroup(layout.createSequentialGroup()
+                        .addGap(89, 89, 89)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(501, Short.MAX_VALUE))
         );
 
         pack();
@@ -471,19 +476,20 @@ public class MainUI extends JFrame implements Serializable {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-    } 
-    
+        ChatMessage status = new ChatMessage(ChatMessage.STATUS, jComboBox1.getSelectedItem().toString());
+        myClient.sendMessageToServer(status);
+    }
+
     private void settingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        if(settings==false){
+        if (settings == false) {
             SettingsUI sui = new SettingsUI(userId, this);
             sui.setVisible(true);
-        }       
-        else if(settings==true){
-            if(!sui.isVisible()){
+        } else if (settings == true) {
+            if (!sui.isVisible()) {
                 sui.setVisible(true);
-            }            
+            }
         }
     }
 
@@ -499,11 +505,22 @@ public class MainUI extends JFrame implements Serializable {
     public void logout() {
         this.dispose();
         System.gc();
-        for (Frame frames : Frame.getFrames()) {
-            frames.dispose();
+        int i = 0;
+        for (ChatWindowUI a : algui) {
+            a.disconnect();
+            a.dispose();
+            System.out.println("ChatWindow " + ++i + " is disposed");
         }
+        for (Frame frames : Frame.getFrames()) {
+            if (!frames.isShowing() || frames.isShowing()) {
+                frames.dispose();
+            }
+        }
+        myServer.stop();
         myClient.disconnectMain();
         myClient.disconnect();
+        sr.interrupt();
+
         //disconnect all sockets to other clients
         Login logoutTime = new Login();
         logoutTime.logoutTime(userId);
@@ -536,7 +553,7 @@ public class MainUI extends JFrame implements Serializable {
     private javax.swing.JPanel ContactsList;
 
     private void runServer(Server myServer) {
-        myServer.start(); //To change body of generated methods, choose Tools | Templates.
+        myServer.run(); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void appendEvent(String str) {
@@ -583,6 +600,7 @@ public class MainUI extends JFrame implements Serializable {
     public void addChatWindow(ChatWindowUI cwindow) {
         algui.add(cwindow);
         chatting.add(cwindow.getUsername());
+        System.out.println("ChatWindows#:" + algui.size());
         for (String x : chatting) {
             System.out.println("Chatting to: " + x);
         }
@@ -622,9 +640,11 @@ public class MainUI extends JFrame implements Serializable {
     class ServerRunning extends Thread {
 
         public void run() {
-            myServer.start();
+            myServer.run();
+            myServer.stop();
             myServer = null;
         }
+
     }
-    
+
 }

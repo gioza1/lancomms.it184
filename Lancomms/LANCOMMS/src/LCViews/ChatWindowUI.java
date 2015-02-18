@@ -44,7 +44,7 @@ public class ChatWindowUI extends javax.swing.JFrame {
     private String toServer;
     private int toPort;
     private MainUI mainui;
-    
+
     private Socket socket;
     private ObjectInputStream sInput;
     private ObjectOutputStream sOutput;
@@ -52,11 +52,10 @@ public class ChatWindowUI extends javax.swing.JFrame {
     private boolean isCallInstanced = false;
     private boolean isCallDisabled = false;
 
-    
     public ChatWindowUI(String username, String s, int p) {
         toServer = s;
         toPort = p;
-        this.userNameTo = username;    
+        this.userNameTo = username;
         initComponents();
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -66,12 +65,11 @@ public class ChatWindowUI extends javax.swing.JFrame {
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationByPlatform(true);
     }
-    
+
     public ChatWindowUI(ClientObject to, ClientObject from) {
         toCo = to;
         fromCo = from;
         userNameTo = to.getUsername();
-
 
         //connect to a client
         try {
@@ -81,7 +79,7 @@ public class ChatWindowUI extends javax.swing.JFrame {
             try {
                 sInput = new ObjectInputStream(socket.getInputStream());
                 sOutput = new ObjectOutputStream(socket.getOutputStream());
-                
+
             } catch (IOException ex) {
                 System.out.println("Exception creating new Input/output Streams: " + ex);
                 return;
@@ -90,20 +88,24 @@ public class ChatWindowUI extends javax.swing.JFrame {
             System.out.println("Exception creating new Input/output Streams: " + ex);
             return;
         }
-        
+        System.out.println("Chat window created by doubleclick");
         initComponents();
+        senderDetails(fromCo);
         this.setLocationByPlatform(true);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        
+
     }
-    
-    public void setMainUI(MainUI mui){
+
+    public void setMainUI(MainUI mui) {
         this.mainui = mui;
     }
-    
-    
-    
-    private void disconnect() {
+
+    public void setSendDisabled() {
+        sendButton.setEnabled(false);
+    }
+
+    public void disconnect() {
+        sendLogoutToChatter();
         try {
             if (sInput != null) {
                 sInput.close();
@@ -127,7 +129,7 @@ public class ChatWindowUI extends javax.swing.JFrame {
         if (this != null) {
             this.dispose();
         }
-        
+
     }
 
     /**
@@ -262,7 +264,7 @@ public class ChatWindowUI extends javax.swing.JFrame {
         ChatMessage cmsg = new ChatMessage(ChatMessage.MESSAGE, message.getText());
         append(fromCo.getUsername() + ": " + message.getText() + "\n");
         message.setText("");
-        
+
         if (sentSelf == false) {
             senderDetails(fromCo);
         }
@@ -270,28 +272,37 @@ public class ChatWindowUI extends javax.swing.JFrame {
         return;
 
     }//GEN-LAST:event_sendButtonActionPerformed
-    
+
     public void sendMessage(ChatMessage msg) {
         try {
             sOutput.writeObject(msg);
-            if(msg.getType()==1){
+            if (msg.getType() == 1) {
                 Message mlog = new Message();
-                mlog.messageTime(fromCo.getMyId(),msg.getMessage(),toCo.getMyId());
-                }
+                mlog.messageTime(fromCo.getMyId(), msg.getMessage(), toCo.getMyId());
+            }
+        } catch (IOException e) {
+            System.out.println("Exception writing to contact's server: " + e);
+        }
+    }
+
+    public void sendLogoutToChatter() {
+
+        try {
+            sOutput.writeObject(new ChatMessage(ChatMessage.LOGOUT, "Bye"));
         } catch (IOException e) {
             System.out.println("Exception writing to server: " + e);
         }
     }
-    
-    public void sendResponse(ChatMessage cmsg){
+
+    public void sendResponse(ChatMessage cmsg) {
         if (sentSelf == false) {
             senderDetails(fromCo);
         }
-        sendMessage(cmsg); 
+        sendMessage(cmsg);
     }
-    
+
     boolean senderDetails(ClientObject msg) {
-        
+
         try {
             sOutput.writeObject(msg);
             sOutput.reset();
@@ -302,18 +313,18 @@ public class ChatWindowUI extends javax.swing.JFrame {
         System.out.println("Sent myself");
         return true;
     }
-       
+
     private void videoCallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_videoCallActionPerformed
         try {
             // TODO add your handling code here:
-            if(!isCallDisabled){
+            if (!isCallDisabled) {
                 int callPort = toCo.getPort();
-                if(isCallInstanced==false){
-                    call = new Call(toCo.getServer(), Integer.toString(callPort), Integer.toString(fromCo.getPort()), this, toCo.getUsername());    
-                    }
-                this.isCallInstanced=true; //associate instance to chatwindow
+                if (isCallInstanced == false) {
+                    call = new Call(toCo.getServer(), Integer.toString(callPort), Integer.toString(fromCo.getPort()), this, toCo.getUsername());
+                }
+                this.isCallInstanced = true; //associate instance to chatwindow
                 ChatMessage cmsg = new ChatMessage(ChatMessage.CALL, "call");
-                append("\nAttempting to call "+toCo.getUsername()+"\n");       
+                append("\nAttempting to call " + toCo.getUsername() + "\n");
                 if (sentSelf == false) {
                     senderDetails(fromCo);
                 }
@@ -324,58 +335,57 @@ public class ChatWindowUI extends javax.swing.JFrame {
             Logger.getLogger(ChatWindowUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_videoCallActionPerformed
-    
-    public boolean isCallInstanced(){
+
+    public boolean isCallInstanced() {
         return isCallInstanced;
     }
-    
-    public Call getCallInstance(){
+
+    public Call getCallInstance() {
         return call;
     }
-    
-    public void setCallInstance(){
-        isCallInstanced=true;
-    }
-    
-    public void setCallDisabled(){
-        isCallDisabled = true;
-        videoCall.setEnabled(false);        
+
+    public void setCallInstance() {
+        isCallInstanced = true;
     }
 
-    public void setCallEnabled(){
+    public void setCallDisabled() {
+        isCallDisabled = true;
+        videoCall.setEnabled(false);
+    }
+
+    public void setCallEnabled() {
         isCallDisabled = false;
         videoCall.setEnabled(true);
     }
-    
-    public void disableCall(){
+
+    public void disableCall() {
         mainui.setCallDisabled();
     }
-    
-    public void enableCall(){
+
+    public void enableCall() {
         mainui.setCallEnabled();
     }
 
     public String getUsername() {
         return userNameTo;
     }
-    
-    public int getId(){
+
+    public int getId() {
         return fromCo.getMyId();
     }
-    
-    public int getToId(){
+
+    public int getToId() {
         return toCo.getMyId();
     }
 
-    
     public JTextArea getMessageArea() {
         return chat;
     }
-    
+
     public void setMessageArea(JTextArea message) {
         this.chat = message;
     }
-      
+
     public void append(String str) {
         chat.append(str);
         chat.setCaretPosition(chat.getText().length() - 1);
@@ -396,5 +406,5 @@ public class ChatWindowUI extends javax.swing.JFrame {
     private javax.swing.JButton sendButton;
     private javax.swing.JButton videoCall;
     // End of variables declaration//GEN-END:variables
-    
+
 }

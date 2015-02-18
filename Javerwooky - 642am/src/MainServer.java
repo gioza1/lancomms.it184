@@ -255,7 +255,7 @@ public class MainServer {
             // to loop until LOGOUT
 
             while (tKeepGoing) {
-                
+                if(test==null){
                 try {
                     test = (ClientObject) sInput.readObject();
                     display(test.getUsername());
@@ -274,6 +274,7 @@ public class MainServer {
                     display(ct.test.getUsername());
                     
                     ct.updateOnlineList(alCo);
+                }
                 }
 
                 // read a String (which is an object)

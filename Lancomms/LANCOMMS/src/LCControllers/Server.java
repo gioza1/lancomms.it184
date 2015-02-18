@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 /*
  * The server that can be run both as a console application or a GUI
  */
-public class Server {
+public class Server implements Runnable {
 
     // a unique ID for each connection
     private static int uniqueId;
@@ -38,7 +38,7 @@ public class Server {
     private int port;
     // the boolean that will be turned of to stop the server
     private boolean keepGoing;
-
+    private ServerSocket serverSocket;
     private ClientObject me;
 
     private ArrayList<ClientObject> alCo = new ArrayList<ClientObject>();
@@ -58,21 +58,18 @@ public class Server {
         al = new ArrayList<ClientThread>();
     }
 
-    public void start() {
+    public void run() {
         keepGoing = true;
         /* create socket server and wait for connection requests */
         try {
             // the socket used by the server
-            ParseRoute pr= new ParseRoute();
+            ParseRoute pr = new ParseRoute();
             InetAddress addr = InetAddress.getByName(pr.getLocalIPAddress());
-            ServerSocket serverSocket = new ServerSocket(me.getPort(), 50, addr);
+            serverSocket = new ServerSocket(me.getPort(), 50, addr);
 
             // infinite loop to wait for connections
             while (keepGoing) {
                 // format message saying we are waiting
-//                display("Server waiting for Clients on port " + port + ".");
-                System.out.println("Server waiting for Clients on port " + me.getPort() + " and server " + me.getServer());
-
                 Socket socket = serverSocket.accept();  	// accept connection
                 System.out.println(socket.toString());
                 // if I was asked to stop
@@ -82,35 +79,39 @@ public class Server {
                 ClientThread t = new ClientThread(socket);  // make a thread of it
                 al.add(t);									// save it in the ArrayList
                 t.start();
+                System.out.println("CLIENT THREAD COUNT: " + al.size());
 //                System.out.println("Client thread started");
             }
-            // I was asked to stop
+        } catch (IOException e) {
+            String msg = sdf.format(new Date()) + " Exception on new ServerSocket: " + e + "\n";
+            display(msg);
+        } // I was asked to stop
+        finally {
             try {
                 serverSocket.close();
-                for (int i = 0; i < al.size(); ++i) {
-                    ClientThread tc = al.get(i);
-                    try {
-                        tc.sInput.close();
-                        tc.sOutput.close();
-                        tc.socket.close();
-                    } catch (IOException ioE) {
-                        // not much I can do
-                    }
-                }
+                System.out.println("Server succsefully stopped");
             } catch (Exception e) {
                 System.out.println("Exception closing the server and clients: " + e);
             }
-        } // something went bad
-        catch (IOException e) {
-            String msg = sdf.format(new Date()) + " Exception on new ServerSocket: " + e + "\n";
-            display(msg);
+            for (int i = 0; i < al.size(); ++i) {
+                System.out.println("Stopping all client threads. CT#: " + i);
+                ClientThread tc = al.get(i);
+                try {
+                    tc.sInput.close();
+                    tc.sOutput.close();
+                    tc.socket.close();
+                } catch (IOException ioE) {
+                    // not much I can do
+                }
+            }
         }
+        // something went bad
     }
+
     /*
      * For the GUI to stop the server
      */
-
-    protected void stop() {
+    public void stop() {
 //    protected void stop() {
         keepGoing = false;
         // connect to myself as Client to exit statement 
@@ -261,7 +262,7 @@ public class Server {
         public void run() {
             // to loop until LOGOUT           
             Call call = new Call();
-            
+
             boolean keepGoing = true;
             boolean isCallInstancedHere = false;
 
@@ -305,7 +306,7 @@ public class Server {
                          * value in ChatWindow.java file.
                          */
                         cw.setTitle(userName);
-                        /* Set message to TextArea */                        
+                        /* Set message to TextArea */
                     }
 
                     alCo.add(co);
@@ -318,36 +319,33 @@ public class Server {
                 } catch (ClassNotFoundException e2) {
                     break;
                 }
-                
+
                 // the messaage part of the ChatMessage
                 String message = cm.getMessage();
                 // set up call address-port if not instanced yet
-                if(cw.isCallInstanced()==false)
-                    {
-                    call = new Call(co.getServer(),Integer.toString(co.getPort()),Integer.toString(port),cw,co.getUsername());
+                if (cw.isCallInstanced() == false) {
+                    call = new Call(co.getServer(), Integer.toString(co.getPort()), Integer.toString(port), cw, co.getUsername());
                     cw.setCallInstance();
                     isCallInstancedHere = true;
-                    }
-                else if(cw.isCallInstanced()==true)   
-                    {
-                    if(isCallInstancedHere == false){
+                } else if (cw.isCallInstanced() == true) {
+                    if (isCallInstancedHere == false) {
                         call = cw.getCallInstance();
                         isCallInstancedHere = true;
-                        }
                     }
-                
+                }
+
                 // Switch on the type of message receive
                 switch (cm.getType()) {
 
                     case ChatMessage.MESSAGE:
                         cw.append(co.getUsername() + ": " + message + "\n");
-                        if(cw.isVisible()==false)
-                            {
+                        if (cw.isVisible() == false) {
                             cw.setVisible(true);
-                            }
+                        }
                         break;
                     case ChatMessage.LOGOUT:
-                        display(username + " disconnected with a LOGOUT message.");
+                        cw.setSendDisabled();
+//                        display(username + " disconnected with a LOGOUT message.");
                         keepGoing = false;
                         break;
                     case ChatMessage.WHOISIN:
@@ -358,68 +356,66 @@ public class Server {
                             writeMsg((i + 1) + ") " + ct.username + " since " + ct.date);
                         }
                         break;
-                    case ChatMessage.CALL:                      
+                    case ChatMessage.CALL:
                         try {
-                            String cresponse=null;
-                            if(!sg.checkCallDisabled()){
+                            String cresponse = null;
+                            if (!sg.checkCallDisabled()) {
                                 cresponse = call.acceptOrReject(co.getUsername());
                                 cm = new ChatMessage(ChatMessage.RESPONSE, cresponse);
                                 cw.sendResponse(cm);
 
-                                if(cresponse.equals("Accept")){                                                           
-                                    if(cw.isVisible()==false){
-                                    cw.setVisible(true);
-                                    }             
-                                    cw.append("\nYou are now in a call with "+co.getUsername()+"\n");
+                                if (cresponse.equals("Accept")) {
+                                    if (cw.isVisible() == false) {
+                                        cw.setVisible(true);
+                                    }
+                                    cw.append("\nYou are now in a call with " + co.getUsername() + "\n");
                                     call.startCall();
                                     sg.setCallDisabled();
+                                } else if (cresponse.equals("Reject")) {
+                                    cw.append("\nYou rejected the call from " + co.getUsername() + "\n");
                                 }
-                                else if(cresponse.equals("Reject")){
-                                    cw.append("\nYou rejected the call from "+co.getUsername()+"\n");                                    
-                                }
-                            }
-                            else if(sg.checkCallDisabled()){
+                            } else if (sg.checkCallDisabled()) {
                                 cresponse = "Busy";
                                 cm = new ChatMessage(ChatMessage.RESPONSE, cresponse);
                                 cw.sendResponse(cm);
                             }
-                            System.out.println("My response is: "+ cresponse);
-                            
+                            System.out.println("My response is: " + cresponse);
+
                         } catch (IOException ex) {
                             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        
+
                         break;
                     case ChatMessage.RESPONSE:
                         switch (message) {
-                        case "Accept":
-                            call.startCall();
-                            sg.setCallDisabled();
-                            cw.append("\nYou are now in a call with "+co.getUsername()+"\n");
-                            break;
-                        case "Reject":
-                            cw.append("\n"+co.getUsername()+" has rejected the call!\n");
-                            sg.setCallEnabled();
-                            break;
-                        case "Busy":
-                            cw.append("\n"+co.getUsername()+" is in a call right now. Please try again later!\n");
-                            sg.setCallEnabled();
-                            break;
-                        }                            
+                            case "Accept":
+                                call.startCall();
+                                sg.setCallDisabled();
+                                cw.append("\nYou are now in a call with " + co.getUsername() + "\n");
+                                break;
+                            case "Reject":
+                                cw.append("\n" + co.getUsername() + " has rejected the call!\n");
+                                sg.setCallEnabled();
+                                break;
+                            case "Busy":
+                                cw.append("\n" + co.getUsername() + " is in a call right now. Please try again later!\n");
+                                sg.setCallEnabled();
+                                break;
+                        }
                         break;
                     case ChatMessage.STOPCALL:
-                        call.stopCall();   
-                        break;                        
+                        call.stopCall();
+                        break;
                 }
             }
             // remove myself from the arrayList containing the list of the
             // connected Clients
 
             //cw.dispose();
-            cw.append(co.getUsername()+" is now offline.\n");
-            try{
+            cw.append(co.getUsername() + " is now offline.\n");
+            try {
                 call.stopCall();
-            }catch(Exception e){
+            } catch (Exception e) {
                 //
             }
             remove(id);
