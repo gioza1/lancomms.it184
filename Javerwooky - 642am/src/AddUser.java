@@ -148,7 +148,9 @@ public class AddUser extends javax.swing.JFrame {
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         // TODO add your handling code here:
         if (addUser()) {
+            JOptionPane.showMessageDialog(null, "Successfully added user!");
             am.populadaTable();
+            this.dispose();
         }
 //        addUser();
     }//GEN-LAST:event_addButtonActionPerformed
@@ -220,61 +222,58 @@ public class AddUser extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Please input your name");
         } else if (lastName.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please input your surname");
-//        } else if (password.getPassword().length < 0) {
-//            JOptionPane.showMessageDialog(null, "Please input password");
-//        } else if (password.getPassword().length > 0) {
-//            pass = new String(password.getPassword());
-//        } else if (confirmPassword.getPassword().length < 0) {
-//            JOptionPane.showMessageDialog(null, "Confirm your password");
-//        } else if (confirmPassword.getPassword().length > 0) {
-//            confpass = new String(confirmPassword.getPassword());
-//        } else if (!pass.contentEquals(confpass)) {
-//            JOptionPane.showMessageDialog(null, "Passwords do not match");
-        } else {
+        } else if (password.getText().length() == 0) {
+            JOptionPane.showMessageDialog(null, "Please input password");
+            return false;
+        }
+        if (!password.getText().isEmpty() && !password.getText().equals(confirmPassword.getText())) {
+            JOptionPane.showMessageDialog(null, "Passwords do not match");
+            return false;
+        }
+        try {
+            //STEP 2: Register JDBC driver
+            Class.forName("com.mysql.jdbc.Driver");
+
+            //STEP 3: Open a connection
+            conn = new ConnectDB().connectToDB();
+            System.out.println("Connected database successfully...");
+
+            //STEP 4: Execute a query
+            System.out.println("Inserting records into the table...");
+            stmt = conn.createStatement();
+
+            String sql = "INSERT INTO `user` (user_username,user_password,user_fname,user_lname,user_status) VALUES ('"
+                    + username.getText() + "','" + password.getText() + "','" + firstName.getText() + "','" + lastName.getText()
+                    + "',1" + ")";
+
+            stmt.executeUpdate(sql);
+            isSuccess = true;
+            System.out.println("Inserted records into the table...");
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
             try {
-                //STEP 2: Register JDBC driver
-                Class.forName("com.mysql.jdbc.Driver");
-
-                //STEP 3: Open a connection
-                conn = new ConnectDB().connectToDB();
-                System.out.println("Connected database successfully...");
-
-                //STEP 4: Execute a query
-                System.out.println("Inserting records into the table...");
-                stmt = conn.createStatement();
-
-                String sql = "INSERT INTO `user` (user_username,user_password,user_fname,user_lname,user_status) VALUES ('"
-                        + username.getText() + "','" + password.getText() + "','" + firstName.getText() + "','" + lastName.getText()
-                        + "',1" + ")";
-
-                stmt.executeUpdate(sql);
-                isSuccess = true;
-                System.out.println("Inserted records into the table...");
-
+                if (stmt != null) {
+                    conn.close();
+                }
             } catch (SQLException se) {
-                //Handle errors for JDBC
+            }// do nothing
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException se) {
                 se.printStackTrace();
-            } catch (Exception e) {
-                //Handle errors for Class.forName
-                e.printStackTrace();
-            } finally {
-                //finally block used to close resources
-                try {
-                    if (stmt != null) {
-                        conn.close();
-                    }
-                } catch (SQLException se) {
-                }// do nothing
-                try {
-                    if (conn != null) {
-                        conn.close();
-                    }
-                } catch (SQLException se) {
-                    se.printStackTrace();
-                }//end finally try
-            }//end try
-            System.out.println("Goodbye!");
-        }//end main
+            }//end finally try
+        }//end try
+        System.out.println("Goodbye!");
+        //end main
 
         return isSuccess;
     }

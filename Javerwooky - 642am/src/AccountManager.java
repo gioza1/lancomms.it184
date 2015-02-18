@@ -87,8 +87,18 @@ public class AccountManager extends javax.swing.JFrame {
         });
 
         updateUser.setText("Update User");
+        updateUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateUserActionPerformed(evt);
+            }
+        });
 
         deleteUser.setText("Delete User");
+        deleteUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteUserActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -123,6 +133,22 @@ public class AccountManager extends javax.swing.JFrame {
         // TODO add your handling code here:
         new AddUser(this).setVisible(true);
     }//GEN-LAST:event_addUserActionPerformed
+
+    private void updateUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateUserActionPerformed
+        // TODO add your handling code here:
+        updateUser();
+    }//GEN-LAST:event_updateUserActionPerformed
+
+    private void deleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserActionPerformed
+        // TODO add your handling code here:
+        if (JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this user?") == JOptionPane.YES_OPTION) {
+            String username = usersTable.getModel().getValueAt(usersTable.getSelectedRow(), 0).toString();
+            if (deleteUser(username)) {
+                JOptionPane.showMessageDialog(null, "Successfully deleted user!");
+                populadaTable();
+            }
+        }
+    }//GEN-LAST:event_deleteUserActionPerformed
 
     /**
      * @param args the command line arguments
@@ -235,7 +261,72 @@ public class AccountManager extends javax.swing.JFrame {
         usersTable.setModel(model);
     }
 
-    public void addUser() {
+    public void updateUser() {
+        String username = usersTable.getModel().getValueAt(usersTable.getSelectedRow(), 0).toString();
+        new UpdateUser(username, this).setVisible(true);
+    }
+
+    public boolean deleteUser(String user) {
+        Connection conn = null;
+        Statement stmt = null;
+        boolean isSuccess = false;
+        int id = getUserId(user);
+        //STEP 3: Open a connection
+        conn = new ConnectDB().connectToDB();
+        System.out.println("Connected database successfully...");
+//                    active = (changeStatus.isEnabled() == true ? 1 : 0);
+        try {
+            stmt = conn.createStatement();
+            String sql = "DELETE FROM `user` WHERE user_id='" + id + "';";
+            stmt.executeUpdate(sql);
+            isSuccess = true;
+            System.out.println("Deleted " + user);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null) {
+                    conn.close();
+                }
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+        }//end try
+
+        System.out.println(
+                "Goodbye!");
+//        }//end main
+
+        return isSuccess;
+    }
+
+    public int getUserId(String user) {
+        int id = 0;
+        try {
+            Connection connection = new ConnectDB().connectToDB();
+
+            String sql = "SELECT user_id FROM `user` WHERE user_username='" + user + "';";
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                id = rs.getInt("user_id");
+            }
+            rs.close();
+            stmt.close();
+            connection.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return id;
     }
 
 }
