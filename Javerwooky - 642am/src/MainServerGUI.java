@@ -8,9 +8,15 @@
  * @author Gio
  */
 import LCControllers.ClientObject;
+import LCControllers.ParseRoute.ParseRoute;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.border.BevelBorder;
 
 /*
  * The server as a GUI
@@ -25,9 +31,9 @@ public class MainServerGUI extends JFrame implements ActionListener {
     // the stop and start buttons
     private JButton stopStart;
     // JTextArea for the chat room and the events
-    private JTextArea chat, event;
+    private JTextArea chat, separate, event;
     // The port number
-    private JTextField tPortNumber;
+    private JTextField tPortNumber, tIpAddress;
     // my server
     private MainServer server;
 
@@ -35,24 +41,29 @@ public class MainServerGUI extends JFrame implements ActionListener {
 
     // server constructor that receive the port to listen to for connection as parameter
     MainServerGUI() {
-        super("Main Server");
+        super("LANCOMMS Main Server");
         server = null;
-        // in the NorthPanel the PortNumber the Start and Stop buttons
+
+        ParseRoute pr = new ParseRoute();
+
         JPanel north = new JPanel();
+        north.add(new JLabel("Server Address: "));
+
+        try {
+            north.add(new JLabel(InetAddress.getByName(pr.getLocalIPAddress()).toString()));
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(MainServerGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+//        north.add(tIpAddress);
+        north.add(new JLabel("   "));
         north.add(new JLabel("Port number: "));
-        tPortNumber = new JTextField("  " + 1500);
-        north.add(tPortNumber);
-        // to stop or start the server, we start with "Start"
-        stopStart = new JButton("Start");
-        stopStart.addActionListener(this);
-        north.add(stopStart);
-        stopStart.setEnabled(false);
+        north.add(new JLabel("1500"));
+
         add(north, BorderLayout.NORTH);
         //MENU BAR//
         JMenuBar menuBar = new JMenuBar();
         // Add the menubar to the frame
         setJMenuBar(menuBar);
-
         // Define and add two drop down menu to the menubar
         JMenu manageMenu = new JMenu("Server");
         menuBar.add(manageMenu);
@@ -80,19 +91,24 @@ public class MainServerGUI extends JFrame implements ActionListener {
         });
 
         // the event and chat room
-        JPanel center = new JPanel(new GridLayout(3, 1));
-        chat = new JTextArea(80, 80);
-        chat.setEditable(false);
-        appendRoom("Chat room.\n");
-        center.add(new JScrollPane(chat));
+        JPanel center = new JPanel(new GridLayout(2, 1));
+//        chat = new JTextArea(80, 80);
+//        chat.setEditable(false);
+//        appendRoom("Chat room.\n");
+//        center.add(new JScrollPane(chat));
         event = new JTextArea(80, 80);
         event.setEditable(false);
+        event.setLineWrap(true);
         appendEvent("Events log.\n");
         center.add(new JScrollPane(event));
         add(center);
 //        center.add(new JScrollPane(list));
 //        add(center);
 
+//        separate = new JTextArea(10, 10);
+//        separate.setEditable(false);
+//        separate.setLineWrap(true);
+//        appendEvent("List of Connected Users:");
         /*--------------------------------------------------------*/
         /*------------------------------------*/
         list.addMouseListener(null);
@@ -123,6 +139,12 @@ public class MainServerGUI extends JFrame implements ActionListener {
                 return renderer;
             }
         });
+
+        JScrollPane scrollPane = new JScrollPane(list);
+        JLabel label = new JLabel("Header", JLabel.CENTER);
+        label.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        scrollPane.setColumnHeaderView(label);
+        
         center.add(new JScrollPane(list));
         add(center);
         /*------------------------------------*/
@@ -145,8 +167,6 @@ public class MainServerGUI extends JFrame implements ActionListener {
         server = new MainServer(this);
         // and start it as a thread
         new ServerRunning().start();
-        stopStart.setText("Stop");
-        tPortNumber.setEditable(false);
 
         setVisible(true);
 
@@ -158,19 +178,19 @@ public class MainServerGUI extends JFrame implements ActionListener {
                 setExtendedState(JFrame.ICONIFIED);
             }
         });
-         
+
     }
 
     // append message to the two JTextArea
     // position at the end
-    void appendRoom(String str) {
-        chat.append(str);
-        chat.setCaretPosition(chat.getText().length() - 1);
+    void appendUsers(String str) {
+        separate.append(str);
+        separate.setCaretPosition(separate.getText().length() - 1);
     }
 
     void appendEvent(String str) {
         event.append(str);
-        event.setCaretPosition(chat.getText().length() - 1);
+        event.setCaretPosition(event.getText().length() - 1);
 
     }
 

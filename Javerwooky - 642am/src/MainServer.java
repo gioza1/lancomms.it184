@@ -142,7 +142,7 @@ public class MainServer {
         if (sg == null) {
             System.out.print(messageLf);
         } else {
-            sg.appendRoom(messageLf);     // append in the room window
+//            sg.appendRoom(messageLf);     // append in the room window
         }
         // we loop in reverse order in case we would have to remove a Client
         // because it has disconnected
@@ -265,7 +265,7 @@ public class MainServer {
                         Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
                         break;
                     }
-                    sg.appendRoom("\n" + test.getUsername() + " just connected.");
+                    sg.appendEvent(test.getUsername() + " just connected.\n");
 
                     addToContactList(test);
                     alCo.add(test);
