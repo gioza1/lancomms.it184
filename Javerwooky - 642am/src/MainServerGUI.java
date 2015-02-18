@@ -15,7 +15,7 @@ import java.awt.event.*;
 /*
  * The server as a GUI
  */
-public class MainServerGUI extends JFrame implements ActionListener, WindowListener {
+public class MainServerGUI extends JFrame implements ActionListener {
 
     DefaultListModel<ClientObject> model = new DefaultListModel<>();
 //    final JList list = new JList(model);
@@ -34,7 +34,6 @@ public class MainServerGUI extends JFrame implements ActionListener, WindowListe
     private ClientObject me;
 
     // server constructor that receive the port to listen to for connection as parameter
-
     MainServerGUI() {
         super("Main Server");
         server = null;
@@ -49,6 +48,36 @@ public class MainServerGUI extends JFrame implements ActionListener, WindowListe
         north.add(stopStart);
         stopStart.setEnabled(false);
         add(north, BorderLayout.NORTH);
+        //MENU BAR//
+        JMenuBar menuBar = new JMenuBar();
+        // Add the menubar to the frame
+        setJMenuBar(menuBar);
+
+        // Define and add two drop down menu to the menubar
+        JMenu manageMenu = new JMenu("Server");
+        menuBar.add(manageMenu);
+
+        JMenuItem manageUsers = new JMenuItem("Manage Accounts");
+        JMenuItem exitAction = new JMenuItem("Exit");
+        manageMenu.add(manageUsers);
+        manageMenu.add(exitAction);
+        manageUsers.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                new AccountManager().setVisible(true);
+            }
+        });
+        exitAction.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                if (server != null) {
+                    try {
+                        server.stop();			// ask the server to close the conection
+                    } catch (Exception eClose) {
+                    }
+                    server = null;
+                }
+                System.exit(1);
+            }
+        });
 
         // the event and chat room
         JPanel center = new JPanel(new GridLayout(3, 1));
@@ -99,8 +128,9 @@ public class MainServerGUI extends JFrame implements ActionListener, WindowListe
         /*------------------------------------*/
 
         // need to be informed when the user click the close button on the frame
-        addWindowListener(this);
+//        addWindowListener(this);
         setSize(400, 600);
+
         setVisible(true);
         if (server != null) {
             server.stop();
@@ -119,6 +149,16 @@ public class MainServerGUI extends JFrame implements ActionListener, WindowListe
         tPortNumber.setEditable(false);
 
         setVisible(true);
+
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+//        this.setLocationByPlatform(true);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                setExtendedState(JFrame.ICONIFIED);
+            }
+        });
+
     }
 
     // append message to the two JTextArea
@@ -170,21 +210,10 @@ public class MainServerGUI extends JFrame implements ActionListener, WindowListe
      * If the user click the X button to close the application
      * I need to close the connection with the server to free the port
      */
-    @Override
-    public void windowClosing(WindowEvent e) {
-        // if my Server exist
-        if (server != null) {
-            try {
-                server.stop();			// ask the server to close the conection
-            } catch (Exception eClose) {
-            }
-            server = null;
-        }
-        // dispose the frame
-        dispose();
-        System.exit(0);
-    }
-
+//    @Override
+//    public void windowClosing(WindowEvent e) {
+//
+//    }
     // I can ignore the other WindowListener method
     public void windowClosed(WindowEvent e) {
     }
