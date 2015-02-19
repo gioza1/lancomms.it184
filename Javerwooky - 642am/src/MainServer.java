@@ -326,7 +326,7 @@ public class MainServer {
                             Iterator<ClientObject> ite = cm.getList().iterator();
                             do {
                                 if (ite.next().getFullName().contentEquals(user)) {
-                                    writeMessage(cm);
+                                    ct.writeMessage(cm);
                                 }
                             } while (ite.hasNext());
 
