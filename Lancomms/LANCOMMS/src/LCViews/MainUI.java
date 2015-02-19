@@ -283,7 +283,7 @@ public class MainUI extends JFrame implements Serializable {
         MainTabs.addTab("<html><body leftmargin=15 topmargin=8 marginwidth=38 marginheight=5>Online Users</body></html>", ContactsList);
 
         jList2.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = {};
+            String[] strings = {"Mike Test (2015-2-15 06:47)"};
 
             public int getSize() {
                 return strings.length;

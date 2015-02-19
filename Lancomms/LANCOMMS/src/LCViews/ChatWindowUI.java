@@ -198,7 +198,7 @@ public class ChatWindowUI extends javax.swing.JFrame {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lancomms/pp2.png"))); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel4.setText(fromCo.getUsername());
+        jLabel4.setText(toCo.getName());
 
         videoCall.setText("Video Call");
         videoCall.addActionListener(new java.awt.event.ActionListener() {
