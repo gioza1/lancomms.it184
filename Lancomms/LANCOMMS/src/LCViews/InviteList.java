@@ -35,7 +35,7 @@ public class InviteList extends javax.swing.JFrame {
         hey = ey;
         me = oh;
         initComponents();
-        this.setTitle("Broadcast Message");
+        this.setTitle("Send to Many");
         populadaList();
         if (hey.size() == 0) {
             sendButton.setEnabled(false);
@@ -136,6 +136,8 @@ public class InviteList extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Please select users to send message to!");
         } else {
             me.sendMessageToServer(new ChatMessage(ChatMessage.CLIENTBROADCAST, x, me.getCo().getFullName() + ": " + messageArea.getText()));
+            JOptionPane.showMessageDialog(null, "Message sent!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
         }
     }//GEN-LAST:event_sendButtonActionPerformed
 
