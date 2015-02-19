@@ -356,14 +356,14 @@ public class Server implements Runnable {
 //                        display(username + " disconnected with a LOGOUT message.");
                         keepGoing = false;
                         break;
-                    case ChatMessage.WHOISIN:
-                        writeMsg("List of the users connected at " + sdf.format(new Date()) + "\n");
-                        // scan al the users connected
-                        for (int i = 0; i < al.size(); ++i) {
-                            ClientThread ct = al.get(i);
-                            writeMsg((i + 1) + ") " + ct.username + " since " + ct.date);
-                        }
-                        break;
+//                    case ChatMessage.WHOISIN:
+//                        writeMsg("List of the users connected at " + sdf.format(new Date()) + "\n");
+//                        // scan al the users connected
+//                        for (int i = 0; i < al.size(); ++i) {
+//                            ClientThread ct = al.get(i);
+//                            writeMsg((i + 1) + ") " + ct.username + " since " + ct.date);
+//                        }
+//                        break;
                     case ChatMessage.CALL:
                         try {
                             String cresponse = null;

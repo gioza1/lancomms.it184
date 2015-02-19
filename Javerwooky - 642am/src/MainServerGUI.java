@@ -70,8 +70,15 @@ public class MainServerGUI extends JFrame implements ActionListener {
 
         JMenuItem manageUsers = new JMenuItem("Manage Accounts");
         JMenuItem exitAction = new JMenuItem("Exit");
+        JMenuItem sendMessage = new JMenuItem("Send");
         manageMenu.add(manageUsers);
         manageMenu.add(exitAction);
+        manageMenu.add(sendMessage);
+        sendMessage.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                server.broadcast("Ola");
+            }
+        });
         manageUsers.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 new AccountManager().setVisible(true);
@@ -144,7 +151,7 @@ public class MainServerGUI extends JFrame implements ActionListener {
         JLabel label = new JLabel("Header", JLabel.CENTER);
         label.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         scrollPane.setColumnHeaderView(label);
-        
+
         center.add(new JScrollPane(list));
         add(center);
         /*------------------------------------*/

@@ -18,6 +18,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 
 /*
  * The Client that can be run both as a console or a GUI
@@ -182,15 +183,17 @@ public class Client {
 //        }
     }
 
-   public void sendMessageToServer(ChatMessage msg) {
+    public void sendMessageToServer(ChatMessage msg) {
         try {
+//            mainSOutput.reset();
             mainSOutput.writeObject(msg);
+//            mainSOutput.flush();
         } catch (IOException e) {
             System.out.println("Exception writing to server: " + e);
         }
     }
 
-   public void updateStatus() {
+    public void updateStatus() {
         ChatMessage cmsg = new ChatMessage(ChatMessage.STATUS, "BUSY");
         try {
             mainSOutput.writeObject(cmsg);
@@ -264,6 +267,26 @@ public class Client {
         }
     }
 
+    //ORIG REFERENCE
+//    class ListenFromMainServer extends Thread {
+//
+//        public void run() {
+////            boolean connected = true;
+//            while (true) {
+//                System.out.println("ListenFromMainServer Started");
+////                ArrayList<ClientObject> eh = new ArrayList<ClientObject>();
+//                ArrayList<ClientObject> eh = (ArrayList<ClientObject>) Client.receiveObject(mainSInput);
+//                if (eh != null) {
+//                    cg.updateList(eh);
+//                } else {
+//
+//                    break;
+//                }
+//            }
+//            cg.logout();
+//        }
+//
+//    }
     class ListenFromMainServer extends Thread {
 
         public void run() {
@@ -271,11 +294,19 @@ public class Client {
             while (true) {
                 System.out.println("ListenFromMainServer Started");
 //                ArrayList<ClientObject> eh = new ArrayList<ClientObject>();
-                ArrayList<ClientObject> eh = (ArrayList<ClientObject>) Client.receiveObject(mainSInput);
+                ChatMessage eh = (ChatMessage) Client.receiveObject(mainSInput);
                 if (eh != null) {
-                    cg.updateList(eh);
+                    switch (eh.getType()) {
+                        case ChatMessage.MESSAGE:
+                            System.out.println(eh.getMessage());
+                            break;
+                        case ChatMessage.UPDATELIST:
+                            cg.updateList(eh.getList());
+                            break;
+                        case ChatMessage.BROADCAST:
+                            JOptionPane.showMessageDialog(null, eh.getMessage(), "Broadcast Message", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 } else {
-
                     break;
                 }
             }

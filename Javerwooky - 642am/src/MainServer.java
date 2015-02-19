@@ -134,7 +134,7 @@ public class MainServer {
      *  to broadcast a message to all Clients
      */
 
-    private synchronized void broadcast(String message) {
+    synchronized void broadcast(String message) {
         // add HH:mm:ss and \n to the message
         String time = sdf.format(new Date());
         String messageLf = time + " " + message + "\n";
@@ -149,10 +149,11 @@ public class MainServer {
         for (int i = al.size(); --i >= 0;) {
             ClientThread ct = al.get(i);
             // try to write to the Client if it fails remove it from the list
-            if (!ct.writeMsg(messageLf)) {
-                al.remove(i);
-                display("Disconnected Client " + ct.username + " removed from list.");
-            }
+            ct.updateOnlineList(new ChatMessage(ChatMessage.MESSAGE, message));
+//            if (!ct.writeMsg(messageLf)) {
+//                al.remove(i);
+//                display("Disconnected Client " + ct.username + " removed from list.");
+//            }
         }
     }
 
@@ -271,8 +272,7 @@ public class MainServer {
                     alCo.add(test);
                     for (ClientThread ct : al) {
                         display(ct.test.getUsername());
-
-                        ct.updateOnlineList(alCo);
+                        ct.updateOnlineList(new ChatMessage(ChatMessage.UPDATELIST, alCo));
                     }
                 }
 
@@ -292,24 +292,37 @@ public class MainServer {
                 // Switch on the type of message receive
                 switch (cm.getType()) {
 
+                    case ChatMessage.MESSAGE:
+                        for (ClientThread ct : al) {
+//                            display("Setting status to: " + message);
+//                            display(ct.test.getUsername());
+//                            test.setStatus(message);
+                            ct.updateOnlineList(new ChatMessage(ChatMessage.MESSAGE, "Olah From main :)"));
+                        }
+                        break;
+
                     case ChatMessage.STATUS:
                         for (ClientThread ct : al) {
                             display("Setting status to: " + message);
 //                            display(ct.test.getUsername());
                             test.setStatus(message);
-                            ct.updateOnlineList(alCo);
+                            ct.updateOnlineList(new ChatMessage(ChatMessage.UPDATELIST, alCo));
                         }
                         break;
                     case ChatMessage.LOGOUT:
                         display(username + " disconnected with a LOGOUT message.");
                         tKeepGoing = false;
                         break;
-                    case ChatMessage.WHOISIN:
+                    case ChatMessage.BROADCAST:
 //                        writeMsg("List of the users connected at " + sdf.format(new Date()) + "\n");
                         // scan al the users connected
-                        for (int i = -1; i < al.size(); i++) {
-                            ClientThread ct = al.get(i);
-                            display((i + 1) + ") " + ct.username + " since " + ct.date);
+                        int i = 0;
+                        for (ClientThread ct : al) {
+                            System.out.println("CHATMESSAGEARRAY SIZE: " + cm.getList().size() + "CLIENTTSIZE: " + al.size());
+                            String user = cm.getList().get(i).getUsername();
+                            if (ct.test.getUsername().contentEquals(user)) {
+                                writeMessage(cm);
+                            }
                         }
                         break;
                 }
@@ -322,9 +335,9 @@ public class MainServer {
 
             alCo.remove(test);
             for (ClientThread cT : al) {
-                cT.updateOnlineList(alCo); // updates the online list for each client thread
+                cT.updateOnlineList(new ChatMessage(ChatMessage.UPDATELIST, alCo)); // updates the online list for each client thread
             }
-            display(test.getUsername() + " disconnected.");
+//            display(test.getUsername() + " disconnected.");
             close();
 
         }
@@ -355,7 +368,26 @@ public class MainServer {
         /*
          * Pass the current online list
          */
-        private boolean updateOnlineList(ArrayList<ClientObject> co) {
+        //ORIG REFERENCE
+//        private boolean updateOnlineList(ArrayList<ClientObject> co) {
+//            // if Client is still connected send the message to it
+//            if (!socket.isConnected()) {
+//                close();
+//                return false;
+//            }
+//            // write the message to the stream
+//            try {
+//
+//                sOutput.writeObject(co);
+//                sOutput.reset();
+//            } // if an error occurs, do not abort just inform the user
+//            catch (IOException e) {
+//                display("Error sending message to " + username);
+//                display(e.toString());
+//            }
+//            return true;
+//        }
+        private boolean updateOnlineList(ChatMessage co) {
             // if Client is still connected send the message to it
             if (!socket.isConnected()) {
                 close();
@@ -388,6 +420,25 @@ public class MainServer {
             try {
                 sOutput.reset();
                 sOutput.writeObject(msg);
+            } // if an error occurs, do not abort just inform the user
+            catch (IOException e) {
+                display("Error sending message to " + username);
+                display(e.toString());
+            }
+            return true;
+        }
+
+        private boolean writeMessage(ChatMessage co) {
+            // if Client is still connected send the message to it
+            if (!socket.isConnected()) {
+                close();
+                return false;
+            }
+            // write the message to the stream
+            try {
+
+                sOutput.writeObject(co);
+                sOutput.reset();
             } // if an error occurs, do not abort just inform the user
             catch (IOException e) {
                 display("Error sending message to " + username);
