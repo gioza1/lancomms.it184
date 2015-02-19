@@ -273,7 +273,7 @@ public class ChatWindowUI extends javax.swing.JFrame {
 
         if (message.getText().length() > 0) {
 
-            append(fromCo.getUsername() + ": " + message.getText() + "\n");
+            append(fromCo.getFullName() + ": " + message.getText() + "\n");
             message.setText("");
 
             sendMessage(cmsg);
