@@ -33,6 +33,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  */
 public class Server implements Runnable {
 
+    Clip clip = null;
     // a unique ID for each connection
     private static int uniqueId;
     // an ArrayList to keep the list of the Client
@@ -345,7 +346,7 @@ public class Server implements Runnable {
                 switch (cm.getType()) {
 
                     case ChatMessage.MESSAGE:
-                        playSound();
+                        playSound(0);
                         cw.append(co.getUsername() + ": " + message + "\n");
                         if (cw.isVisible() == false) {
                             cw.setVisible(true);
@@ -367,6 +368,7 @@ public class Server implements Runnable {
                     case ChatMessage.CALL:
                         try {
                             String cresponse = null;
+                            playSound(0);
                             if (!sg.checkCallDisabled()) {
                                 cresponse = call.acceptOrReject(co.getUsername());
                                 cm = new ChatMessage(ChatMessage.RESPONSE, cresponse);
@@ -379,8 +381,11 @@ public class Server implements Runnable {
                                     cw.append("\nYou are now in a call with " + co.getUsername() + "\n");
                                     call.startCall();
                                     sg.setCallDisabled();
+                                    stopSound();
+
                                 } else if (cresponse.equals("Reject")) {
                                     cw.append("\nYou rejected the call from " + co.getUsername() + "\n");
+                                    stopSound();
                                 }
                             } else if (sg.checkCallDisabled()) {
                                 cresponse = "Busy";
@@ -399,16 +404,18 @@ public class Server implements Runnable {
                             case "Accept":
                                 call.startCall();
                                 sg.setCallDisabled();
-
                                 cw.append("\nYou are now in a call with " + co.getUsername() + "\n");
+                                stopSound();
                                 break;
                             case "Reject":
                                 cw.append("\n" + co.getUsername() + " has rejected the call!\n");
                                 sg.setCallEnabled();
+                                stopSound();
                                 break;
                             case "Busy":
                                 cw.append("\n" + co.getUsername() + " is in a call right now. Please try again later!\n");
                                 sg.setCallEnabled();
+                                stopSound();
                                 break;
                         }
                         break;
@@ -478,10 +485,19 @@ public class Server implements Runnable {
             return true;
         }
 
-        public boolean playSound() {
+        public boolean playSound(int whatSound) {
             final java.util.Date date = new java.util.Date();
-            String stringFile = "x.wav";
-            File wavfile = new File("resources/lancommschat.wav");
+            File wavfile = null;
+            final int CHAT = 0, CALL = 1;
+            switch (whatSound) {
+                case CHAT:
+                    wavfile = new File("resources/lancommschat.wav");
+                    break;
+                case CALL:
+                    wavfile = new File("resources/lancommscall.wav");
+                    break;
+            }
+
             AudioInputStream audioInput = null;
             boolean x = false;
             try {
@@ -494,7 +510,9 @@ public class Server implements Runnable {
             }
             AudioFormat format = audioInput.getFormat();
 //        DataLine.Info info = new DataLine.Info(Clip.class, format);
-            Clip clip = null;
+            if (clip != null) {
+                clip.flush();
+            }
             try {
                 clip = AudioSystem.getClip();
             } catch (LineUnavailableException ex) {
@@ -508,7 +526,14 @@ public class Server implements Runnable {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
             clip.start();
+            clip.loop(clip.LOOP_CONTINUOUSLY);
             return x;
+        }
+
+        public void stopSound() {
+            if (clip != null) {
+                clip.stop();
+            }
         }
 
     }
