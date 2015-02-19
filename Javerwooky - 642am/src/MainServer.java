@@ -322,11 +322,14 @@ public class MainServer {
                         int i = al.size();
                         for (ClientThread ct : al) {
                             System.out.println("CHATMESSAGEARRAY SIZE: " + cm.getList().size() + "CLIENTTSIZE: " + al.size());
-                            String user = cm.getList().get(i--).getUsername();
+                            String user = ct.test.getFullName();
+                            Iterator<ClientObject> ite = cm.getList().iterator();
+                            do {
+                                if (ite.next().getFullName().contentEquals(user)) {
+                                    writeMessage(cm);
+                                }
+                            } while (ite.hasNext());
 
-                            if (ct.test.getUsername().contentEquals(user)) {
-                                writeMessage(cm);
-                            }
                         }
                         break;
                 }
