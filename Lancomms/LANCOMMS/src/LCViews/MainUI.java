@@ -51,7 +51,7 @@ public class MainUI extends JFrame implements Serializable {
     private Session sess;
     private int userId;
     private int idrow;
-    private String namerow;    
+    private String namerow;
     private int counter;
     private ClientObject myCObj;
     private Conversations convo;
@@ -61,6 +61,7 @@ public class MainUI extends JFrame implements Serializable {
     private ArrayList<ChatWindowUI> algui;
     private ArrayList<ConversationUI> cvgui;
     private ArrayList<ConvObject> convos;
+    private ArrayList<ClientObject> userList;
     private boolean callDisabled;
     private List<String> chatting;
     private List<String> conving;
@@ -88,8 +89,7 @@ public class MainUI extends JFrame implements Serializable {
         chatting = new ArrayList<String>();
         conving = new ArrayList<String>();
         host = hostadd;
-        
-        
+
         int port = 0;
         ParseRoute pr = new ParseRoute();
         String server = pr.getLocalIPAddress();
@@ -129,12 +129,12 @@ public class MainUI extends JFrame implements Serializable {
         userId = sess.getId();
 
         setConvoList();
-        
+
         initComponents();
         initComponents2();
 
         updateConvoList(convos);
-        
+
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setLocationByPlatform(true);
         this.addWindowListener(new WindowAdapter() {
@@ -171,13 +171,13 @@ public class MainUI extends JFrame implements Serializable {
         jLabel6 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         LancommsMenu = new javax.swing.JMenu();
-        broadcast = new javax.swing.JMenu();
+        broadcast = new javax.swing.JButton();
         settingsMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
         logoutMenuItem = new javax.swing.JMenuItem();
+//        sendToMany = new javax.swing.JMenuItem();
         ContactsList = new javax.swing.JPanel();
         ContactsList.setForeground(new java.awt.Color(255, 255, 255));
-     
 
         WindowListener l = new WindowAdapter() {
             List<Window> windows = new ArrayList<Window>();
@@ -303,7 +303,7 @@ public class MainUI extends JFrame implements Serializable {
 //                return strings[i];
 //            }
 //        });
-        jList2.addMouseListener(null);        
+        jList2.addMouseListener(null);
         MouseListener mouseListener2 = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
@@ -315,7 +315,7 @@ public class MainUI extends JFrame implements Serializable {
                         if (!conving.contains(o.getNameTo())) {
                             o.setMessages();
                             ConversationUI cv = new ConversationUI(o);
-                            cv.setTitle("Message Logs with "+o.getNameTo());
+                            cv.setTitle("Message Logs with " + o.getNameTo());
                             cv.setVisible(true);
                             cvSetMainUI(cv);
                             addConvoWindow(cv);
@@ -323,7 +323,7 @@ public class MainUI extends JFrame implements Serializable {
                         } else {
 
                             for (Frame cwindow : Frame.getFrames()) {
-                                if (!cwindow.isShowing() && cwindow.getTitle().equals("Message Logs with "+o.getNameTo())) {
+                                if (!cwindow.isShowing() && cwindow.getTitle().equals("Message Logs with " + o.getNameTo())) {
                                     System.out.println("Setting visible the convo window of: " + cwindow.getTitle());
                                     cwindow.setVisible(true);
                                 }
@@ -333,8 +333,8 @@ public class MainUI extends JFrame implements Serializable {
                 }
             }
         };
-        jList2.addMouseListener(mouseListener2);        
-        jList2.setVisibleRowCount(10);        
+        jList2.addMouseListener(mouseListener2);
+        jList2.setVisibleRowCount(10);
         jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jList2.setToolTipText("Message Logs");
         jList2.setCellRenderer(new DefaultListCellRenderer() {
@@ -346,10 +346,8 @@ public class MainUI extends JFrame implements Serializable {
                 }
                 return renderer;
             }
-        });        
-        
-        
-        
+        });
+
         jScrollPane2.setViewportView(jList2);
 
         javax.swing.GroupLayout ConvoListLayout = new javax.swing.GroupLayout(ConvoList);
@@ -428,9 +426,15 @@ public class MainUI extends JFrame implements Serializable {
                 logoutMenuItemActionPerformed(evt);
             }
         });
+
         LancommsMenu.add(logoutMenuItem);
 
         broadcast.setText("Broadcast");
+        broadcast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                new InviteList(userList, myClient).setVisible(true);;
+            }
+        });        
         
         jMenuBar1.add(LancommsMenu);
         jMenuBar1.add(broadcast);
@@ -588,7 +592,7 @@ public class MainUI extends JFrame implements Serializable {
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JPanel ConvoList;
     private javax.swing.JMenu LancommsMenu;
-    private javax.swing.JMenu broadcast;
+    private javax.swing.JButton broadcast;
     private javax.swing.JTabbedPane MainTabs;
     private javax.swing.JLabel UserNameDisplay;
     private javax.swing.JMenuItem aboutMenuItem;
@@ -606,6 +610,7 @@ public class MainUI extends JFrame implements Serializable {
     private javax.swing.JList jTable1; //now a list, not a table
     private javax.swing.JMenuItem logoutMenuItem;
     private javax.swing.JMenuItem settingsMenuItem;
+//    private javax.swing.JMenuItem sendToMany;
     private javax.swing.JPanel ContactsList;
 
     private void runServer(Server myServer) {
@@ -626,6 +631,7 @@ public class MainUI extends JFrame implements Serializable {
                     }
                 } while (ite.hasNext());
                 System.out.println("removed myself!");
+                userList = str;
                 jTable1.setListData(str.toArray());
                 jTable1.updateUI();
 
@@ -634,23 +640,22 @@ public class MainUI extends JFrame implements Serializable {
 
     }
 
-    
-    public void setConvoList(){
+    public void setConvoList() {
         convo = new Conversations(userId);
         convo.setConvList();
-        convos = convo.getConvList();   
+        convos = convo.getConvList();
     }
-    
-    public void updateConvoList(ArrayList<ConvObject> cobj){
+
+    public void updateConvoList(ArrayList<ConvObject> cobj) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Iterator<ConvObject> ite = cobj.iterator();
                 jList2.setListData(cobj.toArray());
                 jList2.updateUI();
             }
-        });       
+        });
     }
-    
+
     public void setCallDisabled() {
         callDisabled = true;
         for (ChatWindowUI cwindow : algui) {
@@ -669,8 +674,8 @@ public class MainUI extends JFrame implements Serializable {
     public boolean checkCallDisabled() {
         return callDisabled;
     }
-    
-    public void setSettingsOpened(){
+
+    public void setSettingsOpened() {
         settings = true;
     }
 
@@ -688,8 +693,8 @@ public class MainUI extends JFrame implements Serializable {
 
     public void addConvoWindow(ConversationUI cwindow) {
         cvgui.add(cwindow);
-    }    
-    
+    }
+
     public ArrayList<ClientObject> hideSelf(ArrayList<ClientObject> str) {
         for (ClientObject test : str) {
             if (test.getFullName().contentEquals(myCObj.getFullName())) {
@@ -717,11 +722,11 @@ public class MainUI extends JFrame implements Serializable {
         ChatWindowUI cwwindow = cw;
         cwwindow.setMainUI(this);
     }
-    
+
     public void cvSetMainUI(ConversationUI cv) {
         ConversationUI cvwindow = cv;
         cvwindow.setMainUI(this);
-    }    
+    }
 
     class ServerRunning extends Thread {
 

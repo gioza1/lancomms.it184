@@ -5,7 +5,6 @@ package LCControllers;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Gio
@@ -146,6 +145,7 @@ public class ServerGUI extends JFrame implements WindowListener {
 //        cl.add(str);
     }
 //
+
     void deleteContact(ClientObject str) {
         for (int i = 0; i < model.size(); i++) {
             if (model.elementAt(i).equals(str)) {

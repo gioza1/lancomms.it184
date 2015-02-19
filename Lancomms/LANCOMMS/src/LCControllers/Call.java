@@ -246,6 +246,7 @@ public class Call extends BaseFile implements Runnable{
 
     @Override
     public void run() {
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         startCall();
     }
     
