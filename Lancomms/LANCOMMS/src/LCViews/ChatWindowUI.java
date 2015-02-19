@@ -10,6 +10,8 @@ import LCControllers.ChatMessage;
 import LCControllers.Client;
 import LCControllers.ClientObject;
 import LCModels.Message;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -65,6 +67,7 @@ public class ChatWindowUI extends javax.swing.JFrame {
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationByPlatform(true);
         this.setResizable(false);
+
     }
 
     public ChatWindowUI(ClientObject to, ClientObject from) {
@@ -103,6 +106,7 @@ public class ChatWindowUI extends javax.swing.JFrame {
 
     public void setSendDisabled() {
         sendButton.setEnabled(false);
+        message.setEditable(false);
     }
 
     public void disconnect() {
@@ -263,7 +267,11 @@ public class ChatWindowUI extends javax.swing.JFrame {
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         // TODO add your handling code here:
         ChatMessage cmsg = new ChatMessage(ChatMessage.MESSAGE, message.getText());
-        append(fromCo.getFullName() + ": " + message.getText() + "\n");
+
+        if (message.getText().length() > 0) {
+            append(fromCo.getFullName() + ": " + message.getText() + "\n");
+        }
+
         message.setText("");
 
         if (sentSelf == false) {

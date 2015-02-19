@@ -7,6 +7,8 @@ package LCViews;
 
 import LCControllers.ClientObject;
 import LCControllers.Login;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import javax.swing.JOptionPane;
@@ -26,6 +28,8 @@ public class LoginUI extends javax.swing.JFrame {
         initComponents();
         this.getRootPane().setDefaultButton(LogInButton);
         this.setLocationByPlatform(true);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
     }
 
     /**

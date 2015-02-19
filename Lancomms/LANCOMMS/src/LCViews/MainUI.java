@@ -18,7 +18,9 @@ import LCControllers.Session;
 import LCModels.UserModel;
 import com.sun.security.auth.module.NTSystem;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -137,6 +139,8 @@ public class MainUI extends JFrame implements Serializable {
 
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setLocationByPlatform(true);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width/4-this.getSize().width/4, dim.height/2-this.getSize().height/2);        
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -171,7 +175,7 @@ public class MainUI extends JFrame implements Serializable {
         jLabel6 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         LancommsMenu = new javax.swing.JMenu();
-        broadcast = new javax.swing.JButton();
+        broadcast = new javax.swing.JMenuItem();
         settingsMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
         logoutMenuItem = new javax.swing.JMenuItem();
@@ -403,7 +407,23 @@ public class MainUI extends JFrame implements Serializable {
 
         LancommsMenu.setText("LANCOMMS");
 
+
+        broadcast.setText("Send to Many");
+        broadcast.setIconTextGap(0);
+        broadcast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                new InviteList(userList, myClient).setVisible(true);;
+            }
+        });
+
+        LancommsMenu.add(broadcast);        
+        
         settingsMenuItem.setText("Settings");
+
+//        settingsMenuItem.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+//        settingsMenuItem.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+//        settingsMenuItem.setIconTextGap(1);
+        settingsMenuItem.setInheritsPopupMenu(true);
         settingsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 settingsMenuItemActionPerformed(evt);
@@ -426,16 +446,8 @@ public class MainUI extends JFrame implements Serializable {
                 logoutMenuItemActionPerformed(evt);
             }
         });
-
         LancommsMenu.add(logoutMenuItem);
 
-        broadcast.setText("Broadcast");
-        broadcast.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                new InviteList(userList, myClient).setVisible(true);;
-            }
-        });        
-        
         jMenuBar1.add(LancommsMenu);
         jMenuBar1.add(broadcast);
 
@@ -592,7 +604,7 @@ public class MainUI extends JFrame implements Serializable {
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JPanel ConvoList;
     private javax.swing.JMenu LancommsMenu;
-    private javax.swing.JButton broadcast;
+    private javax.swing.JMenuItem broadcast;
     private javax.swing.JTabbedPane MainTabs;
     private javax.swing.JLabel UserNameDisplay;
     private javax.swing.JMenuItem aboutMenuItem;

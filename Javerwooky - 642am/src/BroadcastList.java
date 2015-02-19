@@ -3,8 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package LCViews;
-
 import LCControllers.ChatMessage;
 import LCControllers.Client;
 import LCControllers.ClientObject;
@@ -21,23 +19,19 @@ import javax.swing.SwingUtilities;
  *
  * @author Gio
  */
-public class InviteList extends javax.swing.JFrame {
+public class BroadcastList extends javax.swing.JFrame {
 
     /**
      * Creates new form InviteList
      */
-    ArrayList<ClientObject> hey;
-    Client me;
-    
-    public InviteList(ArrayList<ClientObject> ey, Client oh) {
-        hey = ey;
+//    ArrayList<ClientObject> hey;
+    MainServer me;
+
+    public BroadcastList(MainServer oh) {
+//        hey = ey;
         me = oh;
         initComponents();
         this.setTitle("Broadcast Message");
-        populadaList();
-        if (hey.size() == 0 ) {
-            sendButton.setEnabled(false);
-        }
         messageArea.setWrapStyleWord(true);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationByPlatform(true);
@@ -52,22 +46,12 @@ public class InviteList extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        userList = new javax.swing.JList();
         sendButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         messageArea = new javax.swing.JTextArea();
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        userList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        userList.setToolTipText("List of users available");
-        jScrollPane1.setViewportView(userList);
 
         sendButton.setText("Send");
         sendButton.addActionListener(new java.awt.event.ActionListener() {
@@ -96,28 +80,23 @@ public class InviteList extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(sendButton))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE))
+                        .addComponent(sendButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(sendButton)
-                            .addComponent(cancelButton))))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sendButton)
+                    .addComponent(cancelButton))
                 .addContainerGap())
         );
 
@@ -126,12 +105,13 @@ public class InviteList extends javax.swing.JFrame {
 
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         // TODO add your handling code here:
-        ArrayList<ClientObject> x = new ArrayList<ClientObject>();
-        x.addAll((List<ClientObject>) userList.getSelectedValuesList());
-        if(userList.isSelectionEmpty()){
-        JOptionPane.showMessageDialog(null, "Please select users to send message to!");
-        }else{
-        me.sendMessageToServer(new ChatMessage(ChatMessage.BROADCAST, x, me.getCo().getFullName()+": "+messageArea.getText()));
+
+        if (messageArea.getText().length() == 0) {
+            JOptionPane.showMessageDialog(null, "You're trying to send a blank. Why don't you write something first huh? :)");
+        } else if (me.hasUsersConnected() == false) {
+            JOptionPane.showMessageDialog(null, "Whut whut hold up, nobody's online!");
+        } else {
+            me.broadcast(new ChatMessage(ChatMessage.BROADCAST, "Server: "+messageArea.getText()));
         }
     }//GEN-LAST:event_sendButtonActionPerformed
 
@@ -177,31 +157,9 @@ public class InviteList extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea messageArea;
     private javax.swing.JButton sendButton;
-    private javax.swing.JList userList;
     // End of variables declaration//GEN-END:variables
 
-    public boolean populadaList() {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                userList.setListData(hey.toArray());
-                userList.updateUI();
-            }
-        });
-        
-        userList.setCellRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                Component renderer = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (renderer instanceof JLabel && value instanceof ClientObject) {
-                    ((JLabel) renderer).setText(((ClientObject) value).getFullName());
-                }
-                return renderer;
-            }
-        });
-        return false;
-    }
 }

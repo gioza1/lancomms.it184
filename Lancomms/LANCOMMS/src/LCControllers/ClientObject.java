@@ -51,6 +51,7 @@ public class ClientObject implements Serializable {
         return username;
     }
 
+
     public String getFullName(){
         return fullname;
     }
@@ -59,23 +60,23 @@ public class ClientObject implements Serializable {
         return firstname;
     }    
     
+
     public int getPort() {
         return port;
     }
 
-    private void setName(){
+    private void setName() {
         UserModel um = new UserModel();
-        fullname = um.getName(userId);   
+        fullname = um.getName(userId);
         System.out.println(fullname);
     }
-    
+
     public int getMyPort() {
         return myPort;
     }
 
     public int getMyId() {
         return userId;
-    }    
-   
+    }
 
 }
