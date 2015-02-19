@@ -11,6 +11,7 @@ package LCControllers;
  */
 import LCControllers.ClientObject;
 import LCControllers.Server.ClientThread;
+import LCViews.GroupChatUI;
 import LCViews.MainUI;
 import java.net.*;
 import java.io.*;
@@ -41,7 +42,9 @@ public class Client {
     // the server, the port and the username
     private String runningServer, username;
     private int runningPort;
-
+    
+    private GroupChatUI gcui;
+    
     private transient ClientObject me;
     /*
      *  Constructor called by console mode
@@ -57,11 +60,11 @@ public class Client {
     public Socket getSocket() {
         return socket;
     }
-
+    
     public Socket getmSocket() {
         return mSocket;
     }
-
+    
     public void disconnectMain() {
         try {
             mSocket.close();
@@ -70,11 +73,11 @@ public class Client {
         }
 //        cg.logout();
     }
-
+    
     public Socket getMainServerSocket() {
         return mSocket;
     }
-
+    
     public ObjectOutputStream getMainSOutput() {
         return mainSOutput;
     }
@@ -88,7 +91,7 @@ public class Client {
         runningPort = port;
         me = test;
     }
-
+    
     public void setMainUI(MainUI e) {
         cg = e;
     }
@@ -128,7 +131,7 @@ public class Client {
         // success we inform the caller that it worked
         return true;
     }
-
+    
     public boolean connectToMainServer(String host) {
         // try to connect to the server
         try {
@@ -138,14 +141,14 @@ public class Client {
             System.out.println("Error connectiong to server:" + ec);
             return false;
         }
-
+        
         String msg = "Connection accepted with" + mSocket.getInetAddress() + ":" + mSocket.getPort();
         System.out.println("Successfully connected to the server");
 
         /* Creating both Data Stream */
         try {
             mainSOutput = new ObjectOutputStream(mSocket.getOutputStream());
-
+            
             mainSInput = new ObjectInputStream(mSocket.getInputStream());
         } catch (IOException eIO) {
             System.out.println("Exception creating new Input/output Streams: " + eIO);
@@ -183,7 +186,7 @@ public class Client {
 //            display("Exception writing to server: " + e);
 //        }
     }
-
+    
     public void sendMessageToServer(ChatMessage msg) {
         try {
             mainSOutput.reset();
@@ -193,7 +196,7 @@ public class Client {
             System.out.println("Exception writing to server: " + e);
         }
     }
-
+    
     public void updateStatus() {
         ChatMessage cmsg = new ChatMessage(ChatMessage.STATUS, "BUSY");
         try {
@@ -208,7 +211,7 @@ public class Client {
      * Close the Input/Output streams and disconnect not much to do in the catch clause
      */
     public void disconnect() {
-
+        
         try {
             if (sInput != null) {
                 sInput.close();
@@ -233,7 +236,7 @@ public class Client {
         if (cg != null) {
 //            cg.connectionFailed();
         }
-
+        
     }
 
 
@@ -242,7 +245,7 @@ public class Client {
      * if we have a GUI or simply System.out.println() it in console mode
      */
     class ListenFromServer extends Thread {
-
+        
         public void run() {
             while (true) {
                 try {
@@ -289,11 +292,11 @@ public class Client {
 //
 //    }
     class ListenFromMainServer extends Thread {
-
+        
         public void run() {
 //            boolean connected = true;
             while (true) {
-                System.out.println("ListenFromMainServer Started");
+//                System.out.println("ListenFromMainServer Started");
 //                ArrayList<ClientObject> eh = new ArrayList<ClientObject>();
                 ChatMessage eh = (ChatMessage) Client.receiveObject(mainSInput);
                 if (eh != null) {
@@ -306,6 +309,24 @@ public class Client {
                             break;
                         case ChatMessage.CLIENTBROADCAST:
                             JOptionPane.showMessageDialog(null, eh.getMessage(), "Broadcast Message", JOptionPane.INFORMATION_MESSAGE);
+                            break;
+                        case ChatMessage.GROUPCHATINVITE:
+                            gcui = new GroupChatUI(eh.getList(), Client.this);
+                            gcui.setVisible(true);
+                            break;
+                        case ChatMessage.GROUPCHATMESSAGE:
+                            System.out.println("GROUPCHATMESSAGE: " + eh.getMessage());
+                            gcui.appendToTextArea(eh.getMessage());
+                            break;
+                        case ChatMessage.GROUPCHATLEAVE:
+                            System.out.println("GROUPCHATLEAVE: " + eh.getMessage());
+                            gcui.dispose();
+                            break;
+                        case ChatMessage.GROUPCHATUPDATELIST:
+//                            System.out.println("GROUPCHATUPDATELIST: " + eh.getMessage());
+                            gcui.appendToTextArea(eh.getMessage());
+                            gcui.populadaList(eh.getList());
+                            break;
                     }
                 } else {
                     break;
@@ -313,9 +334,9 @@ public class Client {
             }
             cg.logout();
         }
-
+        
     }
-
+    
     public static Object receiveObject(ObjectInputStream stream) {
         Object obj = null;
         try {
@@ -327,7 +348,7 @@ public class Client {
         }
         return obj;
     }
-
+    
     public ClientObject getCo() {
         return me;
     }

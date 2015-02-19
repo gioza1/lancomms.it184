@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 
 /*
  * The server that can be run both as a console application or a GUI
@@ -35,7 +36,7 @@ public class MainServer {
     private int port = 1500;
     // the boolean that will be turned of to stop the server
     private boolean keepGoing;
-
+    private ArrayList<ClientObject> groupChatPeople;
     private ArrayList<ClientObject> alCo = new ArrayList<ClientObject>();
 
     /*
@@ -330,6 +331,48 @@ public class MainServer {
                                 }
                             } while (ite.hasNext());
 
+                        }
+                        break;
+                    case ChatMessage.GROUPCHATINVITE:
+                        groupChatPeople = cm.getList();
+                        for (ClientThread ct : al) {
+                            System.out.println("CHATMESSAGEARRAY SIZE: " + cm.getList().size() + "CLIENTTSIZE: " + al.size());
+                            String user = ct.test.getFullName();
+
+                            Iterator<ClientObject> ite = cm.getList().iterator();
+                            do {
+                                if (ite.next().getFullName().contentEquals(user)) {
+                                    ct.writeMessage(cm);
+                                }
+                            } while (ite.hasNext());
+
+                        }
+                        break;
+                    case ChatMessage.GROUPCHATMESSAGE:
+                        for (ClientThread ct : al) {
+                            String user = ct.test.getFullName();
+                            Iterator<ClientObject> ite = groupChatPeople.iterator();
+                            do {
+                                if (ite.next().getFullName().contentEquals(user)) {
+                                    ct.writeMessage(cm);
+                                }
+                            } while (ite.hasNext());
+
+                        }
+                        break;
+                    case ChatMessage.GROUPCHATLEAVE:
+                        Iterator<ClientObject> ite = groupChatPeople.iterator();
+                        do {
+                            if (ite.next().getFullName().contentEquals(cm.getClientObject().getFullName())) {
+                                ite.remove();
+                                break;
+                            }
+                        } while (ite.hasNext());
+                        for (ClientThread ct : al) {
+
+                            ct.writeMessage(new ChatMessage(ChatMessage.GROUPCHATUPDATELIST, groupChatPeople, cm.getClientObject().getFullName() + " has left the conversation.\n"));
+//                                 
+                            System.out.println("Updated groupChatPeople hehe;");
                         }
                         break;
                 }

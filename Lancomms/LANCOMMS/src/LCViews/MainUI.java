@@ -142,7 +142,7 @@ public class MainUI extends JFrame implements Serializable {
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setLocationByPlatform(true);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setLocation(dim.width/4-this.getSize().width/4, dim.height/2-this.getSize().height/2);        
+        this.setLocation(dim.width / 4 - this.getSize().width / 4, dim.height / 2 - this.getSize().height / 2);
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -178,6 +178,7 @@ public class MainUI extends JFrame implements Serializable {
         jMenuBar1 = new javax.swing.JMenuBar();
         LancommsMenu = new javax.swing.JMenu();
         broadcast = new javax.swing.JMenuItem();
+        groupChat = new javax.swing.JMenuItem();
         settingsMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
         logoutMenuItem = new javax.swing.JMenuItem();
@@ -410,18 +411,28 @@ public class MainUI extends JFrame implements Serializable {
 
         LancommsMenu.setText("LANCOMMS");
 
+        groupChat.setText("Invite to Group Chat");
+        groupChat.setInheritsPopupMenu(true);
+        groupChat.setIconTextGap(0);
+        groupChat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                new InviteGroupChat(userList, myClient).setVisible(true);;
+            }
+        });
+
+        LancommsMenu.add(groupChat);
 
         broadcast.setText("Send to Many");
         broadcast.setInheritsPopupMenu(true);
         broadcast.setIconTextGap(0);
         broadcast.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                new InviteList(userList, myClient).setVisible(true);;
+                new SendToMany(userList, myClient).setVisible(true);;
             }
         });
 
-        LancommsMenu.add(broadcast);        
-        
+        LancommsMenu.add(broadcast);
+
         settingsMenuItem.setText("Settings");
 
 //        settingsMenuItem.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -559,7 +570,7 @@ public class MainUI extends JFrame implements Serializable {
         if (settings == false) {
             sui = new SettingsUI(userId, this);
             sui.setVisible(true);
-            System.out.println("sui is "+settings);
+            System.out.println("sui is " + settings);
         } else if (settings == true) {
             if (!sui.isVisible()) {
                 sui.setVisible(true);
@@ -681,6 +692,7 @@ public class MainUI extends JFrame implements Serializable {
     private javax.swing.JPanel ConvoList;
     private javax.swing.JMenu LancommsMenu;
     private javax.swing.JMenuItem broadcast;
+    private javax.swing.JMenuItem groupChat;
     private javax.swing.JTabbedPane MainTabs;
     private javax.swing.JLabel UserNameDisplay;
     private javax.swing.JMenuItem aboutMenuItem;
@@ -716,6 +728,7 @@ public class MainUI extends JFrame implements Serializable {
                 do {
                     if (ite.next().getFullName().contentEquals(myCObj.getFullName())) {
                         ite.remove();
+                        break;
                     }
                 } while (ite.hasNext());
                 System.out.println("removed myself!");

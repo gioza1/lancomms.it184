@@ -27,10 +27,11 @@ public class ChatMessage implements Serializable {
     // WHOISIN to receive the list of the users connected
     // MESSAGE an ordinary message
     // LOGOUT to disconnect from the Server
-    public static final int CLIENTBROADCAST = 0, MESSAGE = 1, LOGOUT = 2, CALL = 3, RESPONSE = 4, STOPCALL = 5, STATUS = 6, UPDATELIST = 7, SERVERBROADCAST=8;
+    public static final int CLIENTBROADCAST = 0, MESSAGE = 1, LOGOUT = 2, CALL = 3, RESPONSE = 4, STOPCALL = 5, STATUS = 6, UPDATELIST = 7, SERVERBROADCAST = 8, GROUPCHATINVITE = 9, GROUPCHATMESSAGE = 10, GROUPCHATLEAVE = 11, GROUPCHATUPDATELIST = 12;
     private int type;
     private String message;
     private ArrayList<ClientObject> clients;
+    private ClientObject client;
 
     // constructor
     public ChatMessage(int type, String message) {
@@ -41,6 +42,11 @@ public class ChatMessage implements Serializable {
     public ChatMessage(int ty, ArrayList<ClientObject> cos) {
         type = ty;
         clients = cos;
+    }
+
+    public ChatMessage(int ty, ClientObject co) {
+        type = ty;
+        client = co;
     }
 
     public ChatMessage(int ty, ArrayList<ClientObject> cos, String text) {
@@ -60,5 +66,9 @@ public class ChatMessage implements Serializable {
 
     public ArrayList<ClientObject> getList() {
         return clients;
+    }
+
+    public ClientObject getClientObject() {
+        return client;
     }
 }
