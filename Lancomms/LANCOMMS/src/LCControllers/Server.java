@@ -370,7 +370,7 @@ public class Server implements Runnable {
                     case ChatMessage.CALL:
                         try {
                             String cresponse = null;
-                            playSound(0);
+                            playSound(1);
                             if (!sg.checkCallDisabled()) {
                                 cresponse = call.acceptOrReject(co.getFullName());
                                 cm = new ChatMessage(ChatMessage.RESPONSE, cresponse);
@@ -500,7 +500,7 @@ public class Server implements Runnable {
                     wavfile = new File("resources/lancommschat.wav");
                     break;
                 case CALL:
-                    wavfile = new File("resources/lancommscall.wav");
+                    wavfile = new File("resources/lancomms_call.wav");
                     break;
             }
 
