@@ -8,14 +8,20 @@
  * @author Gio
  */
 import LCControllers.ClientObject;
+import LCControllers.ParseRoute.ParseRoute;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.border.BevelBorder;
 
 /*
  * The server as a GUI
  */
-public class MainServerGUI extends JFrame implements ActionListener, WindowListener {
+public class MainServerGUI extends JFrame implements ActionListener {
 
     DefaultListModel<ClientObject> model = new DefaultListModel<>();
 //    final JList list = new JList(model);
@@ -25,45 +31,84 @@ public class MainServerGUI extends JFrame implements ActionListener, WindowListe
     // the stop and start buttons
     private JButton stopStart;
     // JTextArea for the chat room and the events
-    private JTextArea chat, event;
+    private JTextArea chat, separate, event;
     // The port number
-    private JTextField tPortNumber;
+    private JTextField tPortNumber, tIpAddress;
     // my server
     private MainServer server;
 
     private ClientObject me;
 
     // server constructor that receive the port to listen to for connection as parameter
-
     MainServerGUI() {
-        super("Main Server");
+        super("LANCOMMS Main Server");
         server = null;
-        // in the NorthPanel the PortNumber the Start and Stop buttons
+
+        ParseRoute pr = new ParseRoute();
+
         JPanel north = new JPanel();
+        north.add(new JLabel("Server Address: "));
+
+        try {
+            north.add(new JLabel(InetAddress.getByName(pr.getLocalIPAddress()).toString()));
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(MainServerGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+//        north.add(tIpAddress);
+        north.add(new JLabel("   "));
         north.add(new JLabel("Port number: "));
-        tPortNumber = new JTextField("  " + 1500);
-        north.add(tPortNumber);
-        // to stop or start the server, we start with "Start"
-        stopStart = new JButton("Start");
-        stopStart.addActionListener(this);
-        north.add(stopStart);
-        stopStart.setEnabled(false);
+        north.add(new JLabel("1500"));
+
         add(north, BorderLayout.NORTH);
+        //MENU BAR//
+        JMenuBar menuBar = new JMenuBar();
+        // Add the menubar to the frame
+        setJMenuBar(menuBar);
+        // Define and add two drop down menu to the menubar
+        JMenu manageMenu = new JMenu("Server");
+        menuBar.add(manageMenu);
+
+        JMenuItem manageUsers = new JMenuItem("Manage Accounts");
+        JMenuItem exitAction = new JMenuItem("Exit");
+        manageMenu.add(manageUsers);
+        manageMenu.add(exitAction);
+        manageUsers.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                new AccountManager().setVisible(true);
+            }
+        });
+        exitAction.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                if (server != null) {
+                    try {
+                        server.stop();			// ask the server to close the conection
+                    } catch (Exception eClose) {
+                    }
+                    server = null;
+                }
+                System.exit(1);
+            }
+        });
 
         // the event and chat room
-        JPanel center = new JPanel(new GridLayout(3, 1));
-        chat = new JTextArea(80, 80);
-        chat.setEditable(false);
-        appendRoom("Chat room.\n");
-        center.add(new JScrollPane(chat));
+        JPanel center = new JPanel(new GridLayout(2, 1));
+//        chat = new JTextArea(80, 80);
+//        chat.setEditable(false);
+//        appendRoom("Chat room.\n");
+//        center.add(new JScrollPane(chat));
         event = new JTextArea(80, 80);
         event.setEditable(false);
+        event.setLineWrap(true);
         appendEvent("Events log.\n");
         center.add(new JScrollPane(event));
         add(center);
 //        center.add(new JScrollPane(list));
 //        add(center);
 
+//        separate = new JTextArea(10, 10);
+//        separate.setEditable(false);
+//        separate.setLineWrap(true);
+//        appendEvent("List of Connected Users:");
         /*--------------------------------------------------------*/
         /*------------------------------------*/
         list.addMouseListener(null);
@@ -94,13 +139,20 @@ public class MainServerGUI extends JFrame implements ActionListener, WindowListe
                 return renderer;
             }
         });
+
+        JScrollPane scrollPane = new JScrollPane(list);
+        JLabel label = new JLabel("Header", JLabel.CENTER);
+        label.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        scrollPane.setColumnHeaderView(label);
+        
         center.add(new JScrollPane(list));
         add(center);
         /*------------------------------------*/
 
         // need to be informed when the user click the close button on the frame
-        addWindowListener(this);
+//        addWindowListener(this);
         setSize(400, 600);
+
         setVisible(true);
         if (server != null) {
             server.stop();
@@ -115,22 +167,30 @@ public class MainServerGUI extends JFrame implements ActionListener, WindowListe
         server = new MainServer(this);
         // and start it as a thread
         new ServerRunning().start();
-        stopStart.setText("Stop");
-        tPortNumber.setEditable(false);
 
         setVisible(true);
+
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+//        this.setLocationByPlatform(true);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                setExtendedState(JFrame.ICONIFIED);
+            }
+        });
+
     }
 
     // append message to the two JTextArea
     // position at the end
-    void appendRoom(String str) {
-        chat.append(str);
-        chat.setCaretPosition(chat.getText().length() - 1);
+    void appendUsers(String str) {
+        separate.append(str);
+        separate.setCaretPosition(separate.getText().length() - 1);
     }
 
     void appendEvent(String str) {
         event.append(str);
-        event.setCaretPosition(chat.getText().length() - 1);
+        event.setCaretPosition(event.getText().length() - 1);
 
     }
 
@@ -170,21 +230,10 @@ public class MainServerGUI extends JFrame implements ActionListener, WindowListe
      * If the user click the X button to close the application
      * I need to close the connection with the server to free the port
      */
-    @Override
-    public void windowClosing(WindowEvent e) {
-        // if my Server exist
-        if (server != null) {
-            try {
-                server.stop();			// ask the server to close the conection
-            } catch (Exception eClose) {
-            }
-            server = null;
-        }
-        // dispose the frame
-        dispose();
-        System.exit(0);
-    }
-
+//    @Override
+//    public void windowClosing(WindowEvent e) {
+//
+//    }
     // I can ignore the other WindowListener method
     public void windowClosed(WindowEvent e) {
     }

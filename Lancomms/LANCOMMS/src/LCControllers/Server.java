@@ -20,6 +20,13 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /*
  * The server that can be run both as a console application or a GUI
@@ -338,6 +345,7 @@ public class Server implements Runnable {
                 switch (cm.getType()) {
 
                     case ChatMessage.MESSAGE:
+                        playSound();
                         cw.append(co.getUsername() + ": " + message + "\n");
                         if (cw.isVisible() == false) {
                             cw.setVisible(true);
@@ -391,6 +399,7 @@ public class Server implements Runnable {
                             case "Accept":
                                 call.startCall();
                                 sg.setCallDisabled();
+
                                 cw.append("\nYou are now in a call with " + co.getUsername() + "\n");
                                 break;
                             case "Reject":
@@ -468,5 +477,40 @@ public class Server implements Runnable {
             }
             return true;
         }
+
+        public boolean playSound() {
+            final java.util.Date date = new java.util.Date();
+            String stringFile = "x.wav";
+            File wavfile = new File("resources/lancommschat.wav");
+            AudioInputStream audioInput = null;
+            boolean x = false;
+            try {
+                audioInput = AudioSystem.getAudioInputStream(wavfile);
+                x = false;
+            } catch (UnsupportedAudioFileException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            AudioFormat format = audioInput.getFormat();
+//        DataLine.Info info = new DataLine.Info(Clip.class, format);
+            Clip clip = null;
+            try {
+                clip = AudioSystem.getClip();
+            } catch (LineUnavailableException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                clip.open(audioInput);
+            } catch (LineUnavailableException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            clip.start();
+            return x;
+        }
+
     }
+
 }

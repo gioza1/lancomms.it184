@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Gio
@@ -36,7 +35,7 @@ public class MainServer {
     private int port = 1500;
     // the boolean that will be turned of to stop the server
     private boolean keepGoing;
-    
+
     private ArrayList<ClientObject> alCo = new ArrayList<ClientObject>();
 
     /*
@@ -51,7 +50,7 @@ public class MainServer {
         // ArrayList for the Client list
         al = new ArrayList<ClientThread>();
     }
-    
+
     public void start() {
         keepGoing = true;
         /* create socket server and wait for connection requests */
@@ -65,7 +64,7 @@ public class MainServer {
             while (keepGoing) {
                 // format message saying we are waiting
                 display("Server waiting for Clients on port " + port + " and IP " + addr + ".");
-                
+
                 Socket socket = serverSocket.accept();  	// accept connection
                 // if I was asked to stop
                 if (!keepGoing) {
@@ -100,7 +99,7 @@ public class MainServer {
     /*
      * For the GUI to stop the server
      */
-    
+
     protected void stop() {
         keepGoing = false;
         // connect to myself as Client to exit statement 
@@ -114,7 +113,7 @@ public class MainServer {
     /*
      * Display an event (not a message) to the console or the GUI
      */
-    
+
     private void display(String msg) {
         String time = sdf.format(new Date()) + " " + msg;
         if (sg == null) {
@@ -123,18 +122,18 @@ public class MainServer {
             sg.appendEvent(time + "\n");
         }
     }
-    
+
     private void addToContactList(ClientObject e) {
         sg.appendContact(e);
     }
-    
+
     private void deleteFromContactList(ClientObject e) {
         sg.deleteContact(e);
     }
     /*
      *  to broadcast a message to all Clients
      */
-    
+
     private synchronized void broadcast(String message) {
         // add HH:mm:ss and \n to the message
         String time = sdf.format(new Date());
@@ -143,7 +142,7 @@ public class MainServer {
         if (sg == null) {
             System.out.print(messageLf);
         } else {
-            sg.appendRoom(messageLf);     // append in the room window
+//            sg.appendRoom(messageLf);     // append in the room window
         }
         // we loop in reverse order in case we would have to remove a Client
         // because it has disconnected
@@ -193,7 +192,7 @@ public class MainServer {
             default:
                 System.out.println("Usage is: > java Server [portNumber]");
                 return;
-            
+
         }
         // create a server object and start it
 //		Server server = new Server(portNumber);
@@ -217,7 +216,7 @@ public class MainServer {
         ChatMessage cm;
         // the date I connect
         String date;
-        
+
         ClientObject test;
         boolean tKeepGoing = true;
 
@@ -234,7 +233,7 @@ public class MainServer {
                     // create output first
                     sOutput = new ObjectOutputStream(socket.getOutputStream());
                     sInput = new ObjectInputStream(socket.getInputStream());
-                    
+
                 } catch (IOException e) {
 //                 remove(id);
                     e.printStackTrace();
@@ -255,26 +254,26 @@ public class MainServer {
             // to loop until LOGOUT
 
             while (tKeepGoing) {
-                if(test==null){
-                try {
-                    test = (ClientObject) sInput.readObject();
-                    display(test.getUsername());
-                } catch (IOException ex) {
-                    Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
-                    break;
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
-                    break;
-                }
-                sg.appendRoom("\n" + test.getUsername() + " just connected.");
-                
-                addToContactList(test);
-                alCo.add(test);
-                for (ClientThread ct : al) {
-                    display(ct.test.getUsername());
-                    
-                    ct.updateOnlineList(alCo);
-                }
+                if (test == null) {
+                    try {
+                        test = (ClientObject) sInput.readObject();
+                        display(test.getUsername());
+                    } catch (IOException ex) {
+                        Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
+                        break;
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
+                        break;
+                    }
+                    sg.appendEvent(test.getUsername() + " just connected.\n");
+
+                    addToContactList(test);
+                    alCo.add(test);
+                    for (ClientThread ct : al) {
+                        display(ct.test.getUsername());
+
+                        ct.updateOnlineList(alCo);
+                    }
                 }
 
                 // read a String (which is an object)
@@ -292,7 +291,7 @@ public class MainServer {
 
                 // Switch on the type of message receive
                 switch (cm.getType()) {
-                    
+
                     case ChatMessage.STATUS:
                         for (ClientThread ct : al) {
                             display("Setting status to: " + message);
@@ -320,14 +319,14 @@ public class MainServer {
             // connected Clients
             remove(id);
             deleteFromContactList(test);
-            
+
             alCo.remove(test);
             for (ClientThread cT : al) {
                 cT.updateOnlineList(alCo); // updates the online list for each client thread
             }
             display(test.getUsername() + " disconnected.");
             close();
-            
+
         }
 
         // try to close everything
@@ -364,7 +363,7 @@ public class MainServer {
             }
             // write the message to the stream
             try {
-                
+
                 sOutput.writeObject(co);
                 sOutput.reset();
             } // if an error occurs, do not abort just inform the user
