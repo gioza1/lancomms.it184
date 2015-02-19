@@ -22,6 +22,7 @@ public class ClientObject implements Serializable {
     private int port;
     private int myPort;
     private int userId;
+    private String firstname;
     private String fullname;
     private String status;
 
@@ -50,9 +51,15 @@ public class ClientObject implements Serializable {
         return username;
     }
 
-    public String getName() {
+
+    public String getFullName(){
         return fullname;
     }
+    
+    public String getFirstName(){
+        return firstname;
+    }    
+    
 
     public int getPort() {
         return port;

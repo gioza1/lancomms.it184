@@ -38,7 +38,7 @@ import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
  *
  * @author eufrik
  */
-public class Call extends BaseFile{
+public class Call extends BaseFile implements Runnable{
 
     Thread call;
     private JFrame cframe;
@@ -141,7 +141,7 @@ public class Call extends BaseFile{
         cframe = new JFrame("Calling: "+username);
         cframe.setContentPane(contentPane);
         cframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+        cframe.setTitle("");
         cframe.setLocation(50, 50);
         cframe.setSize(700, 400);
         cframe.setResizable(false);
@@ -171,7 +171,7 @@ public class Call extends BaseFile{
     public void startCall() {
         setScreen();
         localMediaPlayer.playMedia("dshow://", ":live-caching=100",":sout=#transcode{vcodec=MJPG,vb=56,fps=15,scale=0.5,width=96,height=72,acodec=mp3,ab=24,channels=1,samplerate=8000}:duplicate{dst=rtp{dst="+caller_ad+",port="+caller_sendPort+",mux=ts},dst=display}"," :sout-keep");                
-        mediaPlayer.playMedia("rtp://@:"+caller_rcvPort+"", " :network-caching=200");    
+        mediaPlayer.playMedia("rtp://@:"+caller_rcvPort+"", " :network-caching=100");    
         call_log.callStartTime(cw.getId(), cw.getToId());
     }
     
@@ -185,13 +185,13 @@ public class Call extends BaseFile{
         cw.enableCall();
         closeWindow();      
         System.out.println("Streaming stopped! Call stopped!");
-        cw.append("\nCall Ended.\n");
         call_log.callEndTime(cw.getId());
     }
 
     public void sendStop(){
         ChatMessage cmsg = new ChatMessage(ChatMessage.STOPCALL, "stopcall");
         cw.sendMessage(cmsg);
+        cw.append("\nCall Ended.\n");
     }
     
     private void closeWindow() {
@@ -242,6 +242,12 @@ public class Call extends BaseFile{
             accept="Accept";
         }
         return accept;
+    }
+
+    @Override
+    public void run() {
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+        startCall();
     }
     
 

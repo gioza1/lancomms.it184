@@ -10,6 +10,8 @@ import LCControllers.ChatMessage;
 import LCControllers.Client;
 import LCControllers.ClientObject;
 import LCModels.Message;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -65,12 +67,13 @@ public class ChatWindowUI extends javax.swing.JFrame {
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationByPlatform(true);
         this.setResizable(false);
+
     }
 
     public ChatWindowUI(ClientObject to, ClientObject from) {
         toCo = to;
         fromCo = from;
-        userNameTo = to.getUsername();
+        userNameTo = to.getFullName();
 
         //connect to a client
         try {
@@ -200,7 +203,7 @@ public class ChatWindowUI extends javax.swing.JFrame {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lancomms/pp2.png"))); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel4.setText(toCo.getName());
+        jLabel4.setText(toCo.getFullName());
 
         videoCall.setText("Video Call");
         videoCall.addActionListener(new java.awt.event.ActionListener() {
@@ -267,9 +270,10 @@ public class ChatWindowUI extends javax.swing.JFrame {
             senderDetails(fromCo);
         }
         ChatMessage cmsg = new ChatMessage(ChatMessage.MESSAGE, message.getText());
-        if (message.getText().length() > 0) {
-            append(fromCo.getUsername() + ": " + message.getText() + "\n");
 
+        if (message.getText().length() > 0) {
+
+            append(fromCo.getUsername() + ": " + message.getText() + "\n");
             message.setText("");
 
             sendMessage(cmsg);
@@ -325,11 +329,11 @@ public class ChatWindowUI extends javax.swing.JFrame {
             if (!isCallDisabled) {
                 int callPort = toCo.getPort();
                 if (isCallInstanced == false) {
-                    call = new Call(toCo.getServer(), Integer.toString(callPort), Integer.toString(fromCo.getPort()), this, toCo.getUsername());
+                    call = new Call(toCo.getServer(), Integer.toString(callPort), Integer.toString(fromCo.getPort()), this, toCo.getFullName());
                 }
                 this.isCallInstanced = true; //associate instance to chatwindow
                 ChatMessage cmsg = new ChatMessage(ChatMessage.CALL, "call");
-                append("\nAttempting to call " + toCo.getUsername() + "\n");
+                append("\nAttempting to call " + toCo.getFullName() + "\n");
                 if (sentSelf == false) {
                     senderDetails(fromCo);
                 }

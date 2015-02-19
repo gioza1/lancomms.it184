@@ -18,7 +18,9 @@ import LCControllers.Session;
 import LCModels.UserModel;
 import com.sun.security.auth.module.NTSystem;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -139,6 +141,8 @@ public class MainUI extends JFrame implements Serializable {
 
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setLocationByPlatform(true);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width/4-this.getSize().width/4, dim.height/2-this.getSize().height/2);        
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -173,10 +177,11 @@ public class MainUI extends JFrame implements Serializable {
         jLabel6 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         LancommsMenu = new javax.swing.JMenu();
+        broadcast = new javax.swing.JMenuItem();
         settingsMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
         logoutMenuItem = new javax.swing.JMenuItem();
-        sendToMany = new javax.swing.JMenuItem();
+//        sendToMany = new javax.swing.JMenuItem();
         ContactsList = new javax.swing.JPanel();
         ContactsList.setForeground(new java.awt.Color(255, 255, 255));
 
@@ -221,20 +226,20 @@ public class MainUI extends JFrame implements Serializable {
                     int index = theList.locationToIndex(mouseEvent.getPoint());
                     if (index >= 0) {
                         ClientObject o = (ClientObject) theList.getModel().getElementAt(index);
-                        if (!chatting.contains(o.getUsername())) {
+                        if (!chatting.contains(o.getFullName())) {
 
                             ChatWindowUI cw = new ChatWindowUI(o, myCObj);
                             System.out.println(o.toString());
                             System.out.println(myCObj.toString());
-                            cw.setTitle(o.getUsername());
+                            cw.setTitle(o.getFullName());
                             cw.setVisible(true);
                             cwSetMainUI(cw);
                             addChatWindow(cw);
-                            chatting.add(o.getUsername());
+                            chatting.add(o.getFullName());
                         } else {
 
                             for (Frame cwindow : Frame.getFrames()) {
-                                if (!cwindow.isShowing() && cwindow.getTitle().equals(o.getUsername())) {
+                                if (!cwindow.isShowing() && cwindow.getTitle().equals(o.getFullName())) {
                                     System.out.println("Setting visible the chat window of: " + cwindow.getTitle());
                                     cwindow.setVisible(true);
                                 }
@@ -259,7 +264,7 @@ public class MainUI extends JFrame implements Serializable {
                     //ImageIcon imageIcon = new ImageIcon(getClass().getResource("/images/pp2.png"));
 
                     //setIcon(imageIcon);
-                    ((JLabel) renderer).setText(((ClientObject) value).getName() + "  (" + ((ClientObject) value).getStatus() + ") ");
+                    ((JLabel) renderer).setText(((ClientObject) value).getFullName() + "  (" + ((ClientObject) value).getStatus() + ") ");
                 }
                 return renderer;
             }
@@ -366,7 +371,7 @@ public class MainUI extends JFrame implements Serializable {
 
         NTSystem NTSystem = new NTSystem();//test
 //        UserNameDisplay.setText(System.getProperty("user.name"));
-        UserNameDisplay.setText(myCObj.getName());
+        UserNameDisplay.setText(myCObj.getFullName());
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lancomms/mainui1-1-2.png"))); // NOI18N
 
@@ -404,7 +409,20 @@ public class MainUI extends JFrame implements Serializable {
 
         LancommsMenu.setText("LANCOMMS");
 
+
+        broadcast.setText("Send to Many");
+        broadcast.setInheritsPopupMenu(true);
+        broadcast.setIconTextGap(0);
+        broadcast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                new InviteList(userList, myClient).setVisible(true);;
+            }
+        });
+
+        LancommsMenu.add(broadcast);        
+        
         settingsMenuItem.setText("Settings");
+
 //        settingsMenuItem.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
 //        settingsMenuItem.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 //        settingsMenuItem.setIconTextGap(1);
@@ -423,16 +441,6 @@ public class MainUI extends JFrame implements Serializable {
             }
         });
         LancommsMenu.add(aboutMenuItem);
-
-        sendToMany.setText("Send to Many");
-        sendToMany.setIconTextGap(0);
-        sendToMany.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                new InviteList(userList, myClient).setVisible(true);;
-            }
-        });
-
-        LancommsMenu.add(sendToMany);
 
         logoutMenuItem.setText("Log Out");
         logoutMenuItem.setIconTextGap(0);
@@ -548,8 +556,9 @@ public class MainUI extends JFrame implements Serializable {
 
     private void settingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         if (settings == false) {
-            SettingsUI sui = new SettingsUI(userId, this);
+            sui = new SettingsUI(userId, this);
             sui.setVisible(true);
+            System.out.println("sui is "+settings);
         } else if (settings == true) {
             if (!sui.isVisible()) {
                 sui.setVisible(true);
@@ -670,6 +679,7 @@ public class MainUI extends JFrame implements Serializable {
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JPanel ConvoList;
     private javax.swing.JMenu LancommsMenu;
+    private javax.swing.JMenuItem broadcast;
     private javax.swing.JTabbedPane MainTabs;
     private javax.swing.JLabel UserNameDisplay;
     private javax.swing.JMenuItem aboutMenuItem;
@@ -687,7 +697,7 @@ public class MainUI extends JFrame implements Serializable {
     private javax.swing.JList jTable1; //now a list, not a table
     private javax.swing.JMenuItem logoutMenuItem;
     private javax.swing.JMenuItem settingsMenuItem;
-    private javax.swing.JMenuItem sendToMany;
+//    private javax.swing.JMenuItem sendToMany;
     private javax.swing.JPanel ContactsList;
 
     private void runServer(Server myServer) {
@@ -703,7 +713,7 @@ public class MainUI extends JFrame implements Serializable {
             public void run() {
                 Iterator<ClientObject> ite = str.iterator();
                 do {
-                    if (ite.next().getUsername().contentEquals(myCObj.getUsername())) {
+                    if (ite.next().getFullName().contentEquals(myCObj.getFullName())) {
                         ite.remove();
                     }
                 } while (ite.hasNext());
@@ -756,10 +766,6 @@ public class MainUI extends JFrame implements Serializable {
         settings = true;
     }
 
-    public void setSettingsClosed() {
-        settings = false;
-    }
-
     public void addChatWindow(ChatWindowUI cwindow) {
         algui.add(cwindow);
         chatting.add(cwindow.getUsername());
@@ -778,7 +784,7 @@ public class MainUI extends JFrame implements Serializable {
 
     public ArrayList<ClientObject> hideSelf(ArrayList<ClientObject> str) {
         for (ClientObject test : str) {
-            if (test.getUsername().contentEquals(myCObj.getUsername())) {
+            if (test.getFullName().contentEquals(myCObj.getFullName())) {
                 str.remove(test);
             }
         }

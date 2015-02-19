@@ -9,6 +9,8 @@ import LCControllers.ChatMessage;
 import LCControllers.Client;
 import LCControllers.ClientObject;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListCellRenderer;
@@ -28,19 +30,21 @@ public class InviteList extends javax.swing.JFrame {
      */
     ArrayList<ClientObject> hey;
     Client me;
-    
+
     public InviteList(ArrayList<ClientObject> ey, Client oh) {
         hey = ey;
         me = oh;
         initComponents();
         this.setTitle("Broadcast Message");
         populadaList();
-        if (hey.size() == 0 ) {
+        if (hey.size() == 0) {
             sendButton.setEnabled(false);
         }
         messageArea.setWrapStyleWord(true);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationByPlatform(true);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
     }
 
     /**
@@ -128,10 +132,10 @@ public class InviteList extends javax.swing.JFrame {
         // TODO add your handling code here:
         ArrayList<ClientObject> x = new ArrayList<ClientObject>();
         x.addAll((List<ClientObject>) userList.getSelectedValuesList());
-        if(userList.isSelectionEmpty()){
-        JOptionPane.showMessageDialog(null, "Please select users to send message to!");
-        }else{
-        me.sendMessageToServer(new ChatMessage(ChatMessage.BROADCAST, x, me.getCo().getName()+": "+messageArea.getText()));
+        if (userList.isSelectionEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please select users to send message to!");
+        } else {
+            me.sendMessageToServer(new ChatMessage(ChatMessage.BROADCAST, x, me.getCo().getFullName() + ": " + messageArea.getText()));
         }
     }//GEN-LAST:event_sendButtonActionPerformed
 
@@ -191,13 +195,13 @@ public class InviteList extends javax.swing.JFrame {
                 userList.updateUI();
             }
         });
-        
+
         userList.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 Component renderer = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (renderer instanceof JLabel && value instanceof ClientObject) {
-                    ((JLabel) renderer).setText(((ClientObject) value).getName());
+                    ((JLabel) renderer).setText(((ClientObject) value).getFullName());
                 }
                 return renderer;
             }

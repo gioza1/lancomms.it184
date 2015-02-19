@@ -98,7 +98,7 @@ public class Client {
      */
     public boolean start() {
         boolean successFlag = false;
-        System.out.println(me.getServer() + me.getPort() + me.getUsername());
+        System.out.println(me.getServer() + me.getPort() + me.getFullName());
         try {
             socket = new Socket(runningServer, runningPort); // CONNECTS TO HIS/HER OWN SERVER
         } // if it failed not much I can so

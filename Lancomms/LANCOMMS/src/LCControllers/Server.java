@@ -286,7 +286,7 @@ public class Server implements Runnable {
                     /* Flag to check chat window is opened for user that sent message */
                     boolean flagChatWindowOpened = false;
                     /* Reading Message and Username from JSONObject */
-                    String userName = co.getUsername();
+                    String userName = co.getFullName();
 
                     for (Frame frame : Frame.getFrames()) {
                         /* Check Frame/Window is opened for user */
@@ -332,7 +332,7 @@ public class Server implements Runnable {
                 String message = cm.getMessage();
                 // set up call address-port if not instanced yet
                 if (cw.isCallInstanced() == false) {
-                    call = new Call(co.getServer(), Integer.toString(co.getPort()), Integer.toString(port), cw, co.getUsername());
+                    call = new Call(co.getServer(), Integer.toString(co.getPort()), Integer.toString(port), cw, co.getFullName());
                     cw.setCallInstance();
                     isCallInstancedHere = true;
                 } else if (cw.isCallInstanced() == true) {
@@ -346,8 +346,10 @@ public class Server implements Runnable {
                 switch (cm.getType()) {
 
                     case ChatMessage.MESSAGE:
+
+                        cw.append(co.getFullName() + ": " + message + "\n");
                         playSound(0);
-                        cw.append(co.getUsername() + ": " + message + "\n");
+
                         if (cw.isVisible() == false) {
                             cw.setVisible(true);
                         }
@@ -370,7 +372,7 @@ public class Server implements Runnable {
                             String cresponse = null;
                             playSound(0);
                             if (!sg.checkCallDisabled()) {
-                                cresponse = call.acceptOrReject(co.getUsername());
+                                cresponse = call.acceptOrReject(co.getFullName());
                                 cm = new ChatMessage(ChatMessage.RESPONSE, cresponse);
                                 cw.sendResponse(cm);
 
@@ -378,13 +380,14 @@ public class Server implements Runnable {
                                     if (cw.isVisible() == false) {
                                         cw.setVisible(true);
                                     }
-                                    cw.append("\nYou are now in a call with " + co.getUsername() + "\n");
+                                    cw.append("\nYou are now in a call with " + co.getFullName() + "\n");
                                     call.startCall();
                                     sg.setCallDisabled();
                                     stopSound();
 
                                 } else if (cresponse.equals("Reject")) {
-                                    cw.append("\nYou rejected the call from " + co.getUsername() + "\n");
+
+                                    cw.append("\nYou rejected the call from " + co.getFullName() + "\n");
                                     stopSound();
                                 }
                             } else if (sg.checkCallDisabled()) {
@@ -404,16 +407,18 @@ public class Server implements Runnable {
                             case "Accept":
                                 call.startCall();
                                 sg.setCallDisabled();
-                                cw.append("\nYou are now in a call with " + co.getUsername() + "\n");
+
+                                cw.append("\nYou are now in a call with " + co.getFullName() + "\n");
                                 stopSound();
+
                                 break;
                             case "Reject":
-                                cw.append("\n" + co.getUsername() + " has rejected the call!\n");
+                                cw.append("\n" + co.getFullName() + " has rejected the call!\n");
                                 sg.setCallEnabled();
                                 stopSound();
                                 break;
                             case "Busy":
-                                cw.append("\n" + co.getUsername() + " is in a call right now. Please try again later!\n");
+                                cw.append("\n" + co.getFullName() + " is in a call right now. Please try again later!\n");
                                 sg.setCallEnabled();
                                 stopSound();
                                 break;
@@ -428,7 +433,7 @@ public class Server implements Runnable {
             // connected Clients
 
             //cw.dispose();
-            cw.append(co.getUsername() + " is now offline.\n");
+            cw.append(co.getFullName() + " is now offline.\n");
             try {
                 call.stopCall();
             } catch (Exception e) {
@@ -487,6 +492,7 @@ public class Server implements Runnable {
 
         public boolean playSound(int whatSound) {
             final java.util.Date date = new java.util.Date();
+
             File wavfile = null;
             final int CHAT = 0, CALL = 1;
             switch (whatSound) {
