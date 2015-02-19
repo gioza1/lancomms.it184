@@ -179,12 +179,11 @@ public class LoginUI extends javax.swing.JFrame {
 //        ClientObject willPassThis = log.createClientObj(usernameField.getText());
 
             try {
-                if (userId == 0) {
+                if (userId == -1) {
                     throw new Exception("Wrong username and/or password. Please try again.");
-                } else if (userId == (-1)) {
+                } else if (userId == (-2)) {
+                    throw new Exception("Cannot connect to server at this time.");
                 } else {
-                //WebCamFeed feed = new WebCamFeed();
-                    //feed.getFeed();
                     log.loginTime(userId);
                     MainUI startApp = new MainUI(userId, usernameField.getText(), host);
                     this.setVisible(false);

@@ -23,6 +23,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -146,6 +147,7 @@ public class Call extends BaseFile{
         cframe.setResizable(false);
         javax.swing.JButton stop; stop = new javax.swing.JButton();
         stop.setText("Stop Call");
+        stop.setFont(new java.awt.Font("Calibri", 0, 12));
         stop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stopCall();
@@ -211,9 +213,11 @@ public class Call extends BaseFile{
     //get user response; accept or reject call
     public String acceptOrReject(String username) throws IOException {
         String[] buttons = {"Accept", "Reject"};
-        JOptionPane option = new JOptionPane("You have incoming call from "+username+".", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, buttons, buttons[1]);
+        ImageIcon icon = new ImageIcon(getClass().getResource("/lancomms/call.png"));
+        JOptionPane option = new JOptionPane("You have incoming call from "+username+".", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, icon, buttons, buttons[1]);
         JDialog dialog = option.createDialog("Incoming call.");
-
+        
+           
         
         String reply; //onclick
         String accept = "Reject";

@@ -19,11 +19,11 @@ import java.sql.Timestamp;
 public class Call_Log {
         
         public void callStartTime(int userIdfrom, int userIdto ){
-        Connection con;
-        ConnectDB callConnector = new ConnectDB();
-        con = callConnector.connectToDB();    
+        Connection con=null;
+        ConnectDB callConnector = new ConnectDB();         
         Statement stmt=null; 
         try{        
+            con = callConnector.connectToDB(); 
             stmt = con.createStatement();
             java.util.Date date = new java.util.Date();
             Timestamp tstamp = new Timestamp(date.getTime());
@@ -41,11 +41,11 @@ public class Call_Log {
     }
         
         public void callEndTime(int userId){
-        Connection con;
-        ConnectDB callConnector = new ConnectDB();
-        con = callConnector.connectToDB();    
+        Connection con=null;
+        ConnectDB callConnector = new ConnectDB();   
         Statement stmt=null; 
-        try{        
+        try{    
+            con = callConnector.connectToDB(); 
             stmt = con.createStatement();
             java.util.Date date = new java.util.Date();
             Timestamp tstamp = new Timestamp(date.getTime());

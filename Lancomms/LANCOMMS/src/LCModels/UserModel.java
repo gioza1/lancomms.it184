@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -19,15 +20,13 @@ import javax.swing.JOptionPane;
 public class UserModel {
     
     public boolean checkPassword(int userId, String oldpw){
-        Connection con;
-        ConnectDB callConnector = new ConnectDB();
-        con = callConnector.connectToDB();    
+        Connection con=null;
+        ConnectDB callConnector = new ConnectDB();  
         ResultSet rs=null;
         Statement stmt=null; 
         try{
-        
-            stmt = con.createStatement();
-                
+            con = callConnector.connectToDB();         
+            stmt = con.createStatement();              
             String sql = "SELECT * FROM `user` WHERE user_id = '" + userId + "';";
             rs = stmt.executeQuery(sql);
             rs.next();
@@ -51,12 +50,12 @@ public class UserModel {
     }
     
     public void updatePassword(int userId, String newpw){
-        Connection con;
-        ConnectDB callConnector = new ConnectDB();
-        con = callConnector.connectToDB();    
+        Connection con=null;
+        ConnectDB callConnector = new ConnectDB();  
         ResultSet rs=null;
         Statement stmt=null; 
-        try{        
+        try{
+            con = callConnector.connectToDB();         
             stmt = con.createStatement();
             String sql = "UPDATE `user` SET user_password='"+newpw+"' WHERE user_id='"+userId+"';";
             stmt.executeUpdate(sql);
@@ -71,13 +70,13 @@ public class UserModel {
     }
     
     public String getUserName(int userId){
-        Connection con;
-        ConnectDB callConnector = new ConnectDB();
-        con = callConnector.connectToDB();    
+        Connection con=null;
+        ConnectDB callConnector = new ConnectDB();  
         ResultSet rs=null;
         Statement stmt=null; 
         String userName="";
-        try{        
+        try{
+            con = callConnector.connectToDB();         
             stmt = con.createStatement();
             String sql = "SELECT * FROM `user` WHERE user_id='"+userId+"';";
             rs = stmt.executeQuery(sql);
@@ -96,22 +95,22 @@ public class UserModel {
     }
         
     public String getName(int userId){
-        Connection con;
-        ConnectDB callConnector = new ConnectDB();
-        con = callConnector.connectToDB();    
+        Connection con=null;
+        ConnectDB callConnector = new ConnectDB();           
         ResultSet rs=null;
         Statement stmt=null; 
         String lName="";
         String fName="";
         String name=null;
         try{        
+            con = callConnector.connectToDB(); 
             stmt = con.createStatement();
             String sql = "SELECT * FROM `user` WHERE user_id='"+userId+"';";
             rs = stmt.executeQuery(sql);
             rs.next();
             lName = rs.getString("user_lname");
             fName = rs.getString("user_fname");
-            System.out.println(fName+" "+lName);
+            //System.out.println(fName+" "+lName);
             name=fName+" "+lName;
         }
         catch(SQLException e){
@@ -123,4 +122,32 @@ public class UserModel {
             return name;
         }         
     }    
+
+    public ArrayList<Integer> getUserList() throws SQLException{
+        ArrayList<Integer> users = new ArrayList<Integer>();
+        Connection con=null;
+        ConnectDB callConnector = new ConnectDB();           
+        ResultSet rs=null;
+        Statement stmt=null; 
+        int id;
+
+        try{        
+            con = callConnector.connectToDB(); 
+            stmt = con.createStatement();
+            String sql = "SELECT user_id FROM `user` WHERE user_status=1;";
+            rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                id = rs.getInt("user_id");
+                users.add(id);
+                }
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        finally{
+            try { if (stmt != null) stmt.close(); } catch (Exception e) {};
+            try { if (con != null) con.close(); } catch (Exception e) {};   
+            return users;
+        }         
+    }     
 }

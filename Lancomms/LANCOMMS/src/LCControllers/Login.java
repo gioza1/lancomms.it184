@@ -29,29 +29,31 @@ public class Login {
      */
     public int login(String username, String password){
         
-        Connection con;
-        ConnectDB callConnector = new ConnectDB();
-        con = callConnector.connectToDB();    
+        Connection con=null;
+        ConnectDB callConnector = new ConnectDB();    
         ResultSet rs=null;
         Statement stmt=null; 
         try{
-        
-            stmt = con.createStatement();
-                
-            String sql = "SELECT * FROM `user` WHERE user_username = '" + username + "';";
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            userPw = rs.getString("user_password");
-            if(password.equals(userPw))
-                {
-                userId = rs.getInt("user_id");              
-                }  
-            else{
-                userId = 0;
+            con = callConnector.connectToDB();
+            stmt = con.createStatement();                
+            String sql = "SELECT * FROM `user` WHERE user_username = '" + username + "' AND user_status = 1;";
+            try{
+                rs = stmt.executeQuery(sql);
+                rs.next();
+                userPw = rs.getString("user_password");
+                if(password.equals(userPw))
+                    {
+                    userId = rs.getInt("user_id");              
+                    }  
+                else{
+                    userId = -1;
+                }
+            }catch(SQLException ev){
+                userId = -1;   
             }
         }
         catch(SQLException e){
-            userId = -1;
+            userId = -2;
             System.out.println("An error has occurred: "+e.getMessage()+" !!!");
         }
         finally{
@@ -64,11 +66,11 @@ public class Login {
     }
     
     public void loginTime(int userId){
-        Connection con;
-        ConnectDB callConnector = new ConnectDB();
-        con = callConnector.connectToDB();    
+        Connection con=null;
+        ConnectDB callConnector = new ConnectDB();  
         Statement stmt=null; 
-        try{        
+        try{
+            con = callConnector.connectToDB();         
             stmt = con.createStatement();
             java.util.Date date = new java.util.Date();
             Timestamp tstamp = new Timestamp(date.getTime());
@@ -87,16 +89,14 @@ public class Login {
     }
     
     public void logoutTime(int userId){
-        Connection con;
-        ConnectDB callConnector = new ConnectDB();
-        con = callConnector.connectToDB();    
-        ResultSet rs=null;
+        Connection con=null;
+        ConnectDB callConnector = new ConnectDB();  
         Statement stmt=null; 
-        try{        
+        try{
+            con = callConnector.connectToDB();         
             stmt = con.createStatement();
             java.util.Date date = new java.util.Date();
             Timestamp tstamp = new Timestamp(date.getTime());
-            String room = System.getProperty("user.name");
             String sql = "UPDATE `user_log` SET ul_out_timestamp='"+tstamp+"' WHERE user_id = "+userId+" ORDER BY ul_in_timestamp DESC LIMIT 1;";
             System.out.println("OUT: "+tstamp);
             stmt.executeUpdate(sql);

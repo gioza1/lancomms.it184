@@ -9,6 +9,8 @@ import LCControllers.ChatMessage;
 import LCControllers.Client;
 import LCControllers.ClientObject;
 import LCControllers.Contacts;
+import LCControllers.ConvObject;
+import LCControllers.Conversations;
 import LCControllers.Login;
 import LCControllers.ParseRoute.ParseRoute;
 import LCControllers.Server;
@@ -49,15 +51,19 @@ public class MainUI extends JFrame implements Serializable {
     private Session sess;
     private int userId;
     private int idrow;
-    private String namerow;
+    private String namerow;    
     private int counter;
     private ClientObject myCObj;
+    private Conversations convo;
     private Client myClient;
     private UserModel umodel;
     private Server myServer;
     private ArrayList<ChatWindowUI> algui;
+    private ArrayList<ConversationUI> cvgui;
+    private ArrayList<ConvObject> convos;
     private boolean callDisabled;
     private List<String> chatting;
+    private List<String> conving;
     private SettingsUI sui;
     private ImageIcon img;
     private boolean settings;
@@ -78,8 +84,12 @@ public class MainUI extends JFrame implements Serializable {
         callDisabled = false;
         settings = false;
         algui = new ArrayList<ChatWindowUI>();
+        cvgui = new ArrayList<ConversationUI>();
         chatting = new ArrayList<String>();
+        conving = new ArrayList<String>();
         host = hostadd;
+        
+        
         int port = 0;
         ParseRoute pr = new ParseRoute();
         String server = pr.getLocalIPAddress();
@@ -118,9 +128,13 @@ public class MainUI extends JFrame implements Serializable {
         sess = new Session(uid); // store session
         userId = sess.getId();
 
+        setConvoList();
+        
         initComponents();
         initComponents2();
 
+        updateConvoList(convos);
+        
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setLocationByPlatform(true);
         this.addWindowListener(new WindowAdapter() {
@@ -162,6 +176,7 @@ public class MainUI extends JFrame implements Serializable {
         logoutMenuItem = new javax.swing.JMenuItem();
         ContactsList = new javax.swing.JPanel();
         ContactsList.setForeground(new java.awt.Color(255, 255, 255));
+     
 
         WindowListener l = new WindowAdapter() {
             List<Window> windows = new ArrayList<Window>();
@@ -190,20 +205,14 @@ public class MainUI extends JFrame implements Serializable {
 
         MainTabs.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
 
-//        jTable1.setTableHeader(null);
         jTable1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jTable1.setFont(jTable1.getFont());
         jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-//        jTable1.setGridColor(new java.awt.Color(255, 255, 255));
         jTable1.setInheritsPopupMenu(true);
-//        jTable1.setIntercellSpacing(new java.awt.Dimension(2, 8));
-//        jTable1.setRowHeight(25);
-//        jTable1.setShowHorizontalLines(false);
-//        jTable1.setShowVerticalLines(false);
-//        jTable1.setRowSelectionAllowed(true);
 
         jTable1.addMouseListener(null);
         MouseListener mouseListener = new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent mouseEvent) {
                 JList theList = (JList) mouseEvent.getSource();
                 if (mouseEvent.getClickCount() == 2) {
@@ -282,19 +291,64 @@ public class MainUI extends JFrame implements Serializable {
 
         MainTabs.addTab("<html><body leftmargin=15 topmargin=8 marginwidth=38 marginheight=5>Online Users</body></html>", ContactsList);
 
-        jList2.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = {"Mike Test (2015-2-15 06:47)"};
+//        jList2.setModel(new javax.swing.AbstractListModel() {
+//            String[] strings = {"Mike Test (2015-2-15 06:47)"};
+//
+//            public int getSize() {
+//                return strings.length;
+//            }
+//
+//            public Object getElementAt(int i) {
+//                return strings[i];
+//            }
+//        });
+        jList2.addMouseListener(null);        
+        MouseListener mouseListener2 = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                JList theList = (JList) mouseEvent.getSource();
+                if (mouseEvent.getClickCount() == 2) {
+                    int index = theList.locationToIndex(mouseEvent.getPoint());
+                    if (index >= 0) {
+                        ConvObject o = (ConvObject) theList.getModel().getElementAt(index);
+                        if (!conving.contains(o.getNameTo())) {
+                            o.setMessages();
+                            ConversationUI cv = new ConversationUI(o);
+                            cv.setTitle("Message Logs with "+o.getNameTo());
+                            cv.setVisible(true);
+                            cvSetMainUI(cv);
+                            addConvoWindow(cv);
+                            conving.add(o.getNameTo());
+                        } else {
 
-            public int getSize() {
-                return strings.length;
+                            for (Frame cwindow : Frame.getFrames()) {
+                                if (!cwindow.isShowing() && cwindow.getTitle().equals("Message Logs with "+o.getNameTo())) {
+                                    System.out.println("Setting visible the convo window of: " + cwindow.getTitle());
+                                    cwindow.setVisible(true);
+                                }
+                            }
+                        }
+                    }
+                }
             }
-
-            public Object getElementAt(int i) {
-                return strings[i];
-            }
-        });
+        };
+        jList2.addMouseListener(mouseListener2);        
+        jList2.setVisibleRowCount(10);        
         jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jList2.setToolTipText("");
+        jList2.setToolTipText("Message Logs");
+        jList2.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                Component renderer = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (renderer instanceof JLabel && value instanceof ConvObject) {
+                    ((JLabel) renderer).setText(((ConvObject) value).getLatest());
+                }
+                return renderer;
+            }
+        });        
+        
+        
+        
         jScrollPane2.setViewportView(jList2);
 
         javax.swing.GroupLayout ConvoListLayout = new javax.swing.GroupLayout(ConvoList);
@@ -308,11 +362,11 @@ public class MainUI extends JFrame implements Serializable {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
         );
 
-        MainTabs.addTab("<html><body leftmargin=15 topmargin=8 marginwidth=40 marginheight=5>Conversations</body></html>", ConvoList);
+        MainTabs.addTab("<html><body leftmargin=15 topmargin=8 marginwidth=40 marginheight=5>Message Logs</body></html>", ConvoList);
 
         NTSystem NTSystem = new NTSystem();//test
 //        UserNameDisplay.setText(System.getProperty("user.name"));
-        UserNameDisplay.setText(myCObj.getUsername());
+        UserNameDisplay.setText(myCObj.getName());
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lancomms/mainui1-1-2.png"))); // NOI18N
 
@@ -578,6 +632,23 @@ public class MainUI extends JFrame implements Serializable {
 
     }
 
+    
+    public void setConvoList(){
+        convo = new Conversations(userId);
+        convo.setConvList();
+        convos = convo.getConvList();   
+    }
+    
+    public void updateConvoList(ArrayList<ConvObject> cobj){
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                Iterator<ConvObject> ite = cobj.iterator();
+                jList2.setListData(cobj.toArray());
+                jList2.updateUI();
+            }
+        });       
+    }
+    
     public void setCallDisabled() {
         callDisabled = true;
         for (ChatWindowUI cwindow : algui) {
@@ -596,6 +667,14 @@ public class MainUI extends JFrame implements Serializable {
     public boolean checkCallDisabled() {
         return callDisabled;
     }
+    
+    public void setSettingsOpened(){
+        settings = true;
+    }
+    
+    public void setSettingsClosed(){
+        settings = false;
+    }    
 
     public void addChatWindow(ChatWindowUI cwindow) {
         algui.add(cwindow);
@@ -609,6 +688,10 @@ public class MainUI extends JFrame implements Serializable {
         }
     }
 
+    public void addConvoWindow(ConversationUI cwindow) {
+        cvgui.add(cwindow);
+    }    
+    
     public ArrayList<ClientObject> hideSelf(ArrayList<ClientObject> str) {
         for (ClientObject test : str) {
             if (test.getUsername().contentEquals(myCObj.getUsername())) {
@@ -636,6 +719,11 @@ public class MainUI extends JFrame implements Serializable {
         ChatWindowUI cwwindow = cw;
         cwwindow.setMainUI(this);
     }
+    
+    public void cvSetMainUI(ConversationUI cv) {
+        ConversationUI cvwindow = cv;
+        cvwindow.setMainUI(this);
+    }    
 
     class ServerRunning extends Thread {
 

@@ -45,7 +45,6 @@ public class LANCOMMS {
 
         // get the property value and print it out
         host = prop.getProperty("host");
-        System.out.println(host);
     }
 
     public String getHost() {

@@ -64,6 +64,7 @@ public class ChatWindowUI extends javax.swing.JFrame {
         });
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationByPlatform(true);
+        this.setResizable(false);
     }
 
     public ChatWindowUI(ClientObject to, ClientObject from) {

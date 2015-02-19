@@ -285,10 +285,10 @@ public class AccountManager extends javax.swing.JFrame {
         boolean isSuccess = false;
         int id = getUserId(user);
         //STEP 3: Open a connection
-        conn = new ConnectDB().connectToDB();
         System.out.println("Connected database successfully...");
 //                    active = (changeStatus.isEnabled() == true ? 1 : 0);
         try {
+            conn = new ConnectDB().connectToDB();
             stmt = conn.createStatement();
             String sql = "DELETE FROM `user` WHERE user_id='" + id + "';";
             stmt.executeUpdate(sql);

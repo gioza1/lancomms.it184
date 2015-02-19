@@ -9,6 +9,8 @@ package LCViews;
 import LCControllers.Settings;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 /**
@@ -37,7 +39,8 @@ public class SettingsUI extends JFrame{
         this.setLocationRelativeTo(null);
         this.setTitle("Settings");JPanel panel = new JPanel(); 
         this.mui = mainui;
-                                
+        mainui.setSettingsOpened();
+        
             JLabel usernameLabel = new JLabel("       Current Password: ");
             panel.add(usernameLabel);
             oldpasswordField = new JPasswordField("", 20);
@@ -71,13 +74,22 @@ public class SettingsUI extends JFrame{
             BackButton.addActionListener(new ActionListener() {    
                 public void actionPerformed(ActionEvent e)
                 {
-                    HandlingBackButton();
+                    mainui.setSettingsClosed();
+                    setVisible(false);
                 }
             });
             
         this.add(panel);
-        this.setVisible(true);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setVisible(true);      
+        this.setLocationByPlatform(true);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                mainui.setSettingsClosed();
+                setVisible(false);
+            }
+        });        
     }
 	 /**
           * sending the updated data to the Setting Controller
@@ -90,7 +102,7 @@ public class SettingsUI extends JFrame{
                 JOptionPane.showMessageDialog(null, "Password has been changed.");
             }
             else
-                {  JOptionPane.showMessageDialog(null, "Woops! You may have entered a wrong password. Please try again.");}
+                {  JOptionPane.showMessageDialog(null, "One of the fields is incorrect. Please try again.");}
             oldpasswordField.setText(""); 
             newpasswordField.setText("");
             newpasswordField2.setText("");
