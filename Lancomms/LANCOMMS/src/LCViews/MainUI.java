@@ -411,7 +411,7 @@ public class MainUI extends JFrame implements Serializable {
 
         LancommsMenu.setText("LANCOMMS");
 
-        groupChat.setText("Invite to Group Chat");
+        groupChat.setText("Group Chat");
         groupChat.setInheritsPopupMenu(true);
         groupChat.setIconTextGap(0);
         groupChat.addActionListener(new java.awt.event.ActionListener() {

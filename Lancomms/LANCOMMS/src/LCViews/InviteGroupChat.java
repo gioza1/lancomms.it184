@@ -35,7 +35,7 @@ public class InviteGroupChat extends javax.swing.JFrame {
         hey = ey;
         me = oh;
         initComponents();
-        this.setTitle("Invite");
+        this.setTitle("Group Chat");
         populadaList();
         if (hey.size() == 0) {
             inviteButton.setEnabled(false);
@@ -72,7 +72,7 @@ public class InviteGroupChat extends javax.swing.JFrame {
         userList.setToolTipText("List of users available");
         jScrollPane1.setViewportView(userList);
 
-        inviteButton.setText("Invite");
+        inviteButton.setText("Group Chat");
         inviteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inviteButtonActionPerformed(evt);
@@ -97,7 +97,7 @@ public class InviteGroupChat extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cancelButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                         .addComponent(inviteButton))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
@@ -127,7 +127,7 @@ public class InviteGroupChat extends javax.swing.JFrame {
         ArrayList<ClientObject> x = new ArrayList<ClientObject>();
         x.addAll((List<ClientObject>) userList.getSelectedValuesList());
         if (userList.isSelectionEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please select users to invite!");
+            JOptionPane.showMessageDialog(null, "Please select users to group chat with!");
         } else {
             x.add(me.getCo());
             me.sendMessageToServer(new ChatMessage(ChatMessage.GROUPCHATINVITE, x));
