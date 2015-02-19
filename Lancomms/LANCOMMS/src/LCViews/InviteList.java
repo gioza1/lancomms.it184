@@ -135,7 +135,7 @@ public class InviteList extends javax.swing.JFrame {
         if (userList.isSelectionEmpty()) {
             JOptionPane.showMessageDialog(null, "Please select users to send message to!");
         } else {
-            me.sendMessageToServer(new ChatMessage(ChatMessage.BROADCAST, x, me.getCo().getFullName() + ": " + messageArea.getText()));
+            me.sendMessageToServer(new ChatMessage(ChatMessage.CLIENTBROADCAST, x, me.getCo().getFullName() + ": " + messageArea.getText()));
         }
     }//GEN-LAST:event_sendButtonActionPerformed
 

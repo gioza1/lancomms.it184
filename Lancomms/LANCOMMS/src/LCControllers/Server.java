@@ -497,7 +497,7 @@ public class Server implements Runnable {
             final int CHAT = 0, CALL = 1;
             switch (whatSound) {
                 case CHAT:
-                    wavfile = new File("resources/lancommschat.wav");
+                    wavfile = new File("resources/lancomms_newmsg.wav");
                     break;
                 case CALL:
                     wavfile = new File("resources/lancomms_call.wav");
@@ -532,7 +532,9 @@ public class Server implements Runnable {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
             clip.start();
-            clip.loop(clip.LOOP_CONTINUOUSLY);
+            if (whatSound == CALL) {
+                clip.loop(clip.LOOP_CONTINUOUSLY);
+            }
             return x;
         }
 

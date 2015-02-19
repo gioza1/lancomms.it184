@@ -318,13 +318,12 @@ public class MainServer {
                         display(username + " disconnected with a LOGOUT message.");
                         tKeepGoing = false;
                         break;
-                    case ChatMessage.BROADCAST:
-//                        writeMsg("List of the users connected at " + sdf.format(new Date()) + "\n");
-                        // scan al the users connected
-                        int i = 0;
+                    case ChatMessage.CLIENTBROADCAST: // NEEDS FIXING//
+                        int i = al.size();
                         for (ClientThread ct : al) {
                             System.out.println("CHATMESSAGEARRAY SIZE: " + cm.getList().size() + "CLIENTTSIZE: " + al.size());
-                            String user = cm.getList().get(i).getUsername();
+                            String user = cm.getList().get(i--).getUsername();
+
                             if (ct.test.getUsername().contentEquals(user)) {
                                 writeMessage(cm);
                             }

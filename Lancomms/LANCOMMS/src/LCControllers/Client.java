@@ -144,8 +144,9 @@ public class Client {
 
         /* Creating both Data Stream */
         try {
-            mainSInput = new ObjectInputStream(mSocket.getInputStream());
             mainSOutput = new ObjectOutputStream(mSocket.getOutputStream());
+
+            mainSInput = new ObjectInputStream(mSocket.getInputStream());
         } catch (IOException eIO) {
             System.out.println("Exception creating new Input/output Streams: " + eIO);
             return false;
@@ -185,7 +186,7 @@ public class Client {
 
     public void sendMessageToServer(ChatMessage msg) {
         try {
-//            mainSOutput.reset();
+            mainSOutput.reset();
             mainSOutput.writeObject(msg);
 //            mainSOutput.flush();
         } catch (IOException e) {
@@ -303,7 +304,7 @@ public class Client {
                         case ChatMessage.UPDATELIST:
                             cg.updateList(eh.getList());
                             break;
-                        case ChatMessage.BROADCAST:
+                        case ChatMessage.CLIENTBROADCAST:
                             JOptionPane.showMessageDialog(null, eh.getMessage(), "Broadcast Message", JOptionPane.INFORMATION_MESSAGE);
                     }
                 } else {
