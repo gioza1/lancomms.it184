@@ -74,19 +74,17 @@ public class SettingsUI extends JFrame{
             BackButton.addActionListener(new ActionListener() {    
                 public void actionPerformed(ActionEvent e)
                 {
-                    mainui.setSettingsClosed();
                     setVisible(false);
                 }
             });
             
         this.add(panel);
-        this.setVisible(true);      
         this.setLocationByPlatform(true);
+        this.setVisible(true);      
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
-            @Override
+
             public void windowClosing(WindowEvent e) {
-                mainui.setSettingsClosed();
                 setVisible(false);
             }
         });        

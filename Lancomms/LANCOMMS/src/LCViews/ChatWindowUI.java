@@ -70,7 +70,7 @@ public class ChatWindowUI extends javax.swing.JFrame {
     public ChatWindowUI(ClientObject to, ClientObject from) {
         toCo = to;
         fromCo = from;
-        userNameTo = to.getUsername();
+        userNameTo = to.getFullName();
 
         //connect to a client
         try {
@@ -199,7 +199,7 @@ public class ChatWindowUI extends javax.swing.JFrame {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lancomms/pp2.png"))); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel4.setText(toCo.getName());
+        jLabel4.setText(toCo.getFullName());
 
         videoCall.setText("Video Call");
         videoCall.addActionListener(new java.awt.event.ActionListener() {
@@ -263,7 +263,7 @@ public class ChatWindowUI extends javax.swing.JFrame {
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         // TODO add your handling code here:
         ChatMessage cmsg = new ChatMessage(ChatMessage.MESSAGE, message.getText());
-        append(fromCo.getUsername() + ": " + message.getText() + "\n");
+        append(fromCo.getFullName() + ": " + message.getText() + "\n");
         message.setText("");
 
         if (sentSelf == false) {
@@ -321,11 +321,11 @@ public class ChatWindowUI extends javax.swing.JFrame {
             if (!isCallDisabled) {
                 int callPort = toCo.getPort();
                 if (isCallInstanced == false) {
-                    call = new Call(toCo.getServer(), Integer.toString(callPort), Integer.toString(fromCo.getPort()), this, toCo.getUsername());
+                    call = new Call(toCo.getServer(), Integer.toString(callPort), Integer.toString(fromCo.getPort()), this, toCo.getFullName());
                 }
                 this.isCallInstanced = true; //associate instance to chatwindow
                 ChatMessage cmsg = new ChatMessage(ChatMessage.CALL, "call");
-                append("\nAttempting to call " + toCo.getUsername() + "\n");
+                append("\nAttempting to call " + toCo.getFullName() + "\n");
                 if (sentSelf == false) {
                     senderDetails(fromCo);
                 }
