@@ -370,8 +370,9 @@ public class Server implements Runnable {
                     case ChatMessage.CALL:
                         try {
                             String cresponse = null;
-                            playSound(1);
+                            
                             if (!sg.checkCallDisabled()) {
+                                playSound(1);
                                 cresponse = call.acceptOrReject(co.getFullName());
                                 cm = new ChatMessage(ChatMessage.RESPONSE, cresponse);
                                 cw.sendResponse(cm);

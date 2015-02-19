@@ -331,6 +331,7 @@ public class MainUI extends JFrame implements Serializable {
                             for (Frame cwindow : Frame.getFrames()) {
                                 if (!cwindow.isShowing() && cwindow.getTitle().equals("Message Logs with " + o.getNameTo())) {
                                     System.out.println("Setting visible the convo window of: " + cwindow.getTitle());
+                                    o.setMessages();
                                     cwindow.setVisible(true);
                                 }
                             }
