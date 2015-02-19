@@ -263,16 +263,17 @@ public class ChatWindowUI extends javax.swing.JFrame {
 
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         // TODO add your handling code here:
-        ChatMessage cmsg = new ChatMessage(ChatMessage.MESSAGE, message.getText());
-        if (message.getText().length() > 0) {
-            append(fromCo.getUsername() + ": " + message.getText() + "\n");
-        }
-        message.setText("");
-
         if (sentSelf == false) {
             senderDetails(fromCo);
         }
-        sendMessage(cmsg);
+        ChatMessage cmsg = new ChatMessage(ChatMessage.MESSAGE, message.getText());
+        if (message.getText().length() > 0) {
+            append(fromCo.getUsername() + ": " + message.getText() + "\n");
+
+            message.setText("");
+
+            sendMessage(cmsg);
+        }
         return;
 
     }//GEN-LAST:event_sendButtonActionPerformed

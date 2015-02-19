@@ -220,10 +220,13 @@ public class AddUser extends javax.swing.JFrame {
         String pass = "";
         if (username.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please input username");
+            return false;
         } else if (firstName.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please input your name");
+            return false;
         } else if (lastName.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please input your surname");
+            return false;
         } else if (password.getText().length() == 0) {
             JOptionPane.showMessageDialog(null, "Please input password");
             return false;
