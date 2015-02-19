@@ -103,6 +103,7 @@ public class ChatWindowUI extends javax.swing.JFrame {
 
     public void setSendDisabled() {
         sendButton.setEnabled(false);
+        message.setEditable(false);
     }
 
     public void disconnect() {
@@ -263,7 +264,9 @@ public class ChatWindowUI extends javax.swing.JFrame {
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         // TODO add your handling code here:
         ChatMessage cmsg = new ChatMessage(ChatMessage.MESSAGE, message.getText());
-        append(fromCo.getUsername() + ": " + message.getText() + "\n");
+        if (message.getText().length() > 0) {
+            append(fromCo.getUsername() + ": " + message.getText() + "\n");
+        }
         message.setText("");
 
         if (sentSelf == false) {

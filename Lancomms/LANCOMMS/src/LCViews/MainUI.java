@@ -403,9 +403,9 @@ public class MainUI extends JFrame implements Serializable {
         LancommsMenu.setText("LANCOMMS");
 
         settingsMenuItem.setText("Settings");
-        settingsMenuItem.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        settingsMenuItem.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        settingsMenuItem.setIconTextGap(1);
+//        settingsMenuItem.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+//        settingsMenuItem.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+//        settingsMenuItem.setIconTextGap(1);
         settingsMenuItem.setInheritsPopupMenu(true);
         settingsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -422,14 +422,6 @@ public class MainUI extends JFrame implements Serializable {
         });
         LancommsMenu.add(aboutMenuItem);
 
-        logoutMenuItem.setText("Log Out");
-        logoutMenuItem.setIconTextGap(0);
-        logoutMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logoutMenuItemActionPerformed(evt);
-            }
-        });
-
         sendToMany.setText("Send to Many");
         sendToMany.setIconTextGap(0);
         sendToMany.addActionListener(new java.awt.event.ActionListener() {
@@ -439,6 +431,15 @@ public class MainUI extends JFrame implements Serializable {
         });
 
         LancommsMenu.add(sendToMany);
+
+        logoutMenuItem.setText("Log Out");
+        logoutMenuItem.setIconTextGap(0);
+        logoutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutMenuItemActionPerformed(evt);
+            }
+        });
+        LancommsMenu.add(logoutMenuItem);
 
         jMenuBar1.add(LancommsMenu);
 

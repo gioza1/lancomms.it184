@@ -50,27 +50,26 @@ public class ClientObject implements Serializable {
         return username;
     }
 
-    public String getName(){
+    public String getName() {
         return fullname;
     }
-    
+
     public int getPort() {
         return port;
     }
 
-    private void setName(){
+    private void setName() {
         UserModel um = new UserModel();
-        fullname = um.getName(userId);   
+        fullname = um.getName(userId);
         System.out.println(fullname);
     }
-    
+
     public int getMyPort() {
         return myPort;
     }
 
     public int getMyId() {
         return userId;
-    }    
-   
+    }
 
 }

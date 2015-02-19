@@ -134,7 +134,7 @@ public class MainServer {
      *  to broadcast a message to all Clients
      */
 
-    synchronized void broadcast(String message) {
+    public synchronized void broadcast(ChatMessage message) {
         // add HH:mm:ss and \n to the message
         String time = sdf.format(new Date());
         String messageLf = time + " " + message + "\n";
@@ -148,12 +148,9 @@ public class MainServer {
         // because it has disconnected
         for (int i = al.size(); --i >= 0;) {
             ClientThread ct = al.get(i);
+            ct.writeMessage(message);
             // try to write to the Client if it fails remove it from the list
-            ct.updateOnlineList(new ChatMessage(ChatMessage.MESSAGE, message));
-//            if (!ct.writeMsg(messageLf)) {
-//                al.remove(i);
-//                display("Disconnected Client " + ct.username + " removed from list.");
-//            }
+//            ct.writeMessage(new ChatMessage(ChatMessage.BROADCAST, message));
         }
     }
 
@@ -198,6 +195,14 @@ public class MainServer {
         // create a server object and start it
 //		Server server = new Server(portNumber);
 //		server.start();
+    }
+
+    public boolean hasUsersConnected() {
+        boolean retval = false;
+        if (alCo.size() > 0) {
+            retval = true;
+        }
+        return retval;
     }
 
     /**

@@ -70,13 +70,14 @@ public class MainServerGUI extends JFrame implements ActionListener {
 
         JMenuItem manageUsers = new JMenuItem("Manage Accounts");
         JMenuItem exitAction = new JMenuItem("Exit");
-        JMenuItem sendMessage = new JMenuItem("Send");
+        JMenuItem sendMessage = new JMenuItem("Broadcast");
         manageMenu.add(manageUsers);
-        manageMenu.add(exitAction);
         manageMenu.add(sendMessage);
+        manageMenu.add(exitAction);
+
         sendMessage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                server.broadcast("Ola");
+                new BroadcastList(server).setVisible(true);
             }
         });
         manageUsers.addActionListener(new ActionListener() {
