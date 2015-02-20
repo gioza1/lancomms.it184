@@ -78,11 +78,14 @@ public class MainServerGUI extends JFrame implements ActionListener {
         sendMessage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 new BroadcastList(server).setVisible(true);
+//               
             }
         });
         manageUsers.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 new AccountManager().setVisible(true);
+//                new AdminLogin().setVisible(true);
+//              
             }
         });
         exitAction.addActionListener(new ActionListener() {
