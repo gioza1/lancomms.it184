@@ -369,9 +369,7 @@ public class MainServer {
                             }
                         } while (ite.hasNext());
                         for (ClientThread ct : al) {
-
                             ct.writeMessage(new ChatMessage(ChatMessage.GROUPCHATUPDATELIST, groupChatPeople, cm.getClientObject().getFullName() + " has left the conversation.\n"));
-//                                 
                             System.out.println("Updated groupChatPeople hehe;");
                         }
                         break;
