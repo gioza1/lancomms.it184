@@ -191,7 +191,7 @@ public class Call extends BaseFile implements Runnable{
     public void sendStop(){
         ChatMessage cmsg = new ChatMessage(ChatMessage.STOPCALL, "stopcall");
         cw.sendMessage(cmsg);
-        cw.append("\nCall Ended.\n");
+        cw.append("\nCall Ended.\n\n");
     }
     
     private void closeWindow() {

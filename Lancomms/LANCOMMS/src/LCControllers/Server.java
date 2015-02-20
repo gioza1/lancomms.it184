@@ -427,6 +427,7 @@ public class Server implements Runnable {
                         break;
                     case ChatMessage.STOPCALL:
                         call.stopCall();
+                        cw.append("\nCall Ended.\n");
                         break;
                 }
             }
@@ -498,10 +499,10 @@ public class Server implements Runnable {
             final int CHAT = 0, CALL = 1;
             switch (whatSound) {
                 case CHAT:
-                    wavfile = new File("resources/lancomms_newmsg.wav");
+                    wavfile = new File("rsrc/lancomms_newmsg.wav");
                     break;
                 case CALL:
-                    wavfile = new File("resources/lancomms_call.wav");
+                    wavfile = new File("rsrc/lancomms_call.wav");
                     break;
             }
 

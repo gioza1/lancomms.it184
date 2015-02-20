@@ -7,6 +7,7 @@ package lancomms;
 
 import LCViews.LoginUI;
 import LCViews.MainUI;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class LANCOMMS {
     private String host;
 
     public LANCOMMS() {
+        
         try {
             getPropHost();
         } catch (IOException ex) {

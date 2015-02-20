@@ -9,13 +9,20 @@ import LCControllers.ChatMessage;
 import LCControllers.Client;
 import LCControllers.ClientObject;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.InputMap;
+import static javax.swing.JComponent.WHEN_FOCUSED;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 /**
@@ -70,6 +77,7 @@ public class GroupChatUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        textArea.setEditable(false);
         textArea.setColumns(20);
         textArea.setRows(5);
         jScrollPane2.setViewportView(textArea);
@@ -82,6 +90,26 @@ public class GroupChatUI extends javax.swing.JFrame {
         jScrollPane3.setViewportView(peopleInChat);
 
         onlineLabel.setText("Who's currently in group chat:");
+
+        int condition = WHEN_FOCUSED;
+        // get our maps for binding from the chatEnterArea JTextArea
+        InputMap inputMap = messageField.getInputMap(condition);
+        ActionMap actionMap = messageField.getActionMap();
+
+        // the key stroke we want to capture
+        KeyStroke enterStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+
+        // tell input map that we are handling the enter key
+        inputMap.put(enterStroke, enterStroke.toString());
+
+        // tell action map just how we want to handle the enter key
+        actionMap.put(enterStroke.toString(), new AbstractAction() {
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                sendButtonActionPerformed(evt);
+            }
+        });
 
         sendButton.setText("Send");
         sendButton.addActionListener(new java.awt.event.ActionListener() {

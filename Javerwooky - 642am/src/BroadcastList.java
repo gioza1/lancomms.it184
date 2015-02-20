@@ -111,7 +111,7 @@ public class BroadcastList extends javax.swing.JFrame {
         } else if (me.hasUsersConnected() == false) {
             JOptionPane.showMessageDialog(null, "Whut whut hold up, nobody's online!");
         } else {
-            me.broadcast(new ChatMessage(ChatMessage.SERVERBROADCAST, "Server: "+messageArea.getText()));
+            me.broadcast(new ChatMessage(ChatMessage.CLIENTBROADCAST, "Server: "+messageArea.getText()));
         }
     }//GEN-LAST:event_sendButtonActionPerformed
 
