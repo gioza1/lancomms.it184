@@ -5,12 +5,22 @@
  */
 package LCViews;
 
-import LCControllers.ClientObject;
 import LCControllers.Login;
+import LCControllers.Server;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.File;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
 
 /**
@@ -20,6 +30,8 @@ import javax.swing.JOptionPane;
 public class LoginUI extends javax.swing.JFrame {
 
     private String host;
+    Clip clip = null;
+
     /**
      * Creates new form Login
      */
@@ -29,7 +41,7 @@ public class LoginUI extends javax.swing.JFrame {
         this.getRootPane().setDefaultButton(LogInButton);
         this.setLocationByPlatform(true);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
     }
 
     /**
@@ -45,7 +57,9 @@ public class LoginUI extends javax.swing.JFrame {
             client.close();
             return true;
         } catch (Exception e) {
+
             JOptionPane.showMessageDialog(null, "Server is offline!");
+
             System.out.println(e.getMessage());
 
             return false;
@@ -184,8 +198,10 @@ public class LoginUI extends javax.swing.JFrame {
 
             try {
                 if (userId == -1) {
+                    playSound(2);
                     throw new Exception("Wrong username and/or password. Please try again.");
                 } else if (userId == (-2)) {
+                    playSound(2);
                     throw new Exception("Cannot connect to server at this time.");
                 } else {
                     log.loginTime(userId);
@@ -200,6 +216,8 @@ public class LoginUI extends javax.swing.JFrame {
                 System.out.println(e.getMessage());
 
             }
+        } else {
+            playSound(2);
         }
     }//GEN-LAST:event_LogInButtonActionPerformed
 
@@ -212,5 +230,48 @@ public class LoginUI extends javax.swing.JFrame {
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JTextField usernameField;
     // End of variables declaration//GEN-END:variables
+
+    public boolean playSound(int whatSound) {
+        final java.util.Date date = new java.util.Date();
+
+        File wavfile = null;
+        final int LOGIN = 0, LOGOUT = 1, FAIL = 2;
+        switch (whatSound) {
+            case FAIL:
+                wavfile = new File("rsrc/lancomms_error.wav");
+                break;
+
+        }
+
+        AudioInputStream audioInput = null;
+        boolean x = false;
+        try {
+            audioInput = AudioSystem.getAudioInputStream(wavfile);
+            x = false;
+        } catch (UnsupportedAudioFileException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        AudioFormat format = audioInput.getFormat();
+//        DataLine.Info info = new DataLine.Info(Clip.class, format);
+//        if (clip != null) {
+//            clip.flush();
+//        }
+        try {
+            clip = AudioSystem.getClip();
+        } catch (LineUnavailableException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            clip.open(audioInput);
+        } catch (LineUnavailableException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        clip.start();
+        return x;
+    }
 
 }
