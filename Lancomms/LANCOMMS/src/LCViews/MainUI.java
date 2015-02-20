@@ -416,7 +416,8 @@ public class MainUI extends JFrame implements Serializable {
         groupChat.setIconTextGap(0);
         groupChat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                new InviteGroupChat(userList, myClient).setVisible(true);;
+
+                new InviteGroupChat(userList, myClient).setVisible(true);
             }
         });
 
@@ -827,6 +828,20 @@ public class MainUI extends JFrame implements Serializable {
     public void cvSetMainUI(ConversationUI cv) {
         ConversationUI cvwindow = cv;
         cvwindow.setMainUI(this);
+    }
+
+    public void disableGroupChat() {
+        groupChat.setEnabled(false);
+    }
+
+    public boolean enableGroupChat() {
+        groupChat.setEnabled(true);
+        return groupChat.isEnabled();
+    }
+
+    public boolean isInGroupChat() {
+        return groupChat.isEnabled();
+
     }
 
     class ServerRunning extends Thread {

@@ -408,7 +408,6 @@ public class Server implements Runnable {
                             case "Accept":
                                 call.startCall();
                                 sg.setCallDisabled();
-
                                 cw.append("\nYou are now in a call with " + co.getFullName() + "\n");
                                 stopSound();
 

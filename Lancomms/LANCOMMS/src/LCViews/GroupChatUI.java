@@ -157,6 +157,7 @@ public class GroupChatUI extends javax.swing.JFrame {
 //        ChatMessage crapMessage = new ChatMessage(ChatMessage.GROUPCHATMESSAGE, "<" + myName + ">: " + messageField.getText() + "\n");
         myself.sendMessageToServer(new ChatMessage(ChatMessage.GROUPCHATLEAVE, myself.getCo()));
         textArea.append(myName + "has left the conversation.\n");
+        myself.getMainUI().enableGroupChat();
         this.dispose();
     }//GEN-LAST:event_leaveButtonActionPerformed
 
