@@ -77,27 +77,28 @@ public class MainServerGUI extends JFrame implements ActionListener {
 
         sendMessage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                new BroadcastList(server).setVisible(true);
-//               
+//                new BroadcastList(server).setVisible(true);
+                new AdminLogin(1, server).setVisible(true);
             }
         });
         manageUsers.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                new AccountManager().setVisible(true);
-//                new AdminLogin().setVisible(true);
+//                new AccountManager().setVisible(true);
+                new AdminLogin(0, null).setVisible(true);
 //              
             }
         });
         exitAction.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                if (server != null) {
-                    try {
-                        server.stop();			// ask the server to close the conection
-                    } catch (Exception eClose) {
-                    }
-                    server = null;
-                }
-                System.exit(1);
+//                if (server != null) {
+//                    try {
+//                        server.stop();			// ask the server to close the conection
+//                    } catch (Exception eClose) {
+//                    }
+//                    server = null;
+//                }
+//                System.exit(1);
+                new AdminLogin(2, server).setVisible(true);
             }
         });
 

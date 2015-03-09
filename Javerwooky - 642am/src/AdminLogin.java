@@ -1,3 +1,13 @@
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,10 +22,33 @@ public class AdminLogin extends javax.swing.JFrame {
     /**
      * Creates new form AdminLogin
      */
-    public AdminLogin() {
+    private final int MANAGER = 0, BROADCAST = 1, EXIT = 2;
+    private int action;
+    private MainServer server;
+
+    public AdminLogin(int x) {
+        x = action;
         initComponents();
         this.setTitle("Verify Admin");
+        setResizable(false);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setLocationByPlatform(true);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
+
+    }
+
+    public AdminLogin(int x, MainServer h) {
+        action = x;
+        server = h;
+        initComponents();
+        this.setTitle("Verify Admin");
+        setResizable(false);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setLocationByPlatform(true);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
+
     }
 
     /**
@@ -41,8 +74,18 @@ public class AdminLogin extends javax.swing.JFrame {
         jLabel2.setText("Password:");
 
         jButton1.setText("Verify");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Cancel");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -81,6 +124,41 @@ public class AdminLogin extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        if (!verify()) {
+            JOptionPane.showMessageDialog(null, "Access denied!", null, JOptionPane.ERROR_MESSAGE);
+        } else {
+            switch (action) {
+                case MANAGER:
+                    new AccountManager().setVisible(true);
+                    this.dispose();
+                    break;
+                case BROADCAST:
+                    new BroadcastList(server).setVisible(true);
+                    this.dispose();
+                    break;
+                case EXIT:
+//                    if (server != null) {
+//                        try {
+//                            server.stop();			// ask the server to close the conection
+//                        } catch (Exception eClose) {
+//                        }
+//                        server = null;
+//                    }
+                    System.exit(1);
+                    this.dispose();
+                    break;
+
+            }
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -125,4 +203,66 @@ public class AdminLogin extends javax.swing.JFrame {
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JTextField usernameField;
     // End of variables declaration//GEN-END:variables
+
+    public boolean verify() {
+
+        Connection con = null;
+        LCModels.ConnectDB callConnector = new LCModels.ConnectDB();
+        ResultSet rs = null;
+        Statement stmt = null;
+        String pass = null;
+        boolean retval = false;
+
+        try {
+            con = callConnector.connectToDB();
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            stmt = con.createStatement();
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String sql = "SELECT user_password FROM `user` WHERE user_username = 'admin' AND user_status = 1;";
+
+        try {
+            rs = stmt.executeQuery(sql);
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            rs.next();
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            pass = rs.getString("user_password");
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (!pass.isEmpty() && passwordField.getText().equals(pass)) {
+            retval = true;
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            };
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (Exception e) {
+            };
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (Exception e) {
+            };
+
+        }
+        return retval;
+
+    }
 }

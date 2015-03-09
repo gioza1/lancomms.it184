@@ -9,16 +9,19 @@ package LCControllers;
  *
  * @author Gio
  */
-import LCControllers.ClientObject;
-import LCControllers.Server.ClientThread;
 import LCViews.GroupChatUI;
 import LCViews.MainUI;
 import java.net.*;
 import java.io.*;
-import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 /*
@@ -26,6 +29,7 @@ import javax.swing.JOptionPane;
  */
 public class Client {
 
+    private Clip clip;
     // for I/O
     private transient ObjectInputStream sInput;		// to read from the socket
     private transient ObjectOutputStream sOutput;		// to write on the socket
@@ -308,14 +312,28 @@ public class Client {
                             cg.updateList(eh.getList());
                             break;
                         case ChatMessage.CLIENTBROADCAST:
-                            JOptionPane.showMessageDialog(null, eh.getMessage(), "Broadcast Message", JOptionPane.INFORMATION_MESSAGE);
+//                            JOptionPane.showMessageDialog(null, eh.getMessage(), "Broadcast Message", JOptionPane.INFORMATION_MESSAGE);
+//                            JOptionPane optionPane = new JOptionPane();
+//                            JDialog dialog = optionPane.createDialog("Broadcast Message");
+//                            optionPane.setMessage(eh.getMessage());
+//                            optionPane.setMessageType(JOptionPane.INFORMATION_MESSAGE);
+//                            
+//                            dialog.setAlwaysOnTop(true);
+//                            dialog.setVisible(true);
+                            playSound(2);
+                            JOptionPane op = new JOptionPane(eh.getMessage(), JOptionPane.INFORMATION_MESSAGE);
+                            JDialog dialog = op.createDialog("Broadcast Message");
+                            dialog.setAlwaysOnTop(true); //<-- this line
+                            dialog.setModal(true);
+                            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                            dialog.setVisible(true);
                             break;
                         case ChatMessage.GROUPCHATINVITE:
                             if (cg.isInGroupChat()) {
                                 gcui = new GroupChatUI(eh.getList(), Client.this);
                                 gcui.setVisible(true);
                                 cg.disableGroupChat();
-                            } 
+                            }
                             break;
                         case ChatMessage.GROUPCHATMESSAGE:
                             System.out.println("GROUPCHATMESSAGE: " + eh.getMessage());
@@ -364,6 +382,58 @@ public class Client {
 
     public MainUI getMainUI() {
         return cg;
+    }
+
+    public boolean playSound(int whatSound) {
+        final java.util.Date date = new java.util.Date();
+
+        File wavfile = null;
+        final int CHAT = 0, CALL = 1, BROADCAST = 2;
+        switch (whatSound) {
+            case CHAT:
+                wavfile = new File("rsrc/lancomms_newmsg.wav");
+                break;
+            case CALL:
+                wavfile = new File("rsrc/lancomms_call.wav");
+                break;
+            case BROADCAST:
+                wavfile = new File("rsrc/lancomms_broadcast.wav");
+                break;
+
+        }
+
+        AudioInputStream audioInput = null;
+        boolean x = false;
+        try {
+            audioInput = AudioSystem.getAudioInputStream(wavfile);
+            x = false;
+        } catch (UnsupportedAudioFileException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        AudioFormat format = audioInput.getFormat();
+//        DataLine.Info info = new DataLine.Info(Clip.class, format);
+        if (clip != null) {
+            clip.flush();
+        }
+        try {
+            clip = AudioSystem.getClip();
+        } catch (LineUnavailableException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            clip.open(audioInput);
+        } catch (LineUnavailableException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        clip.start();
+        if (whatSound == CALL) {
+            clip.loop(clip.LOOP_CONTINUOUSLY);
+        }
+        return x;
     }
 }
 //}
