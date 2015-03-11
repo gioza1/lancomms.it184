@@ -8,11 +8,10 @@ package LCControllers;
 import LCModels.UserModel;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- *
+ * @desc sets retrieved conversations unto an array list
+ * of ConvObject for display in the Main UI's conversation list
  * @author eufrik
  */
 public class Conversations {

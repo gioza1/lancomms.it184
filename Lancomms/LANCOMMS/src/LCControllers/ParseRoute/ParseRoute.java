@@ -8,6 +8,9 @@ import java.util.*;
  * Find out the local IP address and default gateway
  * @author Henry Zheng
  * @url http://www.ireasoning.com
+ * 
+ * 
+ * Note: This module is used in LANCOMMS to get the local IP address of a PC in a network with the possibility of virtual adapters in mind.
  */
 public class ParseRoute 
 {

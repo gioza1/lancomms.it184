@@ -1,12 +1,11 @@
 package LCControllers;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
- *
+ * @desc This class includes all necessary functions related to 
+ * a client, which is a representation of the user in the network, 
+ * such as listening for signals and/or messages from either another
+ * client or the main server
+ * 
  * @author Gio
  */
 import LCViews.GroupChatUI;
@@ -24,18 +23,16 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
-/*
- * The Client that can be run both as a console or a GUI
- */
 public class Client {
 
     private Clip clip;
-    // for I/O
-    private transient ObjectInputStream sInput;		// to read from the socket
+    
+    // for I/O to another client
+    private transient ObjectInputStream sInput;                 // to read from the socket
     private transient ObjectOutputStream sOutput;		// to write on the socket
     private transient Socket socket;
 
-    //main server
+    //Setting up connections to the Main Server
     private transient ObjectInputStream mainSInput;		// to read from the socket
     private transient ObjectOutputStream mainSOutput;		// to write on the socket
     private transient Socket mSocket;
@@ -43,28 +40,20 @@ public class Client {
     // if I use a GUI or not
     private MainUI cg;
 
-    // the server, the port and the username
+    // the server, the port and the username of
     private String runningServer, username;
     private int runningPort;
 
     private GroupChatUI gcui;
 
     private transient ClientObject me;
-    /*
-     *  Constructor called by console mode
-     *  server: the server address
-     *  port: the port number
-     *  username: the username
-     */
-//    Client(String server, int port, String username) {
-//        // which calls the common constructor with the GUI set to null
-//        this(server, port, username, null);
-//    }
 
+    //gets socket of the target user
     public Socket getSocket() {
         return socket;
     }
-
+    
+    //gets socket of the Main Server
     public Socket getmSocket() {
         return mSocket;
     }
@@ -75,7 +64,6 @@ public class Client {
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        cg.logout();
     }
 
     public Socket getMainServerSocket() {
@@ -105,20 +93,15 @@ public class Client {
      */
     public boolean start() {
         boolean successFlag = false;
-        System.out.println(me.getServer() + me.getPort() + me.getFullName());
         try {
             socket = new Socket(runningServer, runningPort); // CONNECTS TO HIS/HER OWN SERVER
-        } // if it failed not much I can so
+        } // if it failed not much I can do
         catch (UnknownHostException ex) {
-            System.out.println("Host was not found: " + runningServer);
             return false;
         } catch (IOException ec) {
             ec.printStackTrace();
-            System.out.println("Error connecting to server:" + ec);
             return false;
         }
-        String msg = "Connection accepted " + socket.getInetAddress() + ":" + socket.getPort();
-        System.out.println(msg);
 
         /* Creating both Data Stream */
         try {
@@ -131,7 +114,6 @@ public class Client {
 
         // creates the Thread to listen from the server 
         new ListenFromServer().start();
-        System.out.println("Now listening to server");
         // success we inform the caller that it worked
         return true;
     }
@@ -142,12 +124,11 @@ public class Client {
             mSocket = new Socket(host, 1500);
         } // if it failed not much I can so
         catch (Exception ec) {
-            System.out.println("Error connectiong to server:" + ec);
+            System.out.println("Error connecting to server:" + ec);
             return false;
         }
 
         String msg = "Connection accepted with" + mSocket.getInetAddress() + ":" + mSocket.getPort();
-        System.out.println("Successfully connected to the server");
 
         /* Creating both Data Stream */
         try {
@@ -184,18 +165,13 @@ public class Client {
         } catch (IOException e) {
             System.out.println("Exception writing to server: " + e);
         }
-//        try {
-//            mainSOutput.writeObject(msg);
-//        } catch (IOException e) {
-//            display("Exception writing to server: " + e);
-//        }
     }
 
     public void sendMessageToServer(ChatMessage msg) {
         try {
             mainSOutput.reset();
             mainSOutput.writeObject(msg);
-//            mainSOutput.flush();
+//          mainSOutput.flush();
         } catch (IOException e) {
             System.out.println("Exception writing to server: " + e);
         }
@@ -235,12 +211,9 @@ public class Client {
         } catch (Exception e) {
         } // not much else I can do
 
-//        disconnectMain();
-        // inform the GUI
         if (cg != null) {
 //            cg.connectionFailed();
         }
-
     }
 
 
@@ -254,7 +227,6 @@ public class Client {
             while (true) {
                 try {
                     String msg = (String) sInput.readObject();
-                    // if console mode print the message and add back the prompt
 
                     if (cg == null) {
                         System.out.println(msg);
@@ -275,33 +247,10 @@ public class Client {
         }
     }
 
-    //ORIG REFERENCE
-//    class ListenFromMainServer extends Thread {
-//
-//        public void run() {
-////            boolean connected = true;
-//            while (true) {
-//                System.out.println("ListenFromMainServer Started");
-////                ArrayList<ClientObject> eh = new ArrayList<ClientObject>();
-//                ArrayList<ClientObject> eh = (ArrayList<ClientObject>) Client.receiveObject(mainSInput);
-//                if (eh != null) {
-//                    cg.updateList(eh);
-//                } else {
-//
-//                    break;
-//                }
-//            }
-//            cg.logout();
-//        }
-//
-//    }
     class ListenFromMainServer extends Thread {
 
         public void run() {
-//            boolean connected = true;
             while (true) {
-//                System.out.println("ListenFromMainServer Started");
-//                ArrayList<ClientObject> eh = new ArrayList<ClientObject>();
                 ChatMessage eh = (ChatMessage) Client.receiveObject(mainSInput);
                 if (eh != null) {
                     switch (eh.getType()) {
@@ -312,18 +261,10 @@ public class Client {
                             cg.updateList(eh.getList());
                             break;
                         case ChatMessage.CLIENTBROADCAST:
-//                            JOptionPane.showMessageDialog(null, eh.getMessage(), "Broadcast Message", JOptionPane.INFORMATION_MESSAGE);
-//                            JOptionPane optionPane = new JOptionPane();
-//                            JDialog dialog = optionPane.createDialog("Broadcast Message");
-//                            optionPane.setMessage(eh.getMessage());
-//                            optionPane.setMessageType(JOptionPane.INFORMATION_MESSAGE);
-//                            
-//                            dialog.setAlwaysOnTop(true);
-//                            dialog.setVisible(true);
                             playSound(2);
                             JOptionPane op = new JOptionPane(eh.getMessage(), JOptionPane.INFORMATION_MESSAGE);
                             JDialog dialog = op.createDialog("Broadcast Message");
-                            dialog.setAlwaysOnTop(true); //<-- this line
+                            dialog.setAlwaysOnTop(true);
                             dialog.setModal(true);
                             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                             dialog.setVisible(true);
@@ -350,7 +291,6 @@ public class Client {
 //                            gcui.dispose();
 //                            break;
                         case ChatMessage.GROUPCHATUPDATELIST:
-//                            System.out.println("GROUPCHATUPDATELIST: " + eh.getMessage());
                             gcui.appendToTextArea(eh.getMessage());
                             gcui.populadaList(eh.getList());
                             break;
@@ -413,7 +353,7 @@ public class Client {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
         AudioFormat format = audioInput.getFormat();
-//        DataLine.Info info = new DataLine.Info(Clip.class, format);
+//      DataLine.Info info = new DataLine.Info(Clip.class, format);
         if (clip != null) {
             clip.flush();
         }
@@ -436,4 +376,3 @@ public class Client {
         return x;
     }
 }
-//}

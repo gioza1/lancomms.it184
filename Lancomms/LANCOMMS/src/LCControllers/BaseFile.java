@@ -16,7 +16,7 @@ import uk.co.caprica.vlcj.runtime.x.LibXUtil;
 import com.sun.jna.NativeLibrary;
 
 /**
- * Base class for tests.
+ * Note: This is taken from VLCJ's examples and modified slightly for LANCOMMS application use.
  * <p>
  * This makes it a lot easier to switch vlc versions or vlc install directories without having to
  * change system properties on a lot of IDE application run-configurations.

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package LCControllers;
 
 import javax.swing.*;
@@ -12,8 +7,8 @@ import java.net.ServerSocket;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author user
+ * @desc This class is used for the purpose of retrieving contacts from the database.
+ * @author Weej Chavez
  */
 public class Contacts {
 

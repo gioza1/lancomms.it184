@@ -1,18 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package LCControllers;
 
 import LCModels.Message;
 import LCModels.UserModel;
-import LCViews.ConversationUI;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 /**
- *
+ * @desc A simple object for being able to contain conversations with target user
  * @author eufrik
  */
 public class ConvObject {

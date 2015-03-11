@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package LCControllers;
 
 import LCModels.ConnectDB;
@@ -14,8 +8,8 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 
 /**
- *
- * @author user
+ * @desc Contains all functions related to log in, including login, logout log, and login log
+ * @author Weej
  */
 public class Login {
     
@@ -23,8 +17,8 @@ public class Login {
     String userPw = null;
     /**
      * 
-     * @param username the user name what is the user is trying to log in
-     * @param password the password
+     * @param username - the user name what is the user is trying to log in
+     * @param password - the password
      * @return userID of the user who logs in
      */
     public int login(String username, String password){
@@ -64,7 +58,9 @@ public class Login {
         }   
         
     }
-    
+    /**
+     * @param userId - the user's corresponding ID in the database
+     */    
     public void loginTime(int userId){
         Connection con=null;
         ConnectDB callConnector = new ConnectDB();  
