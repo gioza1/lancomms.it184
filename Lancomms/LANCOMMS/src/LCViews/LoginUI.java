@@ -5,12 +5,16 @@
  */
 package LCViews;
 
+import LCControllers.ChatMessage;
+import LCControllers.Client;
 import LCControllers.Login;
 import LCControllers.Server;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -31,6 +35,8 @@ public class LoginUI extends javax.swing.JFrame {
 
     private String host;
     Clip clip = null;
+    private transient ObjectInputStream mainSInput;		// to read from the socket
+    private transient ObjectOutputStream mainSOutput;
 
     /**
      * Creates new form Login
@@ -66,6 +72,7 @@ public class LoginUI extends javax.swing.JFrame {
         }
 
     }
+
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -191,6 +198,7 @@ public class LoginUI extends javax.swing.JFrame {
 
     private void LogInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogInButtonActionPerformed
         if (checkServerConnection()) {
+
             Login log = new Login();
 //        public ClientObject(String server, int port, String username, ClientGUI cg) {
             int userId = log.login(usernameField.getText(), passwordField.getText());
@@ -204,11 +212,23 @@ public class LoginUI extends javax.swing.JFrame {
                     playSound(2);
                     throw new Exception("Cannot connect to server at this time.");
                 } else {
+//                    if (!isOnline()) {
                     log.loginTime(userId);
                     MainUI startApp = new MainUI(userId, usernameField.getText(), host);
-                    this.setVisible(false);
-                    this.dispose();
-                    startApp.setVisible(true);
+//                    startApp.setVisible(true);
+
+                    if (!startApp.getIsAlreadyOnline()) { // IF true, start new show MainUI
+                        startApp.setVisible(true);
+                        this.setVisible(false);
+                        this.dispose();
+                    } else {
+                        playSound(2);
+                        JOptionPane.showMessageDialog(null, "Account is already logged in!", "Error", JOptionPane.ERROR_MESSAGE);
+                        startApp.setVisible(false);
+                        startApp.dispose();
+//                      
+                    }
+
                 }
 
             } catch (Exception e) {

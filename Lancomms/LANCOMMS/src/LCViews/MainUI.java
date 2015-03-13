@@ -72,6 +72,7 @@ public class MainUI extends JFrame implements Serializable {
     private SettingsUI sui;
     private ImageIcon img;
     private boolean settings;
+    private boolean isAlreadyOnline;
     private String host;
     private ServerRunning sr;
     DefaultListModel<ClientObject> model = new DefaultListModel<>();
@@ -124,6 +125,7 @@ public class MainUI extends JFrame implements Serializable {
         if (!myClient.connectToMainServer(host)) {
             return;
         }
+
         if (!myClient.start()) {
             return;
         }
@@ -830,19 +832,18 @@ public class MainUI extends JFrame implements Serializable {
         cvwindow.setMainUI(this);
     }
 
-    public void disableGroupChat() {
-        groupChat.setEnabled(false);
-    }
-
-    public boolean enableGroupChat() {
-        groupChat.setEnabled(true);
-        return groupChat.isEnabled();
-    }
-
-    public boolean isInGroupChat() {
-        return groupChat.isEnabled();
-
-    }
+//    public void disableGroupChat() {
+//        groupChat.setEnabled(false);
+//    }
+//
+//    public boolean enableGroupChat() {
+//        groupChat.setEnabled(true);
+//        return groupChat.isEnabled();
+//    }
+//    public boolean isInGroupChat() {
+//        return groupChat.isEnabled();
+//
+//    }
 
     class ServerRunning extends Thread {
 
@@ -852,6 +853,14 @@ public class MainUI extends JFrame implements Serializable {
             myServer = null;
         }
 
+    }
+
+    public void setIsAlreadyOnline(boolean tralse) {
+        isAlreadyOnline = tralse;
+    }
+
+    public boolean getIsAlreadyOnline() {
+        return isAlreadyOnline;
     }
 
 }

@@ -1,17 +1,18 @@
 package LCControllers;
 
 /**
- * @desc This class includes all necessary functions related to 
- * a client, which is a representation of the user in the network, 
- * such as listening for signals and/or messages from either another
- * client or the main server
- * 
+ * @desc This class includes all necessary functions related to a client, which
+ * is a representation of the user in the network, such as listening for signals
+ * and/or messages from either another client or the main server
+ *
  * @author Gio
  */
 import LCViews.GroupChatUI;
+import LCViews.LoginUI;
 import LCViews.MainUI;
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
@@ -26,7 +27,7 @@ import javax.swing.JOptionPane;
 public class Client {
 
     private Clip clip;
-    
+
     // for I/O to another client
     private transient ObjectInputStream sInput;                 // to read from the socket
     private transient ObjectOutputStream sOutput;		// to write on the socket
@@ -44,7 +45,8 @@ public class Client {
     private String runningServer, username;
     private int runningPort;
 
-    private GroupChatUI gcui;
+    private ArrayList<GroupChatUI> gcui = new ArrayList<GroupChatUI>();
+    private int groupChatCount = 0;
 
     private transient ClientObject me;
 
@@ -52,7 +54,7 @@ public class Client {
     public Socket getSocket() {
         return socket;
     }
-    
+
     //gets socket of the Main Server
     public Socket getmSocket() {
         return mSocket;
@@ -133,7 +135,6 @@ public class Client {
         /* Creating both Data Stream */
         try {
             mainSOutput = new ObjectOutputStream(mSocket.getOutputStream());
-
             mainSInput = new ObjectInputStream(mSocket.getInputStream());
         } catch (IOException eIO) {
             System.out.println("Exception creating new Input/output Streams: " + eIO);
@@ -146,7 +147,7 @@ public class Client {
         // Send our username to the server this is the only message that we
         // will send as a String. All other messages will be ChatMessage objects
         try {
-            mainSOutput.writeObject(me);
+            mainSOutput.writeObject(new ChatMessage(ChatMessage.NEWLOGIN, me));
         } catch (IOException eIO) {
             System.out.println("Exception doing login : " + eIO);
             disconnectMain();
@@ -155,6 +156,31 @@ public class Client {
         // success we inform the caller that it worked
         return true;
     }
+
+//    public boolean isAlreadyOnline(String host) {
+//        boolean isonline = false;
+//        boolean alreadySent = false;
+//        ChatMessage cm = new ChatMessage(ChatMessage.CHECKISONLINE, me.getUsername());
+//        try {
+//            if (alreadySent == false) {
+//                mainSOutput.writeObject(cm);
+//                alreadySent = true;
+//            }
+//        } catch (IOException eIO) {
+//            System.out.println("Exception doing login : " + eIO);
+////                    disconnectMain();
+//            return false;
+//        }
+//
+//        try {
+//            isonline = mainSInput.readBoolean();
+//        } catch (IOException ex) {
+//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//        return isonline;
+//
+//    }
 
     /*
      * To send a message to the server
@@ -270,20 +296,23 @@ public class Client {
                             dialog.setVisible(true);
                             break;
                         case ChatMessage.GROUPCHATINVITE:
-                            if (cg.isInGroupChat()) {
-                                gcui = new GroupChatUI(eh.getList(), Client.this);
-                                gcui.setVisible(true);
-                                cg.disableGroupChat();
-                            }
+//                            if (cg.isInGroupChat()) {
+
+                            gcui.add(new GroupChatUI(eh.getList(), Client.this, groupChatCount));
+                            System.out.println(gcui.size());
+                            gcui.get(groupChatCount++).setVisible(true);
+//                                cg.disableGroupChat();
+//                            }
                             break;
                         case ChatMessage.GROUPCHATMESSAGE:
                             System.out.println("GROUPCHATMESSAGE: " + eh.getMessage());
-                            gcui.appendToTextArea(eh.getMessage());
+                            gcui.get(eh.getGroupChatUIID()).appendToTextArea(eh.getMessage());
                             break;
                         case ChatMessage.GROUPCHATLEAVE:
                             System.out.println("GROUPCHATLEAVE: " + eh.getMessage());
-                            cg.enableGroupChat();
-                            gcui.dispose();
+//                            cg.enableGroupChat();
+                            gcui.get(eh.getGroupChatUIID()).dispose();
+                            gcui.remove(eh.getGroupChatUIID());
                             break;
 //                        case ChatMessage.GROUPCHATFAILED:
 //                            System.out.println("GROUPCHATFAIL: " + eh.getMessage());
@@ -291,8 +320,21 @@ public class Client {
 //                            gcui.dispose();
 //                            break;
                         case ChatMessage.GROUPCHATUPDATELIST:
-                            gcui.appendToTextArea(eh.getMessage());
-                            gcui.populadaList(eh.getList());
+//                            gcui.appendToTextArea(eh.getMessage());
+//                            gcui.populadaList(eh.getList());
+                            System.out.println("GROUPCHATLEAVE: " + eh.getMessage());
+//                            cg.enableGroupChat();
+                            gcui.get(eh.getGroupChatUIID()).appendToTextArea(eh.getMessage());
+                            gcui.get(eh.getGroupChatUIID()).populadaList(eh.getList());
+//                            gcui.get(eh.getGroupChatUIID()).dispose();
+                            gcui.remove(eh.getGroupChatUIID());
+
+                            break;
+                        case ChatMessage.ISONLINE:
+                            if (eh.getIsOnline()) {
+                                cg.setIsAlreadyOnline(eh.getIsOnline());
+
+                            }
                             break;
                     }
                 } else {

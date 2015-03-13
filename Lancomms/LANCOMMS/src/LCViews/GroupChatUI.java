@@ -37,8 +37,10 @@ public class GroupChatUI extends javax.swing.JFrame {
     private ArrayList<ClientObject> cm;
     private Client myself;
     private String myName;
+    private int groupChatUIID;
 
-    public GroupChatUI(ArrayList<ClientObject> m, Client me) {
+    public GroupChatUI(ArrayList<ClientObject> m, Client me, int id) {
+        groupChatUIID = id;
         cm = m;
         myself = me;
         myName = me.getCo().getFullName();
@@ -53,6 +55,7 @@ public class GroupChatUI extends javax.swing.JFrame {
         });
         this.setLocationByPlatform(true);
         this.setTitle("LANCOMMS Group Chat");
+        this.setResizable(false);
 
 //        messageField.setText(myself.getCo().getFullName());
     }
@@ -79,6 +82,7 @@ public class GroupChatUI extends javax.swing.JFrame {
 
         textArea.setEditable(false);
         textArea.setColumns(20);
+        textArea.setLineWrap(true);
         textArea.setRows(5);
         jScrollPane2.setViewportView(textArea);
 
@@ -91,6 +95,8 @@ public class GroupChatUI extends javax.swing.JFrame {
 
         onlineLabel.setText("Who's currently in group chat:");
 
+        messageField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        messageField.setToolTipText("");
         int condition = WHEN_FOCUSED;
         // get our maps for binding from the chatEnterArea JTextArea
         InputMap inputMap = messageField.getInputMap(condition);
@@ -161,8 +167,8 @@ public class GroupChatUI extends javax.swing.JFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(messageField)
-                            .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)))
+                            .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+                            .addComponent(messageField)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(onlineLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -176,16 +182,20 @@ public class GroupChatUI extends javax.swing.JFrame {
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         // TODO add your handling code here:
         ChatMessage crapMessage = new ChatMessage(ChatMessage.GROUPCHATMESSAGE, "<" + myName + ">: " + messageField.getText() + "\n");
+        crapMessage.setGroupChatUIID(groupChatUIID);
         myself.sendMessageToServer(crapMessage);
         messageField.setText("");
     }//GEN-LAST:event_sendButtonActionPerformed
 
     private void leaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leaveButtonActionPerformed
         // TODO add your handling code here:
-//        ChatMessage crapMessage = new ChatMessage(ChatMessage.GROUPCHATMESSAGE, "<" + myName + ">: " + messageField.getText() + "\n");
-        myself.sendMessageToServer(new ChatMessage(ChatMessage.GROUPCHATLEAVE, myself.getCo()));
-        textArea.append(myName + "has left the conversation.\n");
-        myself.getMainUI().enableGroupChat();
+        ChatMessage crapMessage = new ChatMessage(ChatMessage.GROUPCHATLEAVE, myself.getCo());
+        crapMessage.setGroupChatUIID(groupChatUIID);
+        myself.sendMessageToServer(crapMessage);
+
+//        myself.sendMessageToServer(new ChatMessage(ChatMessage.GROUPCHATLEAVE, myself.getCo()));
+//        this.textArea.append(myName + "has left the conversation.\n");
+//        myself.getMainUI().enableGroupChat();
         this.dispose();
     }//GEN-LAST:event_leaveButtonActionPerformed
 

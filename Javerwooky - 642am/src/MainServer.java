@@ -224,7 +224,7 @@ public class MainServer {
         // the date I connect
         String date;
 
-        ClientObject test;
+        ClientObject test = null;
         boolean tKeepGoing = true;
 
         // Constructore
@@ -262,24 +262,24 @@ public class MainServer {
 
             while (tKeepGoing) {
                 if (test == null) {
-                    try {
-                        test = (ClientObject) sInput.readObject();
-                        display(test.getUsername());
-                    } catch (IOException ex) {
-                        Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
-                        break;
-                    } catch (ClassNotFoundException ex) {
-                        Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
-                        break;
-                    }
-                    sg.appendEvent(test.getUsername() + " just connected.\n");
-
-                    addToContactList(test);
-                    alCo.add(test);
-                    for (ClientThread ct : al) {
-                        display(ct.test.getUsername());
-                        ct.updateOnlineList(new ChatMessage(ChatMessage.UPDATELIST, alCo));
-                    }
+//                    try {
+//                        test = (ClientObject) sInput.readObject();
+//                        display(test.getUsername());
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
+//                        break;
+//                    } catch (ClassNotFoundException ex) {
+//                        Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
+//                        break;
+//                    }
+//                    sg.appendEvent(test.getUsername() + " just connected.\n");
+//
+//                    addToContactList(test);
+//                    alCo.add(test);
+//                    for (ClientThread ct : al) {
+//                        display(ct.test.getUsername());
+//                        ct.updateOnlineList(new ChatMessage(ChatMessage.UPDATELIST, alCo));
+//                    }
                 }
 
                 // read a String (which is an object)
@@ -297,7 +297,30 @@ public class MainServer {
 
                 // Switch on the type of message receive
                 switch (cm.getType()) {
+                    case ChatMessage.NEWLOGIN:
+                        boolean isOnline = false;
+                        test = cm.getClientObject();
+                        display(test.getUsername());
+                        for (ClientObject client : alCo) {
+                            if (test.getUsername().contentEquals(client.getUsername())) {
+                                isOnline = true;
+                                writeMessage(new ChatMessage(ChatMessage.ISONLINE, isOnline));
+                                close();
+                                break;
+                            }
+                        }
+                        if (isOnline == false) {
+                            sg.appendEvent(test.getUsername() + " just connected.\n");
 
+                            addToContactList(test);
+                            alCo.add(test);
+                            for (ClientThread ct : al) {
+                                display(ct.test.getUsername());
+                                ct.updateOnlineList(new ChatMessage(ChatMessage.UPDATELIST, alCo));
+
+                            }
+                        }
+                        break;
                     case ChatMessage.MESSAGE:
                         for (ClientThread ct : al) {
 //                            display("Setting status to: " + message);
@@ -306,7 +329,10 @@ public class MainServer {
                             ct.updateOnlineList(new ChatMessage(ChatMessage.MESSAGE, "Olah From main :)"));
                         }
                         break;
-
+//                    case ChatMessage.CHECKISONLINE:
+//                        boolean is = false;
+//
+//                        break;
                     case ChatMessage.STATUS:
                         for (ClientThread ct : al) {
                             display("Setting status to: " + message);
@@ -369,7 +395,9 @@ public class MainServer {
                             }
                         } while (ite.hasNext());
                         for (ClientThread ct : al) {
-                            ct.writeMessage(new ChatMessage(ChatMessage.GROUPCHATUPDATELIST, groupChatPeople, cm.getClientObject().getFullName() + " has left the conversation.\n"));
+                            ChatMessage crapitoMensahe = new ChatMessage(ChatMessage.GROUPCHATUPDATELIST, groupChatPeople, cm.getClientObject().getFullName() + " has left the conversation.\n");
+                            crapitoMensahe.setGroupChatUIID(cm.getGroupChatUIID());
+                            ct.writeMessage(crapitoMensahe);
                             System.out.println("Updated groupChatPeople hehe;");
                         }
                         break;
@@ -379,11 +407,13 @@ public class MainServer {
             // remove myself from the arrayList containing the list of the
             // connected Clients
             remove(id);
-            deleteFromContactList(test);
+            if (test != null) {
+                deleteFromContactList(test);
 
-            alCo.remove(test);
-            for (ClientThread cT : al) {
-                cT.updateOnlineList(new ChatMessage(ChatMessage.UPDATELIST, alCo)); // updates the online list for each client thread
+                alCo.remove(test);
+                for (ClientThread cT : al) {
+                    cT.updateOnlineList(new ChatMessage(ChatMessage.UPDATELIST, alCo)); // updates the online list for each client thread
+                }
             }
 //            display(test.getUsername() + " disconnected.");
             close();
@@ -452,6 +482,16 @@ public class MainServer {
                 display(e.toString());
             }
             return true;
+        }
+
+        private boolean userIsOnline() {
+            try {
+                sOutput.writeBoolean(true);
+                return true;
+            } catch (IOException ex) {
+                Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return false;
         }
 
 
