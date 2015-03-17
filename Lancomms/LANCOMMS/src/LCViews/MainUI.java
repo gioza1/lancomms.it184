@@ -854,7 +854,6 @@ public class MainUI extends JFrame implements Serializable {
         }
 
     }
-
     public void setIsAlreadyOnline(boolean tralse) {
         isAlreadyOnline = tralse;
     }

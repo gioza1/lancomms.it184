@@ -70,7 +70,69 @@ public class LoginUI extends javax.swing.JFrame {
 
             return false;
         }
+    }
 
+    private boolean checkIsOnline() {
+        int doOnce = 0;
+        boolean booleano = false;
+        Socket socket = null;
+        try {
+            socket = new Socket();
+            socket.connect(new InetSocketAddress(host, 1500), 2000);
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(null, "Server is offline!");
+
+            System.out.println(e.getMessage());
+
+        }
+        if (socket.isConnected()) {
+            try {
+                mainSInput = new ObjectInputStream(socket.getInputStream());
+                mainSOutput = new ObjectOutputStream(socket.getOutputStream());
+            } catch (IOException eIO) {
+                System.out.println("Exception creating new Input/output Streams: " + eIO);
+                booleano = false;
+            }
+
+            try {
+                while (doOnce == 0) {
+                    mainSOutput.writeObject(new ChatMessage(ChatMessage.ISONLINE, usernameField.getText()));
+                    mainSOutput.reset();
+                    doOnce++;
+                }
+            } // if an error occurs, do not abort just inform the user
+            catch (IOException e) {
+                System.out.println("Exception creating new Input/output Streams: " + e);
+                booleano = false;
+            }
+
+            try {
+                ChatMessage fromMainServer = (ChatMessage) mainSInput.readObject();
+                booleano = fromMainServer.getIsOnline();
+            } catch (IOException ex) {
+                Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                System.out.println("Class not found daw");
+            } finally {
+                try {
+                    mainSOutput.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                try {
+                    mainSInput.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                try {
+                    socket.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return booleano;
     }
 
 
@@ -224,9 +286,7 @@ public class LoginUI extends javax.swing.JFrame {
                     } else {
                         playSound(2);
                         JOptionPane.showMessageDialog(null, "Account is already logged in!", "Error", JOptionPane.ERROR_MESSAGE);
-                        startApp.setVisible(false);
                         startApp.dispose();
-//                      
                     }
 
                 }

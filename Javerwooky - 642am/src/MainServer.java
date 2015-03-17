@@ -222,7 +222,6 @@ public class MainServer {
         // the only type of message a will receive
         ChatMessage cm;
         // the date I connect
-        String date;
 
         ClientObject test = null;
         boolean tKeepGoing = true;
@@ -253,7 +252,7 @@ public class MainServer {
             } else {
                 return;
             }
-            date = new Date().toString() + "\n";
+
         }
 
         // what will run forever
@@ -321,18 +320,16 @@ public class MainServer {
                             }
                         }
                         break;
-                    case ChatMessage.MESSAGE:
-                        for (ClientThread ct : al) {
-//                            display("Setting status to: " + message);
-//                            display(ct.test.getUsername());
-//                            test.setStatus(message);
-                            ct.updateOnlineList(new ChatMessage(ChatMessage.MESSAGE, "Olah From main :)"));
+                    case ChatMessage.ISONLINE:
+                        for (ClientObject client : alCo) {
+                            if (cm.getMessage().contentEquals(client.getUsername())) {
+                                isOnline = true;
+                                writeMessage(new ChatMessage(ChatMessage.ISONLINE, isOnline));
+                                close();
+                                break;
+                            }
                         }
                         break;
-//                    case ChatMessage.CHECKISONLINE:
-//                        boolean is = false;
-//
-//                        break;
                     case ChatMessage.STATUS:
                         for (ClientThread ct : al) {
                             display("Setting status to: " + message);
@@ -348,9 +345,9 @@ public class MainServer {
                     case ChatMessage.CLIENTBROADCAST: // NEEDS FIXING//
                         int i = al.size();
                         for (ClientThread ct : al) {
-                            System.out.println("CHATMESSAGEARRAY SIZE: " + cm.getList().size() + "CLIENTTSIZE: " + al.size());
+                            System.out.println("CHATMESSAGEARRAY SIZE: " + cm.getGroupChatList().size() + "CLIENTTSIZE: " + al.size());
                             String user = ct.test.getFullName();
-                            Iterator<ClientObject> ite = cm.getList().iterator();
+                            Iterator<ClientObject> ite = cm.getGroupChatList().iterator();
                             do {
                                 if (ite.next().getFullName().contentEquals(user)) {
                                     ct.writeMessage(cm);
@@ -360,12 +357,13 @@ public class MainServer {
                         }
                         break;
                     case ChatMessage.GROUPCHATINVITE:
-                        groupChatPeople = cm.getList();
+                        groupChatPeople = cm.getGroupChatList();
+                        cm.setGroupChatUIID(new Random().nextInt());
                         for (ClientThread ct : al) {
-                            System.out.println("CHATMESSAGEARRAY SIZE: " + cm.getList().size() + "CLIENTTSIZE: " + al.size());
+                            System.out.println("CHATMESSAGEARRAY SIZE: " + cm.getGroupChatList().size() + "CLIENTTSIZE: " + al.size());
                             String user = ct.test.getFullName();
 
-                            Iterator<ClientObject> ite = cm.getList().iterator();
+                            Iterator<ClientObject> ite = cm.getGroupChatList().iterator();
                             do {
                                 if (ite.next().getFullName().contentEquals(user)) {
                                     ct.writeMessage(cm);
@@ -377,7 +375,7 @@ public class MainServer {
                     case ChatMessage.GROUPCHATMESSAGE:
                         for (ClientThread ct : al) {
                             String user = ct.test.getFullName();
-                            Iterator<ClientObject> ite = groupChatPeople.iterator();
+                            Iterator<ClientObject> ite = cm.getGroupChatList().iterator();
                             do {
                                 if (ite.next().getFullName().contentEquals(user)) {
                                     ct.writeMessage(cm);
@@ -387,7 +385,7 @@ public class MainServer {
                         }
                         break;
                     case ChatMessage.GROUPCHATLEAVE:
-                        Iterator<ClientObject> ite = groupChatPeople.iterator();
+                        Iterator<ClientObject> ite = cm.getGroupChatList().iterator();
                         do {
                             if (ite.next().getFullName().contentEquals(cm.getClientObject().getFullName())) {
                                 ite.remove();
@@ -395,7 +393,7 @@ public class MainServer {
                             }
                         } while (ite.hasNext());
                         for (ClientThread ct : al) {
-                            ChatMessage crapitoMensahe = new ChatMessage(ChatMessage.GROUPCHATUPDATELIST, groupChatPeople, cm.getClientObject().getFullName() + " has left the conversation.\n");
+                            ChatMessage crapitoMensahe = new ChatMessage(ChatMessage.GROUPCHATUPDATELIST, cm.getGroupChatList(), cm.getClientObject().getFullName() + " has left the conversation.\n");
                             crapitoMensahe.setGroupChatUIID(cm.getGroupChatUIID());
                             ct.writeMessage(crapitoMensahe);
                             System.out.println("Updated groupChatPeople hehe;");
@@ -443,28 +441,6 @@ public class MainServer {
             }
         }
 
-        /*
-         * Pass the current online list
-         */
-        //ORIG REFERENCE
-//        private boolean updateOnlineList(ArrayList<ClientObject> co) {
-//            // if Client is still connected send the message to it
-//            if (!socket.isConnected()) {
-//                close();
-//                return false;
-//            }
-//            // write the message to the stream
-//            try {
-//
-//                sOutput.writeObject(co);
-//                sOutput.reset();
-//            } // if an error occurs, do not abort just inform the user
-//            catch (IOException e) {
-//                display("Error sending message to " + username);
-//                display(e.toString());
-//            }
-//            return true;
-//        }
         private boolean updateOnlineList(ChatMessage co) {
             // if Client is still connected send the message to it
             if (!socket.isConnected()) {

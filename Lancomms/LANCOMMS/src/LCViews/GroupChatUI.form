@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
   </Properties>
@@ -33,7 +33,7 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="messageField" min="-2" pref="303" max="-2" attributes="0"/>
+                              <Component id="jScrollPane1" min="-2" pref="303" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="sendButton" pref="0" max="32767" attributes="0"/>
                           </Group>
@@ -63,10 +63,11 @@
                   <Group type="102" attributes="0">
                       <Component id="jScrollPane2" min="-2" pref="198" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="sendButton" pref="60" max="32767" attributes="0"/>
-                          <Component id="messageField" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jScrollPane1" pref="0" max="32767" attributes="0"/>
+                          <Component id="sendButton" pref="65" max="32767" attributes="0"/>
                       </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="onlineLabel" min="-2" max="-2" attributes="0"/>
@@ -124,15 +125,6 @@
         <Property name="text" type="java.lang.String" value="Who&apos;s currently in group chat:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="messageField">
-      <Properties>
-        <Property name="horizontalAlignment" type="int" value="4"/>
-        <Property name="toolTipText" type="java.lang.String" value=""/>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="int condition = WHEN_FOCUSED;&#xa;        // get our maps for binding from the chatEnterArea JTextArea&#xa;        InputMap inputMap = messageField.getInputMap(condition);&#xa;        ActionMap actionMap = messageField.getActionMap();&#xa;&#xa;        // the key stroke we want to capture&#xa;        KeyStroke enterStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);&#xa;&#xa;        // tell input map that we are handling the enter key&#xa;        inputMap.put(enterStroke, enterStroke.toString());&#xa;&#xa;        // tell action map just how we want to handle the enter key&#xa;        actionMap.put(enterStroke.toString(), new AbstractAction() {&#xa;&#xa;            @Override&#xa;            public void actionPerformed(ActionEvent evt) {&#xa;                sendButtonActionPerformed(evt);&#xa;            }&#xa;        });"/>
-      </AuxValues>
-    </Component>
     <Component class="javax.swing.JButton" name="sendButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Send"/>
@@ -149,5 +141,24 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="leaveButtonActionPerformed"/>
       </Events>
     </Component>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTextArea" name="messageField">
+          <Properties>
+            <Property name="columns" type="int" value="20"/>
+            <Property name="lineWrap" type="boolean" value="true"/>
+            <Property name="rows" type="int" value="5"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="// to get the correct InputMap&#xa;        int condition = WHEN_FOCUSED;&#xa;        // get our maps for binding from the chatEnterArea JTextArea&#xa;        InputMap inputMap = messageField.getInputMap(condition);&#xa;        ActionMap actionMap = messageField.getActionMap();&#xa;&#xa;        // the key stroke we want to capture&#xa;        KeyStroke enterStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);&#xa;&#xa;        // tell input map that we are handling the enter key&#xa;        inputMap.put(enterStroke, enterStroke.toString());&#xa;&#xa;        // tell action map just how we want to handle the enter key&#xa;        actionMap.put(enterStroke.toString(), new AbstractAction() {&#xa;&#xa;            @Override&#xa;            public void actionPerformed(ActionEvent evt) {&#xa;                sendButtonActionPerformed(evt);&#xa;            }&#xa;        });"/>
+          </AuxValues>
+        </Component>
+      </SubComponents>
+    </Container>
   </SubComponents>
 </Form>
