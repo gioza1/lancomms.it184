@@ -6,22 +6,19 @@
 package lancomms;
 
 import LCViews.LoginUI;
-import LCViews.MainUI;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class LANCOMMS {
 
     private String host;
+    private String port;
+    private String db;
+    private String dbUsername;
+    private String dbPassword;
 
     public LANCOMMS() {
         
@@ -32,28 +29,28 @@ public class LANCOMMS {
         }
     }
 
-    public void getPropValues() throws IOException {
-
-        Properties prop = new Properties();
-        String propFileName = "host.properties";
-
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("../config/" + propFileName);
-
-        if (inputStream != null) {
-            prop.load(inputStream);
-        } else {
-            throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-        }
-
-        // get the property value and print it out
-        host = prop.getProperty("host");
-    }
-
     public String getHost() {
         return host;
     }
+    
+    public String getPort(){
+        return port;
+    }
 
-    public String getPropHost() throws IOException {
+    public String getDB(){
+        return db;
+    }
+    
+    public String getDbUsername(){
+        return dbUsername;
+    }
+    
+    public String getDbPassword(){
+        return dbPassword;
+    }
+    
+    
+    public void getPropHost() throws IOException {
 
         String versionString = null;
 
@@ -76,8 +73,11 @@ public class LANCOMMS {
 
         //retrieve the property we are intrested, the app.version
         host = mainProperties.getProperty("host");
-        System.out.println(host);
-        return host;
+        port = mainProperties.getProperty("port");
+        db = mainProperties.getProperty("database");
+        dbUsername = mainProperties.getProperty("dbUsername");
+        dbPassword = mainProperties.getProperty("dbPassword");
+        System.out.println(host+"\n"+db+"\n"+dbUsername+"\n"+dbPassword);
     }
 
     public static void main(String[] args) throws InterruptedException, UnsupportedLookAndFeelException {
@@ -91,7 +91,6 @@ public class LANCOMMS {
 
         LANCOMMS lc = new LANCOMMS();
         LoginUI test = new LoginUI(lc.getHost());
-        //MainUI test = new MainUI(1);
         test.setVisible(true);
 
     }

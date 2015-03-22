@@ -1,11 +1,9 @@
+package LCModels;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-package LCModels;
-
 import java.sql.*;
 import javax.swing.JOptionPane;
 import lancomms.LANCOMMS;
@@ -22,20 +20,27 @@ public class ConnectDB {
      * @return 
      */
     private String host;
+    private String port;
+    private String db;
+    private String dbUsername;
+    private String dbPassword;
     
     public ConnectDB(){
         LANCOMMS lc = new LANCOMMS();
         host = lc.getHost();
-
+        port = lc.getPort();
+        db = lc.getDB();
+        dbUsername = lc.getDbUsername();
+        dbPassword = lc.getDbPassword();
     }
     
     
-    public Connection connectToDB() throws SQLException{
+    public Connection connectToDB(){
         //connects to DB
         
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://"+host+":3306/lancomms","lancomms","lancomms");           
+            con = DriverManager.getConnection("jdbc:mysql://"+host+":"+port+"/"+db,dbUsername,dbPassword);           
         }
         catch ( ClassNotFoundException | SQLException e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );

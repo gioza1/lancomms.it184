@@ -81,7 +81,7 @@ public class ChatMessage implements Serializable {
     }
 
     //Gets list of clients from the given/set array
-    public ArrayList<ClientObject> getList() {
+    public ArrayList<ClientObject> getGroupChatList() {
         return clients;
     }
 
@@ -106,4 +106,7 @@ public class ChatMessage implements Serializable {
         groupChatUIID = id;
     }
 
+     public void setGroupChatList(ArrayList<ClientObject> co) {
+        clients = co;
+    }
 }

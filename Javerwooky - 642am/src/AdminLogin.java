@@ -207,17 +207,15 @@ public class AdminLogin extends javax.swing.JFrame {
     public boolean verify() {
 
         Connection con = null;
-        LCModels.ConnectDB callConnector = new LCModels.ConnectDB();
+        ConnectDB callConnector = new ConnectDB();
         ResultSet rs = null;
         Statement stmt = null;
         String pass = null;
         boolean retval = false;
 
-        try {
-            con = callConnector.connectToDB();
-        } catch (SQLException ex) {
-            Logger.getLogger(AdminLogin.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        con = callConnector.connectToDB();
+
         try {
             stmt = con.createStatement();
         } catch (SQLException ex) {

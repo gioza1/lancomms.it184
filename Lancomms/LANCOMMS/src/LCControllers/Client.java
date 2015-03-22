@@ -8,11 +8,11 @@ package LCControllers;
  * @author Gio
  */
 import LCViews.GroupChatUI;
-import LCViews.LoginUI;
 import LCViews.MainUI;
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
@@ -157,30 +157,6 @@ public class Client {
         return true;
     }
 
-//    public boolean isAlreadyOnline(String host) {
-//        boolean isonline = false;
-//        boolean alreadySent = false;
-//        ChatMessage cm = new ChatMessage(ChatMessage.CHECKISONLINE, me.getUsername());
-//        try {
-//            if (alreadySent == false) {
-//                mainSOutput.writeObject(cm);
-//                alreadySent = true;
-//            }
-//        } catch (IOException eIO) {
-//            System.out.println("Exception doing login : " + eIO);
-////                    disconnectMain();
-//            return false;
-//        }
-//
-//        try {
-//            isonline = mainSInput.readBoolean();
-//        } catch (IOException ex) {
-//            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//
-//        return isonline;
-//
-//    }
 
     /*
      * To send a message to the server
@@ -284,7 +260,7 @@ public class Client {
                             System.out.println(eh.getMessage());
                             break;
                         case ChatMessage.UPDATELIST:
-                            cg.updateList(eh.getList());
+                            cg.updateList(eh.getGroupChatList());
                             break;
                         case ChatMessage.CLIENTBROADCAST:
                             playSound(2);
@@ -297,38 +273,39 @@ public class Client {
                             break;
                         case ChatMessage.GROUPCHATINVITE:
 //                            if (cg.isInGroupChat()) {
-
-                            gcui.add(new GroupChatUI(eh.getList(), Client.this, groupChatCount));
+                            GroupChatUI damb = new GroupChatUI(eh.getGroupChatList(), Client.this, eh.getGroupChatUIID());
+                            gcui.add(damb);
+                            damb.setVisible(true);
                             System.out.println(gcui.size());
-                            gcui.get(groupChatCount++).setVisible(true);
-//                                cg.disableGroupChat();
-//                            }
+                            System.out.println(damb.getGroupChatID());
                             break;
                         case ChatMessage.GROUPCHATMESSAGE:
                             System.out.println("GROUPCHATMESSAGE: " + eh.getMessage());
-                            gcui.get(eh.getGroupChatUIID()).appendToTextArea(eh.getMessage());
+//                            gcui.get(eh.getGroupChatUIID()).appendToTextArea(eh.getMessage());    
+                            for (GroupChatUI gc : gcui) {
+                                if (gc.getGroupChatID() == eh.getGroupChatUIID()) {
+                                    gc.appendToTextArea(eh.getMessage());
+                                    break;
+                                }
+
+                            }
                             break;
-                        case ChatMessage.GROUPCHATLEAVE:
-                            System.out.println("GROUPCHATLEAVE: " + eh.getMessage());
-//                            cg.enableGroupChat();
-                            gcui.get(eh.getGroupChatUIID()).dispose();
-                            gcui.remove(eh.getGroupChatUIID());
-                            break;
-//                        case ChatMessage.GROUPCHATFAILED:
-//                            System.out.println("GROUPCHATFAIL: " + eh.getMessage());
-//                            cg.enableGroupChat();
-//                            gcui.dispose();
-//                            break;
+
                         case ChatMessage.GROUPCHATUPDATELIST:
 //                            gcui.appendToTextArea(eh.getMessage());
-//                            gcui.populadaList(eh.getList());
+//                            gcui.populadaList(eh.getGroupChatList());
                             System.out.println("GROUPCHATLEAVE: " + eh.getMessage());
 //                            cg.enableGroupChat();
-                            gcui.get(eh.getGroupChatUIID()).appendToTextArea(eh.getMessage());
-                            gcui.get(eh.getGroupChatUIID()).populadaList(eh.getList());
-//                            gcui.get(eh.getGroupChatUIID()).dispose();
-                            gcui.remove(eh.getGroupChatUIID());
+                            for (GroupChatUI gc : gcui) {
+                                if (gc.getGroupChatID() == eh.getGroupChatUIID()) {
+                                    gc.appendToTextArea(eh.getMessage());
+                                    gc.populadaList(eh.getGroupChatList());
+                                    gcui.remove(gc);
+                                    groupChatCount--;
+                                    break;
+                                }
 
+                            }
                             break;
                         case ChatMessage.ISONLINE:
                             if (eh.getIsOnline()) {
