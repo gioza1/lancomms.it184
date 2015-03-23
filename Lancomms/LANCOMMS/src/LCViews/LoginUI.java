@@ -286,7 +286,7 @@ public class LoginUI extends javax.swing.JFrame {
                     } else {
                         playSound(2);
                         JOptionPane.showMessageDialog(null, "Account is already logged in!", "Error", JOptionPane.ERROR_MESSAGE);
-                        startApp.dispose();
+//                        startApp.dispose();
                     }
 
                 }

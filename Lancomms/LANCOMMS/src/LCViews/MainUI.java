@@ -844,7 +844,6 @@ public class MainUI extends JFrame implements Serializable {
 //        return groupChat.isEnabled();
 //
 //    }
-
     class ServerRunning extends Thread {
 
         public void run() {
@@ -854,6 +853,7 @@ public class MainUI extends JFrame implements Serializable {
         }
 
     }
+
     public void setIsAlreadyOnline(boolean tralse) {
         isAlreadyOnline = tralse;
     }

@@ -362,10 +362,13 @@ public class MainServer {
                         for (ClientThread ct : al) {
                             System.out.println("CHATMESSAGEARRAY SIZE: " + cm.getGroupChatList().size() + "CLIENTTSIZE: " + al.size());
                             String user = ct.test.getFullName();
+//                            System.out.println("SENDING TO: " + cm.getClientObject().getFullName() + "GROUPCHATID: " + cm.getGroupChatUIID());
 
                             Iterator<ClientObject> ite = cm.getGroupChatList().iterator();
                             do {
                                 if (ite.next().getFullName().contentEquals(user)) {
+                                           System.out.println("SENDING TO: " + user+ "GROUPCHATID: " + cm.getGroupChatUIID());
+                                           
                                     ct.writeMessage(cm);
                                 }
                             } while (ite.hasNext());
